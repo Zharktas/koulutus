@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>web</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Web
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## World Wide Web
+
+* *World Wide Web* (*WWW*, *Web*) on web-resurssien muodostama verkko
+
+* Web-resurssit voivat olla HTML-sivuja, JavaScript-ohjelmia,
+  datatiedostoja, kuvia, videoita tai lähes mitä tahansa muuta
+
+* Kaikilla web-resursseilla on *URL* (*Uniform Resource Locator*),
+  jonka avulla resurssiin voidaan viitata
+
+---
+
+
+## Web-resursseja
+
+  ![](../img/web-resursseja.svg)
+
+---
+
+## Web-resursseja
+
+![](../img/web-resursseja2.svg)
+
+---
+
+## Web vs Internet
+
+* *Internet* on maailmanlaajuinen "verkkojen verkkojen",
+  jossa dataa siirretään *TCP/IP*-protokollalla
+
+* Internetissä voidaan siirtää monenlaista dataa, kuten sähköposteja,
+  verkkopeliliikennettä *ja web-resursseja*
+
+* Web-resurssien siirtoon käytetty protokolla on nimeltään HTTP
+  (ja HTTPS ja FTP), joka puolestaan hyödyntää TCP/IP:tä
+
+* Web siis "toimii Internetin päällä"
+
+---
+
+## Webin historiaa
+
+* 1969: ARPANET
+    * Internetin edeltäjä
+
+* 1983: TCP/IP
+    * Internetin tiedonsiirtoprotokolla
+
+* 1989: World Wide Web
+    * HTTP, HTML
+
+* 1995: JavaScript
+    * Web-selainten ohjelmointikieli
+
+* 1996: CSS
+    * Kieli web-sivujen tyylin määrittelyyn
+
+* 1998: Ajax
+    * Monipuolisempi selain-palvelin-kommunikaatio
+
+* 2011: HTML5
+    * Joukko erilaisia web-teknologioita
+
+---
+
+## Web-sovellusten historiaa
+
+* 1990-luku
+    * Suurelta osin staattisia HTML-sivuja
+    * Esim. http://www.cs.tut.fi/~jkorpela/
+    * "Web 1.0"
+
+* 2000-luku
+    * Dynaamisia web-sovelluksia
+    * Käyttäjien luomaa sisältöä
+    * Esim. http://www.wikipedia.org
+    * "Web 2.0"
+
+* 2010-luku
+    * HTML5, työpöytäsovelluksen tasoinen käyttäjäkokemus
+    * [Semanttinen web](http://en.wikipedia.org/wiki/Semantic_Web), [Mashupit](http://en.wikipedia.org/wiki/Mashup_%28web_application_hybrid%29), ...
+    * Esim. http://play.spotify.com
+    * "Web 3.0"
+
+---
+
+## Web-sovellus
+
+* [en.wikipedia.org](http://en.wikipedia.org/wiki/Web_application):
+> *Web application* is a client-server software application in which the client (or user
+> interface) runs in a web browser.
+
+### Web-sivu vs web-sovellus
+
+* Web-sivu: käyttäjä hakee tietoa
+    * esim. http://www.tut.fi/edutech
+
+* Web-sovellus: käyttäjä suorittaa toimintoja
+    * esim. https://gmail.com
+
+* Rajanveto epätarkkaa
+
+* [Keskustelua aiheesta](http://www.visionmobile.com/blog/2013/07/web-sites-vs-web-apps-what-the-experts-think/)
+
+---
+
+## Web-sovellusten hyötyjä
+
+*(verrattuna natiiviin työpöytä-/mobiilisovellukseen)*
+
+* Käytettävissä kaikkialla
+    * Alustariippumaton
+    * Ainut vaatimus on moderni web-selain
+
+* Sovellusten päivittäminen helppoa
+
+* Turvallisempi suorittaa kuin natiivi sovellus
+    * Web-selaimen "hiekkalaatikko"
+
+---
+
+## Web-sovellusten haittoja
+
+* Käyttäjäkokemus?
+
+* Käyttö vaatii verkkoyhteyden
+
+* Omanlaisensa tietoturvaongelmat
+  * Sovellus koko maailman saavutettavissa
+
+* Sovellusten kehitys
+  * Teknologiarajoitteet
+  * Web-selainten erot ym.
+
+Kaikki nämä ongelmat ovat vähenemään päin web-teknologioiden
+kehittymisen myötä.
+
+---
+
+## Web-teknologioita
+
+* HTML
+    * määrittelee web-sivun sisällön
+
+* CSS
+    * kuvaa web-sivun ulkoasun
+
+* JavaScript
+    * web-sivun toiminnallisuus
+
+* HTTP
+    * kommunikointi web-selaimen ja palvelimen välillä
+
+---
+
+## Tyypillinen web-sovellus
+
+![](../img/webapp.png)
+
+1. *Selainpää* (*Frontend*), suoritetaan web-selaimessa
+    * HTML, CSS, JavaScript
+2. *Palvelinpää* (*Backend*)
+    * Lukuisia vaihtoehtoisia toteutustapoja, sovelluskehyksiä, ohjelmointikieliä, ...
+    * Yhteys tietokantaan
+
+* Näiden välillä kommunikoidaan HTTP-protokollalla
+
+---
+
+## HTTP
+
+* HyperText Transfer Protocol
+
+* Protokolla asiakkaan (usein web-selain) ja palvelimen väliseen kommunikaatioon
+
+* Tekstipohjainen
+
+* Tilaton
+
+![](../img/http.svg)
+
+---
+
+## HTML
+
+* HyperText Markup Language
+
+* Merkkauskieli web-sivun sisällön kuvaamiseen
+    * Puumainen rakenne erilaisia HTML-elementtejä
+
+```html
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <title>Hello World</title>
+  </head>
+  <body>
+    <h1 class="moi">Moi</h1>
+    <p id="eka">Eka!</p>
+    <p>Toka!</p>
+  </body>
+</html>
+```
+
+---
+
+
+## CSS
+
+* Cascading Style Sheets
+
+* Kieli web-sivun ulkoasun määrittämiseen
+
+.pull-left[
+
+* [style.css](../../assets/misc/style.css) 
+
+```css
+p { /* elementin nimi */
+  background-color: skyblue;
+}
+
+.moi { /* elementin luokka */
+  color: orange;
+}
+
+#eka { /* elementin id */
+  border: 1px solid black;
+  padding: 10px;
+}
+```
+]
+
+.pull-right[
+
+* [moi.html](../../assets/misc/moi.html)
+
+```html
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <title>Hello World</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="style.css" />
+  </head><body>
+    <h1 class="moi">Moi</h1>
+    <p id="eka">Eka!</p>
+    <p>Toka!</p>
+  </body></html>
+```
+
+]
+
+---
+
+## JavaScript
+
+* Ohjelmointikieli web-sivujen toiminnallisuuden toteuttamiseen
+
+* Dynaamisesti tyypitetty
+
+* Prototyyppipohjainen
+
+* First-class functions
+
+```javascript
+function foo(p) {
+  return p * p;
+}
+
+var x = foo(6);
+var li = [1, 2, 3].map(foo);
+
+console.log("Moi");
+```
+
+* Voidaan suorittaa muuallakin kuin web-selaimessa
+    * Esim. [NodeJS](http://nodejs.org/)
+
+---
+
+## HTML + CSS + JavaScript
+
+* HTML-dokumenttia voidaan manipuloida JavaScriptillä
+
+.pull-left[
+
+* [moi.html](../../assets/misc/moi.html)
+
+```html
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <title>Hello World</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="style.css" />
+  </head>
+  <body>
+    <h1 class="moi">Moi</h1>
+    <p id="eka">Eka!</p>
+    <p>Toka!</p>
+    <script src="script.js">
+      </script>
+  </body>
+</html>
+```
+]
+
+.pull-right[
+
+* [script.js](../../assets/misc/script.js)
+
+
+```javascript
+function pClicked(event) {
+  var p = event.srcElement;
+  p.classList.add('eka');
+}
+
+var ps = document.
+  getElementsByTagName('p');
+
+for(var i=0; i<ps.length; ++i){
+  var p = ps[i];
+  p.onclick = pClicked;
+}
+```
+]
+
+---
+
+## Web-selaimen kehitystyökalut
+
+* Web-selaimissa on kehitystyökaluja, joilla voi tarkkailla
+HTTP-liikennettä, sivustojen lähdekoodeja (HTML, CSS, JavaScript, ym.)
+
+* Firefoxissa kehitystyökalut saa auki pikanäppäimellä **Ctrl+Shift+C**
+
+![](../img/firefox-dev.png)
+
+---
+
+<h2 class="harjoitus">Harjoitus</h2>
+
+Avaa web-sivu osoitteessa http://www.w3.org
+ja yritä selaimen kehitystyökalujen (erityisesti *Network*-välilehti)
+avulla löytää vastaukset seuraaviin
+kysymyksiin:
+
+1. Mitä resursseja selain lataa kun sivuston avaa?
+
+2. Minkä tyyppisiä resursseja?
+
+3. Mikä resurssi ladataan ensimmäisenä?
+
+4. Mistä selain tietää mitä resursseja pitää ladata sen jälkeen kun
+   alkuperäinen http://www.w3.org -resurssi on ladattu?
+
+
+
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

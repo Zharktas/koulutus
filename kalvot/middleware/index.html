@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>middleware</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Middleware
+### TIE-23500 Web-ohjelmointi
+
+---
+
+# Middleware
+
+> [[M]iddleware](http://searchsoa.techtarget.com/definition/middleware)
+> is a general term for any programming that serves to "glue together"
+> or mediate between two separate and often already existing programs.
+
+* Web-sovellusten tapauksessa middlewarella tarkoitetaan usein
+komponenttia, joka välittää HTTP-pyyntöjä ja/tai -vastauksia
+
+* Middlewaren avulla voi kätevästi tehdä asioita,
+jotka toistuvat useassa eri pyynnössä.
+
+* Tällaisia ovat mm.
+    * evästeiden käsittely
+    * viestin datan jäsentäminen
+    * käyttäjän tunnistus ja autorisointi
+    * loggaus
+    * jne.
+
+
+---
+
+# Express-middleware
+
+* [Express](http://expressjs.com)-sovelluksessa erilaisille pyynnöille
+  voidaan määritellä erilaisia middleware-ketjuja, joiden läpi pyynnöt
+kulkevat
+
+* Expressin tapauksessa
+[middleware](http://expressjs.com/guide/using-middleware.html)
+on seuraavanlainen funktio
+
+```javascript
+var mm = function(req, res, next) {
+  // req: pyyntö
+  // res: vastaus
+  // next: seuraava middleware
+};
+```
+
+* Olioita `req` ja `res` voidaan muokata: muokkaukset näkyvät seuraaville
+middlewareille
+
+* Middlewaren täytyy joko
+    1. kutsua funktiota `next`, jolloin siirrytään ketjussa seuraavaan middlewareen
+    2. tai lähettää vastaus metodilla `res.send` (tai `res.json` tms.)
+         * Tällöin seuraavat middlewaret jätetään huomiotta
+
+
+---
+
+# Express-middlewaren käyttöönotto
+
+```javascript
+var app = express();
+```
+
+Middlewaren voi ottaa käyttöön seuraavasti
+
+```javascript
+// Kaikille pyynnöille
+app.use(mm);
+```
+
+```javascript
+// Määrättyyn polkuun kohdistuville GET-pyynnöille
+app.get('/plaa', mm)
+```
+
+Useampi middleware:
+
+```javascript
+app.get('/plaa', mm1, mm2, mm3);
+```
+
+on sama kuin
+
+```javascript
+app.get('/plaa', mm1);
+app.get('/plaa', mm2);
+app.get('/plaa', mm3);
+```
+
+---
+
+# Esimerkki: cookie-parser
+
+* Esimerkiksi `cookie-parser` -middleware
+    * lukee HTTP-pyynnön `Cookie`-otsikkotiedot
+    * luo `req.cookies` -olion, joka sisältää evästeet
+      avain-arvo-pareina
+
+
+```sh
+npm install cookie-parser --save
+```
+
+```javascript
+var express = require('express');
+var cookieParser = require('cookie-parser');
+
+var app = express();
+app.use(cookieParser());
+```
+
+---
+
+# Esimerkki: käyttäjän tunnistus
+
+```javascript
+function auth(req, res, next) {
+  authenticateUserFromCookies(req.cookies, function(user) {
+    if (!user) {
+      res.status(401).send();
+    }
+    else {
+      req.user = user;
+      next();
+    }
+  }
+}
+```
+
+```javascript
+app.post('/api/blog', auth, function(req, res) {
+  var u = req.user;
+  // ...
+});
+
+```
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

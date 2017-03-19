@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>evaste</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Evästeet
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Evästeet
+
+* Eväste (cookie) on tapa, jolla HTTP:ssa voidaan säilöä
+  pyynnöstä toiseen säilyvää tietoa
+
+* Eväste muodostuu nimi-arvo-pareista
+
+1. Palvelin asettaa evästeen vastauksessaan
+    * `Set-Cookie` -otsikko
+2. Asiakas lähettää evästeen tulevissa pyynnöissään
+    * `Cookie` -otsikko
+
+* Tyypillinen käyttötapa on asettaa ns. *istuntotunniste* (session
+  token)
+    * istuntotunniste luodaan käyttäjän kirjautuessa
+    * sen avulla palvelin tietää kuka HTTP-pyynnön teki
+
+---
+
+## Set-Cookie ja Cookie
+
+* Osoitteesta `http://www.example.com` tuleva vastaus
+
+```http
+HTTP/1.1 200 OK
+...
+Set-Cookie: n=5
+Set-Cookie: foo=bar
+...
+```
+
+* Asiakas liittää jatkossa evästeet ko. osoitteeseen lähettämiinsä pyyntöihin
+
+```http
+GET /kuva.png HTTP/1.1
+...
+Cookie: n=5; foo=bar
+...
+```
+
+---
+
+## Evästeen käyttäytyminen
+
+* Oletusarvoisesti
+    * eväste säilötään istunnon päättymiseen (= selaimen sulkemiseen) asti
+    * eväste liitetään pyyntöihin, jotka tehdään osoitteeseen, jossa
+        * domain on sama kuin alkuperäisessä pyynnössä, ja
+        * polku (path) on sama kuin alkuperäisessä pyynnössä tai sen alipolku
+
+* Käyttäytymistä voidaan muokata evästeen attribuuteilla
+
+```http
+Set-Cookie: NIMI=ARVO; attr1; attr2; ...
+```
+
+---
+
+## Evästeen attribuutit
+
+* `Expires=<päiväys>`
+    * säilytä evästettä tähän asti
+
+* `Max-Age=<sekunnit>`
+    * säilytä evästettä vain tämä aika, kumoaa Expires-attribuutin
+
+* `Domain=<domain1,domain2,...>` 
+    * lähetä eväste näihin domaineihin tehtäviin pyyntöihin
+
+* `Path=<polku>`
+    * lähetä eväste vain tähän polkuun ja sen alipolkuihin
+
+* `HttpOnly`
+    * vain HTTP-viesteihin, ei näy mm. selaimen JavaScript-koodissa
+
+* `Secure`
+    * lähetetään vain "turvallisen" yhteyden yli, käytännössä HTTPS
+
+
+---
+
+## Evästeet ja JavaScript
+
+* Web-selain lähettää evästeet automaattisesti
+     * Web-sovellus ei voi asettaa `Cookie` otsikkotietoa
+
+* Jos evästeessä ei ole `HttpOnly`-attribuuttia, niitä voidaan kuitenkin lukea ja
+  kirjoittaa JavaScriptillä
+
+```javascript
+var vanha = document.cookie;
+```
+```javascript
+document.cookie="uusi=evaste";
+```
+
+* harvoin tälle kuitenkaan on tarvetta...
+
+---
+
+## Esimerkki
+
+* Olen kirjautunut sivulle `webbimaili.fi`, joka on
+      lisännyt autentikointitiedot sisältävän evästeen
+
+* Käyn samalla selaimella osoitteessa `pahis.org`, jossa on seuraava skripti
+
+```javascript
+$.get('https://webbimaili.fi/kaikki.html').done(handleResponse);
+```
+
+* HTTP-viestin mukana kulkevat evästeet voisivat huijata
+`webbimaili.fi`:n luulemaan, että HTTP-pyyntö tulee minulta,
+ja näyttää pahikselle kaikki sähköpostini
+
+* **Mutta**: pahiksen suunnitelma ei kuitenkaan onnistu näin helposti, sillä
+  web-selain rajoittaa eri *originien* välisiä HTTP-pyyntöjä
+    * Rajoituksesta käytetään nimitystä *same-origin policy*
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

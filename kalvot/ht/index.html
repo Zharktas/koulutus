@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>ht</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+<h3 id="mean-stack-harjoitusty-">MEAN stack harjoitustyö</h3>
+<hr>
+<h3>Ploki</h3>
+
+<p>Harjoitustyössä toteutetaan mikroblogipalvelu</p>
+<p>Siellä voi mm.</p>
+<ul>
+<li>Luoda posteja ja kommentoida niitä</li>
+<li>Tykätä posteista</li>
+<li>Muokata sisältöä ja hallita käyttöoikeuksia</li>
+</ul>
+<p>Harjoitustyö mukailee <a href="https://thinkster.io/mean-stack-tutorial">Thikster Mean Stack tutoriaalia</a>. Jos haluat eetä itsenäisesti, voit seurata sitä.</p>
+<hr>
+<h3 id="ty-n-vaiheet">Työn vaiheet</h3>
+<ul>
+<li>Toteutetaan perustoiminnallisuus</li>
+<li>Lisätään käyttäjien autentikointi</li>
+<li>Totetutetaan lisäominaisuuksia sen mukaan miten aikaa jää</li>
+<li>Julkaistaan oma palvelu Herokuun</li>
+</ul>
+<hr>
+<h3 id="teknologiat">Teknologiat</h3>
+<p>Harjoitustyön tekoon käytetään</p>
+<ul>
+<li>Ajoympäristönä <a href="http://nodejs.org">Node.js</a></li>
+<li>Sovellusten julkaisuun <a href="http://heroku.com">Heroku</a></li>
+</ul>
+<p>Lisäksi</p>
+<ul>
+<li>Web-sovelluskehyksenä <a href="http://expressjs.com">Express</a></li>
+<li>Tietokantakirjastona <a href="http://mongoosejs.com/">Mongoose</a><ul>
+<li>joka käyttää <a href="https://docs.mongodb.com/">MongoDB</a> tietokantaa</li>
+</ul>
+</li>
+<li>Client-puolen frameworkkinä Angular.js</li>
+<li>Monia muita <a href="https://www.npmjs.com">npm</a>-paketteja</li>
+</ul>
+<hr>
+<h3 id="kehitysymp-rist-">Kehitysympäristö</h3>
+<ul>
+<li>Cloud9</li>
+</ul>
+<hr>
+<h3 id="kehitysymp-rist-n-pystytys-omalle-koneelle">Kehitysympäristön pystytys omalle koneelle</h3>
+<p>Asenna Git, Node.js, MongoDB
+ja <a href="https://toolbelt.heroku.com/">Heroku Toolbelt</a>.</p>
+<hr>
+<h3 id="harjoitusty-pohja-palvelin">Harjoitustyöpohja: palvelin</h3>
+<ul>
+<li>Node:lle löytyy paljon erilaisia generaattoreita, joilla voidaan luoda sovelluksen runko. Jopa MEAN fullstack generaattoreita.
+Me käytetään express-sovelluksen tekoon tarkoitettua generaattoria.</li>
+<li>Luodaan uusi Node.js projekti C9:iin</li>
+<li>Poista esimerkkisovelluksen koodit</li>
+</ul>
+
+<p>Asennetaan express-generaattori</p>
+<pre><code class="hljs sh">npm install -g express-generator</code></pre>
+
+<p>Luodaan sovellus</p>
+<pre><code class="hljs sh">express --ejs ploki
+<span class="hljs-built_in">cd</span> ploki</code></pre>
+
+<p>Asennetaan riippuvuudet</p>
+<pre><code class="hljs sh">npm install</code></pre>
+
+<p>Käynnistetään sovellus</p>
+<pre><code class="hljs sh">npm start</code></pre>
+
+<hr>
+<h3 id="harjoitusty-pohja-asiakas">Harjoitustyöpohja: asiakas</h3>
+<p>Luodaan Angular sovellus ja sille kontrolleri.</p>
+<p>Muokataan views/index.ejs sisältö seuraavaksi:</p>
+<pre><code class="hljs sh">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;My Angular App!&lt;/title&gt;
+    &lt;script src=<span class="hljs-string">"https://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"</span>&gt;&lt;/script&gt;
+    &lt;script src=<span class="hljs-string">"javascripts/angularApp.js"</span>&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body ng-app=<span class="hljs-string">"flapperNews"</span> ng-controller=<span class="hljs-string">"MainCtrl"</span>&gt;
+    &lt;div&gt;
+      {{<span class="hljs-built_in">test</span>}}
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<p>Luodaan uusi tiedosto javascripts/angularApp.js</p>
+<pre><code class="hljs sh">var app = angular.module(<span class="hljs-string">'flapperNews'</span>, []);
+
+app.controller(<span class="hljs-string">'MainCtrl'</span>, [<span class="hljs-string">'$scope'</span>, <span class="hljs-keyword">function</span>(<span class="hljs-variable">$scope</span>){
+
+  <span class="hljs-variable">$scope</span>.test = <span class="hljs-string">'Hello world!'</span>;
+
+}]);</code></pre>
+
+<p>Tämähän on tuttua viime viikolta =)
+Aja sovellus uudelleen ja testaa, että kaikki toimii!</p>
+<hr>
+<h3 id="toteutetaan-asiakasp-h-n-perustoiminnallisuus">Toteutetaan asiakaspäähän perustoiminnallisuus</h3>
+<p>Tiedostot on nyt paikallaan. Voidaan jatkaa tutoriaalin mukaisesti
+<a href="https://thinkster.io/mean-stack-tutorial#introduction">MEAn stack tutoriaali</a></p>
+<ul>
+<li>postien näyttäminen</li>
+<li>postien lisääminen</li>
+<li>tykkäys</li>
+<li>Angular service</li>
+<li>Angular routing</li>
+</ul>
+<hr>
+<h3 id="toteutetaan-palvelinp-h-n-perustoiminnallisuus">Toteutetaan palvelinpäähän perustoiminnallisuus</h3>
+<p>Asennetaan Mongoose</p>
+<pre><code class="hljs sh">npm install --save mongoose</code></pre>
+
+
+<p>Asennetaan MondoDB
+<a href="https://docs.c9.io/docs/setup-a-database">ohjeet</a></p>
+<pre><code class="hljs bash">sudo apt-get install -y mongodb-org</code></pre>
+
+<pre><code class="hljs bash">mongod --bind_ip=<span class="hljs-variable">$IP</span> --nojournal</code></pre>
+
+<hr>
+<ul>
+<li>Kirjaudu MongoDB-konsoliin</li>
+</ul>
+<pre><code class="hljs bash">mongo</code></pre>
+
+<ul>
+<li>... jossa luodaan tietokanta nimeltä <code>ploki</code> sekä käyttäjä nimeltä <code>dev</code>
+salasanalla <code>dev</code></li>
+</ul>
+<pre><code class="hljs bash">use ploki</code></pre>
+
+<pre><code class="hljs bash">db.createUser({
+     user: <span class="hljs-string">"dev"</span>,
+     <span class="hljs-built_in">pwd</span>: <span class="hljs-string">"dev"</span>,
+     roles: [ <span class="hljs-string">"readWrite"</span>, <span class="hljs-string">"dbAdmin"</span> ]})</code></pre>
+
+<ul>
+<li><code>Ctrl-D</code>:llä pääsee pois MongoDB-konsolista</li>
+</ul>
+<p>Nyt voidaan taas jatkaa tutoriaalin mukaisesti palvelimen kehitystä
+<a href="https://thinkster.io/mean-stack-tutorial#creating-schemas-with-mongoose">MEAn stack tutoriaali</a></p>
+<ul>
+<li>mongoose scheman luonti: posti schema ja kommentti schema</li>
+<li>luodaan tarvittavat reitit</li>
+<li>postien lataaminen, luonti, tykkäys</li>
+<li>kommenttien luonti</li>
+</ul>
+<hr>
+<h3 id="julkaistaan-sovellus-herokuun">Julkaistaan sovellus Herokuun</h3>
+<p>Luodaan tili <a href="https://mlab.com/">mLab tili</a> ja tehdään sinne tietokanta ja käyttäjä.</p>
+<p>Korvataan lokaali tietokanta mLab tietokannan osoitteella. Esim.</p>
+<pre><code class="hljs sh">mongoose.connect('mongodb://dev:dev@ds151137.mlab.com:51137/ploki');
+</code></pre>
+
+
+<p>Luo tili <a href="http://heroku.com">Herokuun</a>. Ja luo uusi Heroku-sovellus.</p>
+<p>Asennetaan Heroku toolbelt</p>
+
+<pre><code class="hljs sh">
+wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+</code></pre>
+
+<p>Julkaistaan oma sovellus Herokuun:</p>
+<pre><code class="hljs sh">git init
+git add .
+git commit -m <span class="hljs-string">"my first commit"</span>
+heroku login
+heroku git:remote <span class="hljs-operator">-a</span> oma_heroku_ploki
+git push heroku master</code></pre>
+
+<p>Sovelluksen päivitys:</p>
+<pre><code class="hljs sh">git add .
+git commit -m <span class="hljs-string">"my second commit"</span>
+git push heroku master</code></pre>
+
+
+<hr>
+<h3 id="autentikointi">Autentikointi</h3>
+<ul>
+<li>Toteutetaan käyttäjien autentikointi Passport-moduulin avulla</li>
+<li>Tähän voisi liittää autentikoinnin esim. Google, Twitter, Facebook tunnuksilla.
+Toteutetaan kuitenkin nyt oma lokaali käyttäjien hallinta.</li>
+<a href="https://thinkster.io/mean-stack-tutorial#adding-authentication-via-passport">MEAn stack tutoriaali</a></p>
+</ul>
+
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

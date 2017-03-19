@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>rest</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="rest">REST</h1>
+<p><a href="./">Kalvot</a></p>
+<p><small>Lassi Haaranen, edited by Petri Ihantola and Antti Nieminen</small></p>
+<p><small>licensed under a <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International
+license</a>.</small></p>
+<hr>
+<h2 id="api-introduction">API Introduction</h2>
+<p>Not all web applications are meant directly for people. Different web
+services provide useful information primarily aimed for other
+applications to consume. Some examples are things like authentication,
+stock data, weather reports, Twitter feeds, etc.</p>
+<p>These programmatic interfaces might not have a GUI but instead are meant
+to be used by other programs on client-side as well as on server-side.</p>
+<p>Typically they are created in a way that allows the consumers to use
+different operating systems or languages.</p>
+<hr>
+<h2 id="web-services">Web Services</h2>
+<p>Most commonly they transfer the data through <code>HTTP</code>.</p>
+<p>Three of commonly used options for web services:</p>
+<ul>
+<li><code>SOAP</code> Simple Object Access Protocol</li>
+<li><code>XML-RPC</code> XML (encoded) Remote Procedure Call</li>
+<li><code>REST</code> Representational State Transfer (probably most common
+nowadays?)</li>
+</ul>
+<hr>
+<h2 id="soap">SOAP</h2>
+<p>Simple Object Access Protocol (SOAP) is an XML-based messaging protocol
+where client sends requests encoded in XML and gets reponses back as
+XML. It can use other protocols in addition to HTTP, such as <code>SMTP</code>.</p>
+<p>Web Services Description Language (<code>WSDL</code>) is XML-based language used to
+describe the data/functionality offered by a web service. It&#39;s commonly
+used with SOAP.</p>
+<p>You should not need to write SOAP yourself, let the API/Toolkit handle
+that for you.</p>
+<hr>
+<h2 id="soap-example">SOAP Example</h2>
+<p>A call in some system like this:</p>
+<pre><code class="hljs java">...getFirstName(<span class="hljs-string">"tteekkar"</span>)</code></pre>
+
+<p>Would be expressed in SOAP like this:</p>
+<pre><code class="hljs xml">&lt;SOAP-ENV:Envelope
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" 
+  SOAP-ENV:encodingStyle= 
+  "http://schemas.xmlsoap.org/soap/encoding/"&gt;
+  &lt;SOAP-ENV:Body&gt;
+    &lt;mtd:GetFirstName xmlns:mtd="an URI"
+      &lt;username xsi:type="xsd:string"&gt;
+        tteekkar
+      &lt;/username&gt;
+    &lt;/mtd:GetFirstName&gt;
+  &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;</code></pre>
+
+<hr>
+<h2 id="xml-rpc">XML-RPC</h2>
+<p>Remote Procedure Call (<code>RPC</code>) generally refers to collections of
+techniques to call a procedure typically on another computer. XML-RPC is
+a specification that is SOAP&#39;s predecessor.</p>
+<p>Procedure calls, parameters and responses are encoded in XML. It&#39;s
+simpler than SOAP and doesn&#39;t have a WSDL.</p>
+<hr>
+<h2 id="representational-state-transfer">Representational State Transfer</h2>
+<p>In RPCs the focus is on method. In Representational State Transfer
+(<code>REST</code>) the focus is on <em>resources</em> that can be accessed and acted upon
+in a standard way.</p>
+<p><a href="http://en.wikipedia.org/wiki/Roy_Fielding">Roy Fielding</a> described REST
+in his dissertation &#39;Architectural Styles and the Design of
+Network-based Software Architectures&#39;.</p>
+<p>Anything that is important enough to be separately referenced/
+modified/retrieved is a resource that has a reference. Universal
+Resource Identifier (<code>URI</code>) is the reference. They should be constructed
+in an intuitive (human readable) manner and reflecting the underlying
+data structure.</p>
+<hr>
+<h2 id="programmable-web">Programmable Web</h2>
+<p>The web is full of different APIs, a good site to start looking for what
+is out there is <a href="http://www.programmableweb.com/">programmableweb.com</a>.</p>
+<p>As an example <a href="http://api.nytimes.com/svc/mostpopular/v2/mostshared/Sports/7.json?api-key=sample-key">New York Times&#39; Most shared sports items from past 7
+days</a>.</p>
+<hr>
+<h2 id="restful-web-services">RESTful Web Services</h2>
+<p><em>Resources</em> are any type of data that can be pointed to with a
+hyperlink: images, documents, web services, etc.</p>
+<p>Data is encoded in a way that it can represent the state of the resource
+and resources are referenced by URIs.</p>
+<p>REST is a pattern, a way of doing things that is not formally codified.</p>
+<p>The REST portion of this lecture is influenced by <a href="https://www.youtube.com/watch?v=mZ8_QgJ5mbs">Beautiful REST &amp; JSON
+APIs by Les Hazlewood</a>
+(definitely worth watching if you need to create an API).</p>
+<hr>
+<h2 id="rest-buzzword-bingo">REST Buzzword Bingo</h2>
+<p>Scalability, Generality, Independence, Latency (caching), Security,
+Encapsulation, Separation of concerns, Statelessness, Uniform interface</p>
+<hr>
+<h2 id="rest-and-json">REST and JSON</h2>
+<p>REST APIs often use JSON since it offers many benefits:</p>
+<ul>
+<li>ubiquity</li>
+<li>simplicity</li>
+<li>readability</li>
+<li>flexibility</li>
+<li>etc...</li>
+</ul>
+<p>However, XML/plaintext/html etc. is also used.</p>
+<hr>
+<h2 id="rest-resources">REST: Resources</h2>
+<p>In RPC, resources can be thought of as <em>verbs</em>. In REST, resources
+should be <em>nouns</em>.</p>
+<p>Broadly speaking there are two types of resources:</p>
+<ul>
+<li><code>Collection resource</code> e.g. <code>/blogposts/2014</code> These link and list
+multiple instance resources. And they might also have their own
+attributes (e.g. &#39;first&#39;, &#39;latest&#39;)</li>
+<li><code>Instance resource</code> e.g. <code>/blogposts/rant-about-rest</code> These
+resources describe one instance of something</li>
+</ul>
+<hr>
+<h2 id="resources-example">Resources Example</h2>
+<p>Example of an instance resource:</p>
+<pre><code class="hljs json">// from: http://some-library-service/isbn/978-0596517748
+{
+  "title": "JavaScript: The Good Parts",
+  "author": "Douglas Crockford",
+  "published": "2008",
+  "isbn": "978-0596517748"
+  "href": "http://some-library-service/isbn/978-0596517748"
+}
+
+// from: http:/some-library-service/keyword/javascript
+{
+  "keywords": ["javascript"],
+  "books": [ 
+    {
+      "href": "http://some-library-service/isbn/978-0596517748",
+      "isbn": "978-0596517748"
+    }, {
+      "href": "http://some-library-service/isbn/978-1933988696",
+      "isbn": "978-1933988696"
+    },
+    ...
+  ]
+}</code></pre>
+
+<hr>
+<h2 id="rest-statelessness">REST: Statelessness</h2>
+<p>Any individual request should be understandable without knowledge of any
+preceding requests.</p>
+<p>This also means that requests can be interpreted and acted upon
+individually, which makes parallel processing easier.</p>
+<p>All required data needs to be present in the request itself.</p>
+<hr>
+<h2 id="rest-addressability">REST: Addressability</h2>
+<p>Addressability (every resource has a unique identifier) gives the major
+benefit of using resources in unforeseen ways.</p>
+<p>Related to this it is a good idea to <em>version</em> your APIs, for example:</p>
+<pre><code>http://my-cool-site.com/api/v1/some/stuff
+</code></pre><p>The future is unknown, and you might need to change the API for one
+reason or another. Versioning enables you to leave the old behavior in
+place so those programs that depend on that version will not be broken.</p>
+<hr>
+<h2 id="rest-connectedness">REST: Connectedness</h2>
+<p>The idea of connectedness is that resources link to other resources</p>
+<p>Following links traverses the API uncovering more information and
+structure.</p>
+<hr>
+<h2 id="rest-uniform-interface">REST: Uniform Interface</h2>
+<p>All the resources share a common uniform interface. Instead of doing
+something (URLs as a &quot;method&quot;) set something (URLs as &quot;variables&quot;).</p>
+<p>Four main constraints of uniform interface:</p>
+<p>Take advantage of <code>HTTP</code> &quot;verbs&quot;:</p>
+<ul>
+<li><code>GET</code> fetch resource</li>
+<li><code>PUT</code> create/replace resource</li>
+<li><code>DELETE</code> remove resource</li>
+<li><code>POST</code> add/modify resource</li>
+</ul>
+<p>POST is not <em>idempotent</em>, so it can be used for partial updates.</p>
+<hr>
+<h2 id="browsers-do-support-put-and-delete-html-doesn-t-">Browsers do support PUT and DELETE - HTML doesn&#39;t.</h2>
+<p>PUT and DELETE request can be initiated via Javascript (AJAX), but not
+via HTML form submission.</p>
+<hr>
+<h2 id="uniform-interface-principles">Uniform Interface Principles</h2>
+<ul>
+<li>Identification of Resources: Request identifies the resource, data
+could be returned in number of formats.</li>
+<li>Manipulation of resources through representations: If a client has
+the resources, it knows enough to modify/manipulate it</li>
+<li>Self-descriptive messages: Each message contains enough information
+on how to process it (what is its mime-type etc.)</li>
+<li>HATEOAS</li>
+</ul>
+<p>Wikipedia has a nice article about
+<a href="http://en.wikipedia.org/wiki/Representational_state_transfer">REST</a>.</p>
+<hr>
+<h2 id="hateoas">HATEOAS</h2>
+<p>Hypertext As The Engine Of Application State (<code>HATEOAS</code>).</p>
+<blockquote>
+<p>&quot;Clients make state transitions only through actions that are
+dynamically identified within hypermedia by the server (e.g., by
+hyperlinks within hypertext). Except for simple fixed entry points to
+the application, a <em>client does not assume that any particular action
+is available for any particular resources beyond those described in
+representations previously received from the server</em>.&quot; <a href="http://en.wikipedia.org/wiki/Representational_state_transfer#Uniform_interface">Wikipedia -
+REST</a>
+(emphasis mine)</p>
+</blockquote>
+<p>Still not widely used</p>
+<hr>
+<h2 id="hateoas-challenges">HATEOAS Challenges</h2>
+<p>There is no standard way for describing the relationships of resources
+in RESTful interfaces. Couple of proposals:</p>
+<ul>
+<li>HAL specification <a href="http://stateless.co/hal_specification.html">http://stateless.co/hal_specification.html</a></li>
+<li>JSON API <a href="http://jsonapi.org/">http://jsonapi.org/</a></li>
+</ul>
+<hr>
+<h2 id="rest-good-ideas">REST: Good Ideas</h2>
+<p><em>API versioning</em>. You might need to change it in the future. If you
+version, you will not break existing API consumers.</p>
+<pre><code>some-domain.com/api/v1/resources/item/775
+</code></pre><p><em>Standard timeformats</em>. Don&#39;t invent your own format for expressing
+times, <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> is a better
+option.</p>
+<pre><code class="hljs"><span class="hljs-string">"time"</span>: <span class="hljs-string">"D2014/07/08T11:23pm"</span> // <span class="hljs-keyword">Do</span> <span class="hljs-literal">NOT</span> <span class="hljs-keyword">do</span> this
+<span class="hljs-string">"time"</span>: <span class="hljs-string">"2014-11-13T17:45:11.647Z"</span> //<span class="hljs-keyword">Do</span> this</code></pre>
+
+<p><em>Pagination</em>. Use offset and limit, and use them consistently.</p>
+<pre><code>/api/v1/books/2014/?offset=50&amp;limit=25
+</code></pre><hr>
+<h2 id="rest-reference-expansion">REST: Reference Expansion</h2>
+<p>Reference expansion (a.k.a. link expansion or entity expansion) is also
+a good idea: <code>some/resource?expand=attribute+other_attribute</code>.</p>
+<pre><code class="hljs json">// from: http:/some-library-service/keyword/javascript?expand=title
+{
+  "keywords": ["javascript"],
+  "books": [ 
+    {
+      "href": "http://some-library-service/isbn/978-0596517748",
+      "isbn": "978-0596517748",
+      "title": "JavaScript: The Good Parts"
+    }, {
+      "href": "http://some-library-service/isbn/978-1933988696",
+      "isbn": "978-1933988696"
+      "title": "Secrets of the JavaScript Ninja"
+    },
+    ...
+  ]
+}</code></pre>
+
+<hr>
+<h2 id="rest-service-composition">REST service composition</h2>
+<p>REST services can also invoke other (REST) services.</p>
+<ul>
+<li>The idempotence and safeness must be maintained, i.e., an idemponent
+(safe) request should not cause a non-idemponent (non-safe) request
+to subservice</li>
+</ul>
+<p>The stateless constraint somewhat limits service composition (creating
+task services)</p>
+<ul>
+<li>Model a long-running task as a resource<br>POST /pizzaOrder instead of POST /pizza</li>
+<li>Or POST /pizza and return 202 In progress (STATE?)</li>
+</ul>
+<hr>
+<h2 id="rest-many-to-many">REST Many-to-Many</h2>
+<p>Many-to-many mappings should be <em>resources</em> as well.</p>
+<p>For example, consider API describing groups and projects that can have
+many-to-many relations.</p>
+<pre><code class="hljs json">/* A relationship between a group and a project */
+{
+  "group": {
+    "id": 7,
+    "href": "http://..."
+  },
+  "project": {
+    "id": 3,
+    "href": "http://..."
+  },
+  "createdBy": "someUserId",
+  "created": "2014-10-28"
+}</code></pre>
+
+<p>Deleting this resource will only remove the link, groups and projects
+will stay intact.</p>
+<hr>
+<h2 id="rest-security">REST Security</h2>
+<p>Avoid session based authentication; keeping up with the principle of
+statelessness, prefer to authenticate every request. Also prefer API
+Keys (like in GitLab) instead of username/password.</p>
+<p>Authorize based on the content of the resource, not URLs which might
+change.</p>
+<p><a href="http://en.wikipedia.org/wiki/OAuth">OAuth</a> is a good option.</p>
+<hr>
+<h2 id="http-and-caching">HTTP and Caching</h2>
+<p><code>HTTP</code> has built-in support for caching. HTTP headers contain metadata
+about fetched resources and can be used to make condiditonal requests.</p>
+<p>Conditional GET requests are only executed, when a certain condition is
+fulfilled, e.g. <em>If-Modified-Since</em> is only executed if a resource has
+been modified since the given date.</p>
+<p>Images, JS libraries, CSS files, static pages, etc. should stay in cache
+as long as possible. Similarly, on rapidly changing pages, caching
+should be disabled or expire fast.</p>
+<p>Caching is also really beneficial for REST APIs.</p>
+<hr>
+<h2 id="caching-metadata">Caching Metadata</h2>
+<p><em>ETag</em> is calculated from the resource contents. If it has not changed,
+the resource hasn&#39;t changed either.</p>
+<p><em>Expires</em> informs when the resource expires and should be fetched again.</p>
+<p><em>Last-modified</em> informs when the resource was last modified on the
+server.</p>
+<hr>
+<h2 id="api-etiquette">API Etiquette</h2>
+<p>Almost all APIs have some sort of usage policy. Typically the number of
+requests you make in a given time frame is limited, e.g. maximum of 10
+requests in a minute.</p>
+<p>Before you start utilizing some API in your web app, make sure you
+adhere to the usage policies.</p>
+<hr>
+<h2 id="some-challenges-of-rest">Some challenges of REST</h2>
+<ul>
+<li>Transactions<br>Manipulating multiple resources; commit iff all successful</li>
+<li>Asynchronous tasks and batch processing</li>
+<li>Links between resources</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

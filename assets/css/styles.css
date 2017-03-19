@@ -1,0 +1,58 @@
+@media (min-width: 768px) { 
+    html {overflow-y: scroll;}
+}
+
+body {
+  font-size: 14px;
+}
+
+h1.title {
+  color: #9e9e9e;
+  margin: 0 0 0.5em 0;
+  font-size: xx-large;
+  font-weight: strong;
+}
+
+h1.title.sidebar {
+    margin: 0 0 0.75em 1em;
+}
+
+div.timestamp {
+  font-size: 9px;
+  color: #BBB;
+  border-top: 1px solid #EEE;
+  margin: 16px 0;
+  text-align: left;
+}
+
+table {
+  margin: 8px;
+  border-collapse: collapse;
+}
+
+table td, table th {
+  padding: 4px;
+  border: 1px solid lightgray;
+}
+
+table th {
+  background: lightgray;
+}
+
+h3 > code {
+  color: black;
+}
+
+h1:target, h2:target, h3:target {
+  -webkit-animation: hhighlight 10s;
+  animation: hhighlight 10s;
+}
+
+@-webkit-keyframes hhighlight {
+  from { background-color: rgb(66, 139, 202); }
+  to { background-color: inherit; }
+}
+@keyframes hhighlight {
+  from { background-color: rgb(66, 139, 202); }
+  to { background-color: inherit; }
+}

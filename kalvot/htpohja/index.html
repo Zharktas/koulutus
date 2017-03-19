@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>htpohja</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Harjoitustyöpohja
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Yleistä
+
+* Käydään läpi muutama käytännön asia harjoitustyötä varten
+
+* Harjoitustyötä varten on
+[harjoitustyöpohja](https://github.com/ahn/htpohja/)
+    * Se käyttää jo käsiteltyjen lisäksi muutamaa työkalua, joita vilkaistaan pikaisesti
+        * `bower`, `grunt`, `yeoman`
+
+* [Sen jälkeen](#7) ohjeet harjoitustyön aloittamiseen
+
+* Harjoitustyöohje [toisessa kalvosetissä](../parkki/)
+    * Ohjetta voi soveltaa mielensä mukaan
+    * Ja kokonaan omankin aiheen voi keksiä
+
+* Työn voi halutessaan tehdä parityönä
+
+---
+
+## bower
+
+* [Bower](http://bower.io/) on npm:n tapaan paketinhallintatyökalu
+
+* Bower on selainpään moduuleille
+    * npm pääasiassa palvelinpäähän
+
+* Käyttö suunnilleen samanlaista kuin npm:n
+
+```bash
+bower install
+```
+
+```bash
+bower install PAKETTI --save
+```
+
+---
+
+## Grunt
+
+* [Grunt](http://gruntjs.com/) on automaatiotyökalu,
+jota voi käyttää mm. web-sovelluksen ajamiseen, testaamiseen ja
+buildaamiseen
+
+* Tiedostossa `Gruntfile.js` määritellään mitä Grunt tekee
+
+* Varsinaisen työn tekevät Grunt-*pluginit*
+    * Muutama esimerkki plugineista:
+
+|Plugin |   |
+|:------------|:--|
+|[Jshint](https://www.npmjs.com/package/grunt-contrib-jshint) | Etsii JavaScript-virheitä ja tyylirikkeitä |
+|[Uglify](http://grunt-tasks.com/grunt-contrib-uglify/) | Minifioi JavaScript-koodit |
+|[Less](https://www.npmjs.com/package/grunt-contrib-less) | Muuntaa Less-tiedostot CSS:ksi
+|[wiredep](https://github.com/stephenplusplus/grunt-wiredep) | Lisää Bower-riippuvuudet automaattisesti HTML-tiedostoon |
+
+---
+
+## Yeoman
+
+* [Yeoman](http://yeoman.io/) on "projektinluontityökalu" web-sovelluksille
+
+* Mm. harjoitustyössä käytetty pohja on luotu Yeomanilla seuraavasti
+
+```bash
+# Asennetaan Yeoman
+npm install -g yo
+
+# Asennetaan Yeoman-projektipohja nimeltä angular-fullstack
+npm install -g generator-angular-fullstack
+
+# Luodaan projekti käyttäen pohjaa angular-fullstack
+yo angular-fullstack
+
+# Yeoman kysyy muutaman kysymyksen luotavasta projektista,
+# luo projektitiedostot ja lopuksi suorittaa
+# komennot `npm install` ja `bower install`
+```
+
+.footnote[
+Harjoitustyöpohjasta on karsittu muutama paketti
+(mm. testaustyökalu Karma), koska
+Cloud9:n ilmaisen workspacen 512Mb muistiraja tuli vastaan
+`npm install`:ia suorittaessa.
+]
+
+---
+
+## Angular-fullstack
+
+* [angular-fullstack](https://github.com/DaftMonk/generator-angular-fullstack)
+  on eräs Yeoman-projektipohja ("generator")
+
+* Se generoi "MEAN"-sovelluksen
+    * MongoDB + Express + Angular + Node
+    * me tosin käytämme MongoDB:n sijaan PostgreSQL:aa
+
+* Sitä voi käyttää projektin luonnin jälkeenkin
+uusien projektin osien generointiin
+
+* Esim.
+
+```bash
+yo angular-fullstack:endpoint message
+[?] What will the url of your endpoint be? /api/messages
+```
+
+```bash
+yo angular-fullstack:route myroute
+[?] Where would you like to create this route? client/app/
+[?] What will the url of your route be? /myroute
+```
+
+* [Lisää angular-fullstack:in dokumentaatiosta](https://github.com/DaftMonk/generator-angular-fullstack)
+---
+
+## Aloitus
+
+* GitHubissa on [harjoitustyöpohja](https://github.com/ahn/htpohja)
+
+<!--
+* Jos sinulla on GitHub-tunnus, voit *forkata*
+[tämän harjoitustyörepositorion](#TODO)
+GitHubissa itsellesi
+![](../img/githubfork.png)
+-->
+
+* Luo Cloud9:ssa uusi custom workspace asettaen Git-osoitteeksi
+`https://github.com/ahn/htpohja.git`
+
+* Suorita workspacen terminaalissa
+
+```bash
+npm install
+bower install
+./init-postgresql-at-cloud9.sh
+```
+<small>
+<code>init-postgresql-at-cloud9.sh</code> on skripti,
+joka käynnistää PostgreSQL:n sekä luo sinne tietokannan ja käyttäjän.
+</small>
+
+* Nyt sovelluksen pitäisi käynnistyä komennolla
+
+```bash
+grunt serve
+```
+
+---
+
+## Pohja
+
+* Harjoitustyöpohja on luotu
+[angular-fullstack](https://github.com/DaftMonk/generator-angular-fullstack)-generaattorilla
+    * ja lisätty Sequelize suunnilleen
+[tässä ohjeessa](http://docs.sequelizejs.com/en/1.7.0/articles/express/)
+kerrotulla tavalla
+    * sekä toteutettu käyttäjän luonti ja kirjautuminen
+
+* Projektin yleinen konfiguraatio:
+
+| Tiedosto |    |
+|:--------|:---|
+| `package.json` | Palvelinpään npm-riippuvuudet |
+| `bower.json` | Selainpään Bower-riippuvuudet |
+| `Gruntfile.js` | Grunt-tehtävien (tasks) määrittely |
+
+---
+
+## Gruntin käyttö
+
+* Kehitysvaiheessa sovellus ajetaan komennolla
+```bash
+grunt serve
+```
+    * sovellus on saatavilla osoitteessa
+      `http://WORKSPACE-KÄYTTÄJÄ.c9users.io`
+
+
+* Lopullisen, julkaistavan sovelluksen voi luoda komennolla
+```bash
+grunt build
+```
+    * Tämä luo hakemistoon `dist` optimoidun version sovelluksesta
+    * HTML-, CSS-, ja JavaScript-tiedostot *minifioidaan* ja liitetään
+      yhteen
+    * Tämän version voi julkaista vaikka Herokuun
+
+---
+
+## client/
+
+* Hakemistossa `client` on  selainpään Angular-sovellus
+    * Sovelluksen Angular-moduulin nimi on `workspaceApp`
+
+|Tiedosto|    |
+|:-------|:---|
+| `client/index.html` | Ensimmäiseksi ladattava HTML-tiedosto |
+| `client/app/` | Angular-sovelluksen toteutus |
+| `client/app/app.js` | Angular-sovelluksen konfiguraatio |
+| `client/app/main/` | Etusivuun littyvät tiedostot |
+| `client/assets/` | Kuvat ja muut staattiset tiedostot |
+| `client/components/` | Useassa näkymässä käytettävät komponentit, esim `navbar`|
+
+---
+
+## server/
+
+* Hakemistossa `server/` on palvelinpään Node+Express-sovellus
+
+|Tiedosto|    |
+|:-------|:---|
+| `server/app.js` | Express-sovellus, jonka mm. `grunt serve` suorittaa |
+| `server/routes.js` | Express-reittien (routes) määrittely |
+| `server/api/` | Reittien toteutus `/api/...` |
+| `server/api/user/` | "Käyttäjä-reitti" `/api/user/` |
+| `server/models/` | Sequelize-mallit |
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

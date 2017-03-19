@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>sop</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="same-origin-policy">Same-origin policy</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="same-origin-policy">Same-origin policy</h2>
+<ul>
+<li><p><em>Same-origin policy</em> on web-selaimen tietoturvamekanismi, joka rajoittaa
+eri <em>originien</em> välistä kommunikaatiota</p>
+</li>
+<li><p>Origin = protokolla + host + portti</p>
+</li>
+<li><p>Esim. verrataan URI:a <code>http://www.tut.fi/fi</code></p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">URL</th>
+<th style="text-align:left">Same origin?</th>
+<th style="text-align:left">Syy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>http:/www.tut.fi/en/?x=1</code></td>
+<td style="text-align:left">Kyllä</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>https:/www.tut.fi</code></td>
+<td style="text-align:left">Ei</td>
+<td style="text-align:left">Eri protokolla</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>http:/www.tut.fi:8000</code></td>
+<td style="text-align:left">Ei</td>
+<td style="text-align:left">Eri portti</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>http:/wiki.tut.fi</code></td>
+<td style="text-align:left">Ei</td>
+<td style="text-align:left">Eri host</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="same-origin-policy">Same-origin policy</h2>
+<ul>
+<li><p>Same-origin policy koskee</p>
+<ul>
+<li>DOM:n käsittelyä</li>
+<li>XMLHttpRequest-pyyntöjä</li>
+</ul>
+</li>
+<li><p>Same-origin policy <em>ei</em> koske</p>
+<ul>
+<li>Lomakkeita (form)</li>
+<li>Sivulle liitettyjä elementtejä, jotka lataavat sisältöään muualta<ul>
+<li>Esim:</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://eriorigin1.com/skript.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"http://eriorigin2.com/style.css"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://eriorigin3.com/kuva.png"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+
+
+<hr>
+<h2 id="same-origin-policy-ja-dom">Same-origin policy ja DOM</h2>
+<ul>
+<li><p>Web-sivun JavaScript-koodi saa käsitellä vain samasta originista ladattujen sivujen DOM:ia</p>
+</li>
+<li><p>Esim. sivulla <code>https://www.tut.fi/fi</code> oleva seuraavanlainen uuden
+selainikkunan avaava ja sitä muokkaava JavaScript-koodi onnistuu:</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> w = open(<span class="hljs-string">"http://www.tut.fi"</span>);
+<span class="hljs-comment">// Kun sivu on latautunut...</span>
+w.document.body.innerHTML = <span class="hljs-string">"&lt;h1&gt;Moi&lt;/h1&gt;"</span>;</code></pre>
+
+<ul>
+<li>Mutta seuraava ei:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> w = open(<span class="hljs-string">"http://www.google.fi"</span>);
+<span class="hljs-comment">// Kun sivu on latautunut...</span>
+w.document.body.innerHTML = <span class="hljs-string">"&lt;h1&gt;Moi&lt;/h1&gt;"</span>;</code></pre>
+
+<pre><code class="hljs">&gt; SecurityError: Blocked <span class="hljs-operator">a</span> frame <span class="hljs-operator">with</span> origin <span class="hljs-string">"http://www.tut.fi"</span>
+  <span class="hljs-built_in">from</span> accessing <span class="hljs-operator">a</span> cross-origin frame.</code></pre>
+
+<hr>
+<h2 id="same-origin-policy-ja-xmlhttprequest">Same-origin policy ja XMLHttpRequest</h2>
+<ul>
+<li><p>Oletuksena Ajax-kutsuja voi tehdä vain samaan originiin</p>
+</li>
+<li><p>Esim. originissa <code>http://www.tut.fi</code> suoritettava seuraava Ajax-pyyntö
+ei onnistu</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$.get(<span class="hljs-string">'http://google.com/'</span>);</code></pre>
+
+<pre><code class="hljs">&gt; XMLHttpRequest cannot <span class="hljs-built_in">load</span> <span class="hljs-keyword">http</span>://google.com/.
+No <span class="hljs-string">'Access-Control-Allow-Origin'</span> header is present <span class="hljs-command"><span class="hljs-keyword">on</span> <span class="hljs-title">the</span> <span class="hljs-title">requested</span></span>
+resource. Origin <span class="hljs-string">'http://www.tut.fi'</span> is therefore <span class="hljs-operator">not</span> allowed access.</code></pre>
+
+<ul>
+<li><p>HUOM: tämä pyyntö kävi kuitenkin google.com:n palvelimella asti</p>
+</li>
+<li><p>Same-origin policy ei estä viestin lähetystä, vain vastauksen
+lukemisen</p>
+</li>
+</ul>
+<hr>
+<h2 id="same-origin-policyn-kiert-minen">Same-origin policyn kiertäminen</h2>
+<ul>
+<li><p>Usein on kuitenkin tarvetta tehdä HTTP-pyyntöjä selaimesta muihin origineihin</p>
+</li>
+<li><p>Tähän on useita tapoja. Esim:</p>
+<ol>
+<li>Pyynnön kierrättäminen oman palvelimen kautta</li>
+<li>JSONP (JSON with Padding)</li>
+<li>CORS (Cross-Origin Resource Sharing)</li>
+</ol>
+</li>
+<li><p>Kaksi jälkimmäistä vaatii yhteistyötä siltä palvelimelta, josta
+resurssi haetaan</p>
+</li>
+</ul>
+<hr>
+<h2 id="ajax-pyynn-n-kierr-tt-minen">Ajax-pyynnön kierrättäminen</h2>
+<ul>
+<li>Same-origin policy on vain <em>selaimen</em> ominaisuus<ul>
+<li>Web-palvelimet voivat tehdä mitä pyyntöjä haluavat</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/viapalvelin.png" alt=""></p>
+<hr>
+<h2 id="jsonp">JSONP</h2>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/JSONP">JSON with Padding (JSONP)</a>
+on kikka, jolla voidaan lukea dataa toisesta originista</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jokuFunktio</span>(<span class="hljs-params">data</span>) </span>{
+  <span class="hljs-comment">// Dataa vastaanotettu...</span>
+}
+
+$(<span class="hljs-built_in">document</span>.body).append(<span class="hljs-string">'&lt;script src='</span> +
+               <span class="hljs-string">'"http://eriorigin.fi/dataa.js'</span> +
+               <span class="hljs-string">'?callback=jokuFunktio"&gt;&lt;/script&gt;'</span>);</code></pre>
+
+<ul>
+<li><code>http://eriorigin.fi/dataa.js?callback=jokuFunktio</code> vastaa
+lähettämällä JavaScript-tiedoston joka kutsuu <code>callback</code>-parametrina annettua
+funktiota<ul>
+<li>funktion parametrina varsinainen data</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">jokuFunktio({jotain: <span class="hljs-string">"dataa"</span>});</code></pre>
+
+<ul>
+<li>JSONP ei ole enää kovin tarpeellinen CORS:in yleistymisen myötä -&gt;</li>
+</ul>
+<hr>
+<h2 id="cors">CORS</h2>
+<ul>
+<li><p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">Cross-Origin Resource Sharing (CORS)</a>
+on tapa, jolla HTTP-palvelin voi
+eksplisiittisesti sallia toisesta originista tulevia pyyntöjä</p>
+<ul>
+<li><a href="http://www.w3.org/TR/cors/">W3C recommendation</a></li>
+</ul>
+</li>
+<li><p>Esim. Ajax-pyyntö</p>
+<ul>
+<li>originista <code>http://www.tut.fi</code></li>
+<li>originiin <code>http://eri.com</code></li>
+</ul>
+</li>
+<li><p>Pyynnössä otsikko</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Origin</span>: <span class="hljs-string">http://www.tut.fi</span></code></pre>
+
+<ul>
+<li>ja <code>http://eri.com</code>:n vastauksessa</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Access-Control-Allow-Origin</span>: <span class="hljs-string">http://www.tut.fi</span></code></pre>
+
+<ul>
+<li>Tällöin selain sallii <code>http://www.tut.fi</code> -sivun lukea vastauksen data</li>
+</ul>
+<hr>
+<h2 id="cors-simple-preflighted-requests">CORS: Simple &amp; Preflighted Requests</h2>
+<ul>
+<li><p>CORS:n näkökulmasta on kahdenlaisia HTTP-pyyntöjä</p>
+<ol>
+<li>Yksinkertaiset (simple)</li>
+<li>Ei-yksinkertaiset (preflighted)</li>
+</ol>
+</li>
+<li><p>Yksinkertaiset pyynnöt</p>
+<ul>
+<li>Metodi joko <code>GET</code>, <code>HEAD</code> tai <code>POST</code></li>
+<li>Lisäksi <a href="http://www.w3.org/TR/cors/#simple-header">rajoituksia otsikkotietoihin</a></li>
+<li>Tällaisia pyyntöjä voi web-sovellus muutenkin lähettää esimerkiksi
+lomakkeilla</li>
+</ul>
+</li>
+<li><p>Palvelin voi hyväksyä yksinkertaisen pyynnön palauttamalla
+vastauksen jossa on otsikkotieto</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Access-Control-Allow-Origin</span>: <span class="hljs-string">&lt;pyynnön Origin&gt;</span></code></pre>
+
+<p>tai</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Access-Control-Allow-Origin</span>: <span class="hljs-string">*</span></code></pre>
+
+<hr>
+<h2 id="cors-preflighted-request">CORS: Preflighted Request</h2>
+<ul>
+<li><p>CORS:n ei-yksinkertaisille pyynnöille pitää tehdä <em>preflight</em>-vaihe</p>
+</li>
+<li><p>Siinä lähetetään ensin <code>OPTIONS</code>-pyyntö, jossa kysytään lupaa ei-yksinkertaisen
+pyynnön suoritukseen</p>
+</li>
+</ul>
+<pre><code class="hljs http">OPTIONS /resurssi HTTP/1.1
+Host: eriorigin.com
+...
+Origin: http://www.tut.fi
+Access-Control-Request-Methods: PUT, DELETE
+Access-Control-Request-Headers: Content-Type, X-Foo, X-Bar</code></pre>
+
+<ul>
+<li>johon palvelin vastaa</li>
+</ul>
+<pre><code class="hljs http">HTTP/1.1 200 OK
+...
+Access-Control-Allow-Origin: http://www.tut.fi
+Access-Control-Allow-Methods: PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, X-Foo, X-Bar</code></pre>
+
+<ul>
+<li>Tämän jälkeen selain voi lähettää varsinaisen HTTP-pyynnön</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

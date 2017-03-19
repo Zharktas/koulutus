@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>tila</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Tilanhallinta
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Tilanhallinta
+
+* HTTP on tilaton protokolla
+    * Palvelin vastaa asiakkaalle pyyntö kerrallaan
+    * Pyyntöjen välillä ei ole loogista yhteyttä
+
+* Usein on kuitenkin tarve tunnistaa, että tietyt pyynnöt kuuluvat
+  samaan kokonaisuuteen eli *istuntoon*
+
+* *Istunto* (*session*) on jatkuva kommunikaatioyhteys kahden tai
+  useamman tahon välillä
+
+* Web-sovellusten tapauksessa istunnolla tarkoitetaan erityisesti web-selaimen ja palvelimen välistä istuntoa
+
+---
+
+## Istuntotunniste
+
+* Istunnot erotellaan toisistaan yleensä *istuntotunnisteen* (*session
+  id*) avulla
+
+* Tyypillisesti:
+    * Palvelin luo istuntotunnisteen ja palauttaa sen asiakkaalle
+    * Asiakas välittää istuntotunnisteen kaikkien tulevien
+      HTTP-pyyntöjen yhteydessä
+    * Palvelin voi täten tunnistaa viestit kuuluvaksi samaan istuntoon
+
+* Istuntotunnisteen täytyy olla sellainen, että sitä ei pysty arvaamaan
+    * Muuten ulkopuolinen taho voisi "kaapata" istunnon
+
+---
+
+## Istuntotunnisteen välitys
+
+* Asiakas voi liittää istuntotunnisteen HTTP-pyyntöön mm. seuraavin
+  tavoin
+
+1. URL-parametrina
+```http
+https://example.com/foo;sessionid=JO8u98JJOIY
+```
+2. Piilotettuna lomakkeen kenttänä
+```html
+<form action="/foo">
+  <input type="hidden" name="sessionid" value="JO8u98JJOIY">
+  ...
+</form>
+```
+
+3. Evästeenä - paras tapa, kunhan evästeet ovat käytössä
+```http
+Cookie: sessionid=JO8u98JJOIY
+```
+
+---
+
+## Istuntotunnisteen välitys evästeenä
+
+1. Jos HTTP-pyynnön evästeessä on istuntotunniste,
+palvelin tulkitsee pyynnön kuuluvan ko. istuntoon
+```http
+Cookie: sessionid=fjXeojf2fj290
+```
+
+2. Jos ei, generoidaan uusi istuntotunniste ja lisätään vastaukseen
+```http
+Set-Cookie: sessionid=oiUjfg8a983f90
+```
+
+---
+
+## Istuntokohtainen data
+
+* Palvelin voi tallentaa istuntoon liittyvää dataa
+
+![](../img/sessionid.png)
+
+---
+
+
+## express.session
+
+* Node.js Express-sovelluksessa istunnonhallinnan saa kätevästi
+  [`express-session`](https://github.com/expressjs/session) -middlewarella
+
+```sh
+npm install express-session --save
+```
+
+```javascript
+var express = require('express');
+var session = require('express-session');
+
+var app = express();
+
+app.use(session({
+  secret: 'salaisuus123',
+  resave: false,
+  saveUninitialized: false
+});
+```
+
+* Luo istuntotunnisteen ja asettaa sen evästeeksi
+
+* Istuntokohtainen data tallennetaan palvelimelle
+
+---
+
+## istuntodata
+
+* `express-session`-middleware luo `req.session` -olion
+    * Siihen voidaan tallentaa ja lukea istuntokohtaista dataa
+
+
+```javascript
+app.get('/', function(req, res, next) {
+  var views = req.session.views || 0;
+  req.session.views = views + 1;
+  res.send("Views: " + req.session.views);
+});
+```
+
+
+* Oletuksena istuntodata tallentuu palvelimen muistiin
+    * Häviää kun palvelimen sammuttaa
+
+* Muitakin tallennusvaihtoehtoja on
+    * Esim. [connect-redis](https://github.com/tj/connect-redis)
+tai
+[connect-mysql-session](https://github.com/CarnegieLearning/connect-mysql-session)
+
+---
+
+## istuntotunniste-eväste
+
+* `express-session` allekirjoittaa evästeen laskemalla
+istuntotunnisteelle [HMAC](http://en.wikipedia.org/wiki/Hash-based_message_authentication_code)-koodin
+    * salakirjoitusavain annetaan `secret`-attribuuttina
+
+```http
+Set-Cookie: connect.sid=s%3A<SessionId>.<HMAC>
+```
+
+* Näin voidaan varmistua siitä, että asiakas ei voi vaihtaa
+  istuntotunnistetta toiseksi
+
+* Kuitenkin: jos joku toinen taho saa haltuunsa käyttäjän
+  istuntotunniste-evästeen, pystyy hän esiintymään ko. käyttäjänä
+    * "Session hijacking"
+    * Tästä syystä istuntotunnisteita kannattaa käyttää vain suojatussa
+  yhteydessä (HTTPS)
+
+```javascript
+app.use(session({
+  secret: 'salaisuus123',
+  cookie: {secure: true}
+});
+```
+
+---
+
+## HTTPS
+
+* [Erillinen kalvosetti](../https/)
+
+---
+
+## Web-sovelluksen data
+
+* Palvelimella olevaa dataa voidaan jaotella sen elinajan mukaan
+
+|Elinaika|Tallennuspaikka|
+|:-------|:----|
+|Yksi HTTP-pyyntö|Palvelimen muisti (esim. muuttuja)|
+|Istunto|Palvelimen muisti/tietokanta/[redis](http://redis.io)/...|
+|Pysyvä|Tietokanta|
+
+* Myös selainpäähän voidaan tallentaa dataa
+
+|Elinaika|Tallennuspaikka|
+|:-------|:--------------|
+|Yksi HTML-sivu|JavaScript-muuttuja|
+|Istunto|*Session Storage*|
+|Melko pysyvä|*Local Storage*|
+
+---
+
+## Datan tallennus selainpäässä
+
+* Web-selaimessa voidaan tallentaa dataa `Web Storage` -rajapinnan
+  kautta
+    * Kaksi oliota: `sessionStorage` ja `localStorage`
+
+* `sessionStorage`: tallennettu data säilyy selaimen sulkemiseen saakka
+
+* `localStorage`: tallennettu data säilyy kunnes joku poistaa sen
+    * joku = web-sovellus/käyttäjä/selain/tms.
+
+* Web Storage -oliot ovat *origin*-kohtaisia
+    * Saman originin sivut näkevät saman olion
+
+* On olemassa lisäksi kehittyneempiä selainpään tallennustapoja:
+[IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+ja
+[WebSQL](http://en.wikipedia.org/wiki/Web_SQL_Database)
+    * Nämä eivät kuitenkaan ole vielä kovin laajalti selaimissa tuettuja
+
+---
+
+## Web Storage -rajapinta
+
+* Web Storage on yksinkertainen avain-arvo-varasto
+
+```javascript
+localStorage.setItem('avain', 'arvo');
+var x = localStorage.getItem('avain');
+localStorage.removeItem('avain');
+```
+
+* Web Storageen voi tallentaa vain merkkijonoja
+    * monimutkaisemmat oliot voi tallentaa serialisoimalla ne
+
+```javascript
+var olio = {a: "foo", b: [1, 2, 3]};
+localStorage.setItem('avain', JSON.stringify(olio));
+var olio2 = JSON.parse(localStorage.getItem('avain'));
+```
+
+* `sessionStorage`:lla sama rajapinta kuin `localStorage`:lla
+
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

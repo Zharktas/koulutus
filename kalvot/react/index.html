@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>react</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# React
+### TIE-23500 Web-ohjelmointi
+
+---
+
+# React
+
+* [React](http://facebook.github.io/react/)
+(React.js) on JavaScript-kirjasto web-käyttöliittymien tekoon
+
+* Komponenttipohjainen
+    * React-komponentteja voidaan käyttää myös osana muilla
+      teknologioilla/frameworkeilla tehtyjä web-sovelluksia
+
+* Deklaratiivinen
+    * Kun komponentin data muuttuu,
+      React renderöi komponentin automaattisesti
+
+* Ylläpitää sisäistä virtuaalista DOM-puuta
+    * Nopeuttaa varsinaisen selaimen DOM:n päivitystä
+
+* Kehittäjiä: Facebook, Instagram, et. al.
+
+---
+
+# React-komponentti
+
+* Reactissa määritellään komponentteja
+
+* Komponentti voi koostua muista React-komponenteista sekä tavallisista
+  HTML-elementeistä
+
+* React-komponentti luodaan `createClass`-funktiolla
+
+* Komponentilla on metodi `render`, joka piirtää komponentin
+
+```react
+var HelloMessage = React.createClass({
+  render: function() {
+    return <div>Hello {this.props.name}</div>;
+  }
+});
+
+React.render(<HelloMessage name="John" />, mountNode);
+```
+
+---
+
+# JSX
+
+* React-komponentin määrittelyssä *voi* käyttää
+[JSX-kieltä](http://facebook.github.io/jsx/)
+
+* JSX:llä elementtipuita voidaan kuvata kompaktisti
+
+* JSX laajentaa JavaScriptin syntaksia lisäämällä siihen XML-tyylisen komponenttien määrittelyn
+    * ([EcmaScriptin *PrimaryExpression*](http://www.ecma-international.org/ecma-262/5.1/#sec-11.1) voi olla myös muotoa `<komponentti>...</komponentti>` tai `<komponentti />`)
+
+* Komponenttien sisällä olevien aaltosulkujen `{}` sisältö tulkitaan
+  JavaScript-lausekkeeksi
+
+* Esim.
+
+```nohighlight
+var x = <Komponentti />;
+```
+
+```nohighlight
+var foo = "fofo";
+return  <div className={foo}>{foo.length}!!!</div>;
+```
+
+---
+
+# JSX:n kääntäminen
+
+* JSX täytyy jossain vaiheessa kääntää tavalliseksi JavaScriptiksi
+
+* Kehitysvaiheessa käännös voidaan tehdä selaimessa React-kirjaston
+  avulla
+
+* Tuotantoympäristössä käännös kannattaa tehokkuussyistä tehdä etukäteen
+    * Onnistuu `jsx`-työkalulla
+
+```nohighlight
+npm install -g react-tools
+```
+
+```nohighlight
+jsx --watch src/ build/
+```
+
+* Käännöstä voi kokeilla
+[JSX Compilerilla](https://facebook.github.io/react/jsx-compiler.html)
+
+---
+
+# JSX-esimerkki
+
+* JSX:
+
+```react
+var HelloMessage = React.createClass({
+  render: function() {
+    return <div>Hello {this.props.name}</div>;
+  }
+});
+
+React.render(<HelloMessage name="John" />, mountNode);
+```
+
+* Vastaava JavaScript:
+
+```react
+var HelloMessage = React.createClass({displayName: "HelloMessage",
+  render: function() {
+    return React.createElement("div", null, "Hello ",
+                               this.props.name);
+  }
+});
+
+React.render(React.createElement(HelloMessage, {name: "John"}),
+                                 mountNode);
+```
+
+---
+
+# Komponentin data
+
+* React-komponentti voi sisältää kahdenlaista dataa:
+
+    1. Attribuuttidata: `props`
+        * Asetetaan komponentin "ulkopuolelta"
+        * Esim. `<Komponentti nimi="Ahto" />`
+        * Luettavissa (mutta ei kirjoitettavissa)
+          komponentin sisällä muuttujassa `this.props`
+
+    2. Tiladata: `state`
+        * Komponentin sisäinen tila
+        * Komponentti voi itse muuttaa tilaansa
+        * Muuttujassa `this.state`
+
+* Kun `props` tai `state` muuttuu, renderöityy komponentti uudelleen
+
+* Jos mahdollista, kannattaa tehdä tilattomia komponentteja
+    * Ei `state`-muuttujaa
+    * Yksinkertaisempia
+
+
+---
+
+# state
+
+```javascript
+var Numero = React.createClass({
+  getInitialState: function() {
+    return {};
+  },
+  componentDidMount: function() {
+    lataaNumeroPalvelimelta(function(n) {
+      this.setState({numero: n});
+    });
+  },
+  render: function() {
+    if (this.state.numero === undefined) {
+      return <div>Ladataan...</div>;
+    }
+    else {
+      return <div>{this.state.numero}</div>;
+    }
+  }
+});
+```
+
+* `componentDidMount`:ia kutsutaan kun komponentti on liitetty DOM:iin
+* `getInitialState` määrittää alkutilan
+* `setState` muuttaa tilaa
+
+---
+
+# Interaktiivisuus
+
+* React-komponentti voi kuunnella käyttöliittymätapahtumia
+
+```javascript
+var Nappi = React.createClass({
+  getInitialState: function() {
+    return {teksti: "Paina tästä";};
+  },
+  handleClick: function() {
+    this.setState({teksti: "Kiitos"});
+  },
+  render: function() {
+    return <button onClick={this.handleClick}>
+             {this.state.text}
+           </button>;
+  }
+});
+```
+
+* Näyttävät tavallisilta DOM-tapahtumilta, mutta sisäisesti React liittää
+  juurikomponenttiin yhden tapahtumankuuntelijan, joka välittää
+tapahtumia lapsilleen
+    * samalla huolehtii selainyhteinsopivuudesta
+
+---
+
+# React
+
+* React soveltuu moneen tarkoitukseen
+    * Kokonaisista *single-page applicationeista*
+      (esim. [instagram.com](https://instagram.com/))
+      pieniin yksittäisiin komponentteihin
+
+* Reactiin on olemassa erilaisia [add-oneja](https://facebook.github.io/react/docs/addons.html)
+
+* Ja erilaista muuta, kuten [React Hot Loader](http://gaearon.github.io/react-hot-loader/getstarted/)
+
+* [Tästä pääsee alkuun](https://facebook.github.io/react/docs/getting-started.html)
+
+* [Tutoriaali](https://facebook.github.io/react/docs/tutorial.html)
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,51 @@
+
+table {
+  border-collapse: collapse;
+  float: left;
+  margin: 12px;
+}
+
+td {
+  border: 1px solid black;
+  width: 24px;
+  height: 24px;
+}
+
+
+/** Numero 1 **/
+
+table:nth-child(1) td:last-child {
+  background: black;
+}
+
+
+/** Numero 2 **/
+
+table:nth-child(2) tr:first-child {
+  background: black;
+}
+
+table:nth-child(2) tr:nth-child(3) {
+  background: black;
+}
+
+table:nth-child(2) tr:last-child {
+  background: black;
+}
+
+table:nth-child(2) tr:nth-child(2) > td:last-child {
+  background: black;
+}
+
+table:nth-child(2) tr:nth-child(4) > td:first-child {
+  background: black;
+}
+
+
+/** Numero 3 **/
+
+table:nth-child(3) {
+
+}
+
+

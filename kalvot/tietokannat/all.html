@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>tietokannat</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+			<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="tietokannoista">Tietokannoista</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="tietokannoista">Tietokannoista</h2>
+<p>Tietokannat voidaan karkeasti jakaa kahteen ryhmään:</p>
+<ol>
+<li><strong>SQL-tietokannat</strong> eli relaatiotietokannat<ul>
+<li>Data tallennetaan tietokannan <em>tauluihin</em></li>
+<li>Taulussa on rivejä ja sarakkeita</li>
+<li>Tauluille on määriteltävä <em>skeema</em>, joka määrää millaista dataa
+taulu voi sisältää</li>
+<li>SQLite, MySQL, PostgreSQL, ...</li>
+</ul>
+</li>
+</ol>
+<ol>
+<li><strong>NoSQL-tietokannat</strong><ul>
+<li>Tietokantaan voi tallentaa ~mitä tahansa dokumentteja</li>
+<li>Skeemaa ei tarvitse määrittää</li>
+<li>MongoDB, Cassandra, Redis, ...</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="sql-tietokannat">SQL-tietokannat</h2>
+<ul>
+<li>SQL-tietokannat koostuvat tauluista<ul>
+<li>Esim. Presidentit-taulu:</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">etunimi</th>
+<th style="text-align:left">sukunimi</th>
+<th style="text-align:left">vuosi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Sauli</td>
+<td style="text-align:left">Niinistö</td>
+<td style="text-align:left">2012</td>
+</tr>
+<tr>
+<td style="text-align:left">Tarja</td>
+<td style="text-align:left">Halonen</td>
+<td style="text-align:left">2000</td>
+</tr>
+<tr>
+<td style="text-align:left">...</td>
+<td style="text-align:left">...</td>
+<td style="text-align:left">...</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Taulun sarakkeet (colums) määrää millaisia arvoja taulu sisältää</li>
+<li>Rivit (rows) ovat tauluun tallennetut data-alkiot</li>
+</ul>
+<hr>
+<h2 id="sql">SQL</h2>
+<ul>
+<li><p>SQL on itse asiassa kieli relaatiotietokantojen käsittelyyn</p>
+<ul>
+<li>Structured Query Language</li>
+</ul>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code class="hljs sql"><span class="hljs-operator"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> Presidentit <span class="hljs-keyword">WHERE</span> vuosi &gt; <span class="hljs-number">1990</span>
+  <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> vuosi;</span></code></pre>
+
+<pre><code class="hljs sql"><span class="hljs-operator"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> Presidentit (etunimi, sukunimi, vuosi)
+  <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">'Donald'</span>, <span class="hljs-string">'Trump'</span>, <span class="hljs-number">2018</span>);</span></code></pre>
+
+<ul>
+<li>Ei käsitellä SQL:ää tämän enempää<ul>
+<li>SQL-tutoriaaleja mm.
+<a href="https://www.codecademy.com/learn/learn-sql">Codecademyssa</a> ja
+<a href="http://www.w3schools.com/sql/sql_intro.asp">W3Schoolissa</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="orm">ORM</h2>
+<ul>
+<li><p>Tietokannat käsittelyä sovelluksessa voidaan helpottaa kirjastolla
+joka toteuttaa <em>Object Relational Mapping</em>:in (ORM)</p>
+</li>
+<li><p>Sen sijaan että muodostetaan SQL-lauseita tai kyselyjä,
+voidaan käsitellä ohjelmointikielen (esim. JavaScript) olioita</p>
+</li>
+<li><p>ORM-kirjasto mäppää olioille tehdyt kutsut tietokantaan</p>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">Presidentti.findAll({
+  where: {vuosi: {$gt: <span class="hljs-number">1990</span>}}
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">pressat</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(pressat);
+});</code></pre>
+---
+## MongoDB
+
+* NoSQL
+* Dokumenttipohjainen (JSON)
+* Taulujen sijaan *collection*
+
+---
+## Mongoose
+
+* [Mongoose](http://mongoosejs.com/)
+on suosituin mallinnuskirjasto MongoDB:lle Node.js-ympäristöön
+
+* Sen avulla tietokantaa voidaan käsitellä ohjelmointikielen JavaScript olioita
+
+* SQL tietokannoille löytyy vastaava kirjasto Sequelize
+  * [Sequelizen dokumentaatio](http://docs.sequelizejs.com/en/latest/)
+
+---
+## Mongoose schema ja malli
+
+
+<pre><code class="hljs javascript">var presidenttiSchema = mongoose.Schema({
+    etunimi: String,
+    sukunimi: String",
+    vuosi: number
+});</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> Presidentti = mongoose.model(<span class="hljs-string">'Presidentti'</span>, presidenttiSchema);
+});</code></pre>
+
+<hr>
+<h2 id="lis-minen-poistaminen">Lisääminen / poistaminen</h2>
+<ul>
+<li>Uusi rivi kantaan:</li>
+</ul>
+<pre><code class="hljs javascript">Presidentti.create({
+  etunimi: <span class="hljs-string">"Bernie"</span>,
+  sukunimi: <span class="hljs-string">"Sanders"</span>,
+  vuosi: <span class="hljs-number">2016</span>
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pressa</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Luotiin presidentti: "</span> + pressa.etunimi);
+});</code></pre>
+
+<ul>
+<li>Haku (<code>find</code> hakee kaikki)</li>
+</ul>
+<pre><code class="hljs javascript">Presidentti.find({
+  where: {etunimi: <span class="hljs-string">"Bernie"</span>}
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">bernie</span>) </span>{
+  <span class="hljs-keyword">if</span> (!bernie) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-string">"Ei bernietä"</span>;
+  }
+  <span class="hljs-comment">// Poistetaan rivi tietokannasta</span>
+  <span class="hljs-keyword">return</span> bernie.destroy();
+});</code></pre>
+
+<hr>
+<h2 id="p-ivitt-minen">Päivittäminen</h2>
+<ul>
+<li><p>Olioiden attribuutteja voidaan muokata</p>
+</li>
+<li><p>Muutokset tallentuvat tietokantaan <code>save()</code>-metodilla</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">Presidentti.find({
+  where: {etunimi: <span class="hljs-string">"Bernie"</span>}
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">bernie</span>) </span>{
+  <span class="hljs-keyword">if</span> (bernie) {
+    bernie.etunimi = <span class="hljs-string">"Bernard"</span>;
+    <span class="hljs-keyword">return</span> bernie.save();
+  }
+  <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">throw</span> <span class="hljs-string">"No bernie, no party"</span>;
+  }
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">bernard</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Bernie päivitettiin"</span>);
+});</code></pre>
+
+<hr>
+<h2 id="mongoose">Mongoose</h2>
+<ul>
+<li><p>Mongoosessa on paljon muitakin ominaisuuksia</p>
+<ul>
+<li><a href="http://mongoosejs.com/">Mongoose dokumentaatio</a></li>
+</ul>
+</li>
+<li><p>Palannemme niihin myöhemmin</p>
+</li>
+<li><p>Tähän asti läpi käydylläkin voi tehdä jo aika paljon</p>
+<ul>
+<li>harjoitus -&gt;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<ul>
+<li><p>Toteutetaan supersankarilomakkeen vastausten tallentaminen
+MongoDB-tietokantaan</p>
+</li>
+<li><p>Ensin täytyy Cloud9:ssa ottaa käyttöön MongoDB ja Mongoose</p>
+<ul>
+<li>ohjeet seuraavilla kalvoilla -&gt;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="mongodb-cloud9-ssa">MongoDB Cloud9:ssa</h2>
+<p>Asennetaan MondoDB
+<a href="https://docs.c9.io/docs/setup-a-database">ohjeet</a></p>
+<pre><code class="hljs bash">sudo apt-get install -y mongodb-org</code></pre>
+
+<pre><code class="hljs bash">mongod --bind_ip=<span class="hljs-variable">$IP</span> --nojournal</code></pre>
+
+<hr>
+<h2 id="mongodb-luodaan-tietokanta">MongoDB: luodaan tietokanta</h2>
+<ul>
+<li>Kirjaudu MongoDB-konsoliin</li>
+</ul>
+<pre><code class="hljs bash">mongo</code></pre>
+
+<ul>
+<li>... jossa luodaan tietokanta nimeltä <code>kanta</code> sekä käyttäjä nimeltä <code>dev</code>
+salasanalla <code>dev</code></li>
+</ul>
+<pre><code class="hljs bash">use kanta</code></pre>
+
+<pre><code class="hljs bash">db.createUser({
+     user: <span class="hljs-string">"dev"</span>,
+     <span class="hljs-built_in">pwd</span>: <span class="hljs-string">"dev"</span>,
+     roles: [ <span class="hljs-string">"readWrite"</span>, <span class="hljs-string">"dbAdmin"</span> ]})</code></pre>
+
+<ul>
+<li><code>Ctrl-D</code>:llä pääsee pois MongoDB-konsolista</li>
+</ul>
+<hr>
+<h2 id="mongoosen-asennus">Mongoosen asennus</h2>
+<ul>
+<li>Asennetaan Mongoose:</li>
+</ul>
+<pre><code class="hljs bash">npm install mongoose --save</code></pre>
+
+<hr>
+<h2 id="model-js">model.js</h2>
+<ul>
+<li><p>Kun kaikki tarvittava on asennettu voidaan siirtyä toteutukseen</p>
+</li>
+<li><p>Luodaan tietokannan käsittelyyn uusi tiedosto <code>model.js</code>,
+jonka sisältö voi näyttää vaikka tältä:</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> mongoose = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongoose'</span>);
+
+<span class="hljs-comment">// Käytetään MongoDB-tietokantaa</span>
+mongoose.connect(<span class="hljs-string">'mongodb://dev:dev@localhost/kanta'</span>);
+
+<span class="hljs-comment">// Määritellään Vastaus-schema</span>
+<span class="hljs-keyword">var</span> vastausSchema = mongoose.Schema({
+    nimi: <span class="hljs-built_in">String</span>,
+  supersankari: <span class="hljs-built_in">String</span>
+});
+
+<span class="hljs-comment">// Määritellään Vastaus-malli</span>
+<span class="hljs-keyword">var</span> Vastaus = mongoose.model(<span class="hljs-string">'Vastaus'</span>, vastausSchema);
+
+<span class="hljs-comment">// "Exportoidaan" Vastaus-malli jotta sitä voidaan käyttää muualla</span>
+exports.Vastaus = Vastaus;</code></pre>
+---
+## Vastauksen tallennus
+
+* Otetaan `Vastaus`-malli käyttöön tiedostossa `server.js` ja muutetaan
+  `POST /supersankari` -käsittelijäfunktiota siten, että ennen
+  vastaamista tallennetaan vastaus tietokantaan
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> Vastaus = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./model.js'</span>).Vastaus;</code></pre>
+
+<pre><code class="hljs javascript">app.post(<span class="hljs-string">"/supersankari"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> nimi = req.body.nimi;
+    <span class="hljs-keyword">var</span> supersankari = req.body.supersankari;
+
+    Vastaus.create({
+      nimi: nimi,
+      supersankari: supersankari
+    }).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      res.send(nimi + <span class="hljs-string">" "</span> + supersankari);
+    },
+    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      res.status(<span class="hljs-number">500</span>).send(<span class="hljs-string">"Tietokantavirhe"</span>);
+    });
+  });</code></pre>
+
+<hr>
+<h2 id="vastausten-tarkastelu">Vastausten tarkastelu</h2>
+<ul>
+<li>Vastausten tarkastelua varten voi luoda vaikkapa uuden näkymän
+<code>views/vastaukset.ejs</code> joka sisältää vaikkapa luettelon vastauksista:</li>
+</ul>
+<pre><code class="hljs html">&lt;ul&gt;
+  &lt;% for(var i=0; i&lt;vastaukset.length; i++) { %&gt;
+    &lt;li&gt;&lt;%= vastaukset[i].nimi %&gt; vastasi
+        että &lt;%= vastaukset[i].supersankari %&gt;&lt;/li&gt;
+  &lt;% } %&gt;
+&lt;/ul&gt;</code></pre>
+
+
+
+<hr>
+<h2 id="vastausten-tarkastelu-luodaan-uusi-reitti">Vastausten tarkastelu: luodaan uusi reitti</h2>
+<ul>
+<li>Tiedostoon <code>server.js</code> uusi reitti <code>/vastaukset</code> joka hakee vastaukset
+tietokannasta ja renderöi <code>vastaukset</code>-näkymän</li>
+</ul>
+<pre><code class="hljs javascript">app.get(<span class="hljs-string">"/vastaukset"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    Vastaus.find(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, vastaukset</span>) </span>{
+    <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> <span class="hljs-built_in">console</span>.error(err);
+    <span class="hljs-built_in">console</span>.log(vastaukset);
+    res.render(<span class="hljs-string">'vastaukset'</span>, {vastaukset: vastaukset});  
+  });
+});</code></pre>
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

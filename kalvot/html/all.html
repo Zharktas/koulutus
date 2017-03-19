@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>html</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="html">HTML</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="html">HTML</h2>
+<ul>
+<li><p>HyperText Markup Language</p>
+</li>
+<li><p>Merkkauskieli web-sivun rakenteen ja sisällön kuvaamiseen</p>
+</li>
+<li><p>HTML-dokumentti on sisäkkäisten HTML-elementtien muodostama puu</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"fi"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"otsikko"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"eka"</span>&gt;</span>Eka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Toka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+<ul>
+<li>Uusin versio on <a href="http://www.w3.org/TR/html5/">HTML5</a>,
+jota myös näillä kalvoilla käsitellään</li>
+</ul>
+<hr>
+<h2 id="html-n-tuottaminen">HTML:n tuottaminen</h2>
+<p>HTML-dokumentteja voidaan tuottaa ainakin...</p>
+<ol>
+<li>kirjoittamalla suoraan HTML:ää</li>
+<li>kirjoittamalla jotain muuta kieltä, joka käännetään automaattisesti
+HTML:ksi<ul>
+<li>Esim. <a href="http://jade-lang.com/">Jade</a></li>
+</ul>
+</li>
+<li>WYSIWYG-editorilla</li>
+</ol>
+<p><img src="../img/htmlwysiwyg.png" alt=""></p>
+<ul>
+<li>Kaikissa tapauksissa on kuitenkin hyvä ymmärtää HTML:n perusteet</li>
+</ul>
+<hr>
+<h2 id="semanttinen-html">Semanttinen HTML</h2>
+<ul>
+<li><p>HTML määrittelee dokumentin rakenteen ja sisällön,
+ei sitä miten dokumentti esitetään</p>
+</li>
+<li><p>Yleisin käyttötapaus HTML-dokumentille on avata se web-selaimella
+ihmisen katsottavaksi, mutta muitakin käyttötapauksia on</p>
+<ul>
+<li>Ääniselaimet, haku- ja muut robotit, ...</li>
+</ul>
+</li>
+<li><p>HTML5:n elementeille on määriteltykin niiden <em>semantiikka</em>,
+ei niiden esitystapaa</p>
+</li>
+<li><p>Esim. <code>strong</code>-elementti:</p>
+</li>
+</ul>
+<pre><code class="hljs html">Tämä on <span class="hljs-tag">&lt;<span class="hljs-title">strong</span>&gt;</span>tärkeää<span class="hljs-tag">&lt;/<span class="hljs-title">strong</span>&gt;</span>.</code></pre>
+
+<ul>
+<li>...tarkoittaa, että &quot;elementin sisältö on tärkeää&quot;,</li>
+<li>...eikä sitä että &quot;elementin sisältö esitetään lihavoidulla fontilla&quot;<ul>
+<li>vaikka käytännössä web-selain näin tekeekin</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="html-n-syntaksi">HTML:n syntaksi</h2>
+<ul>
+<li><p>Eri HTML-elementeillä on erilaisia syntaksisääntöjä</p>
+</li>
+<li><p>Karkeasti elementit voidaan syntaksinsa perusteella kolmeen luokkaan</p>
+</li>
+<li><p>Tyhjät elementit (void elements)</p>
+<ul>
+<li>Eivät voi sisältää sisältöä</li>
+<li><code>area</code>, <code>base</code>, <code>br</code>, <code>col</code>, <code>embed</code>, <code>hr</code>, <code>img</code>, <code>input</code>, <code>keygen</code>, <code>link</code>, <code>meta</code>, <code>param</code>, <code>source</code>, <code>track</code>, <code>wbr</code></li>
+</ul>
+</li>
+<li><p>Raakatekstielementit</p>
+<ul>
+<li>Sisältö ei ole HTML:ää vaan tekstiä</li>
+<li><code>script</code>, <code>style</code>, <code>textarea</code>, <code>title</code></li>
+</ul>
+</li>
+<li><p>Normaalit elementit</p>
+<ul>
+<li>Kaikki muut</li>
+</ul>
+</li>
+<li><p>Tarkemmat säännöt löytyvät <a href="http://www.w3.org/TR/html5/syntax.html#elements-0">HTML5:n speksistä</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="normaalit-elementit">Normaalit elementit</h2>
+<ul>
+<li><p>Normaalit ja raakatekstielementit määritellään alku- ja loppu<em>tagilla</em></p>
+<ul>
+<li>Alkutagi on muotoa <code>&lt;</code> <code>nimi</code> <code>&gt;</code></li>
+<li>Lopputagi on muotoa <code>&lt;/</code> <code>nimi</code> <code>&gt;</code></li>
+<li>Alku- ja lopputagin väliin jää elementin sisältö</li>
+</ul>
+</li>
+<li><p>Esimerkiksi tekstikappaleen määrittelevä <code>p</code> -elementti</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+  Moi vaan!
+<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span></code></pre>
+
+<ul>
+<li><p>Jos elementti sattuu olemaan tyhjä voidaan alku- ja lopputagi
+määritellä lyhennysmerkinnällä <code>&lt;p /&gt;</code></p>
+</li>
+<li><p>Joskus normaalin elementin alku- tai lopputagi voidaan jättää kokonaan pois</p>
+<ul>
+<li>Mutta on luultavasti helpompaa laittaa ne aina kuin opetella
+<a href="http://www.w3.org/TR/html5/syntax.html#syntax-tag-omission">nämä säännöt</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="tyhj-t-elementit">Tyhjät elementit</h2>
+<ul>
+<li><p><em>Tyhjät elementit</em> (void elements) eivät voi sisältää sisältöä</p>
+<ul>
+<li>Niillä ei myöskään ole lopputagia</li>
+</ul>
+</li>
+<li><p>Esimerkiksi &quot;rivinvaihtoelementti&quot;</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">br</span>&gt;</span></code></pre>
+
+<hr>
+<h2 id="raakatekstielementit">Raakatekstielementit</h2>
+<ul>
+<li><p>Elementit <code>script</code>, <code>style</code>, <code>textarea</code>, <code>title</code> ovat ns.
+raakatekstielementtejä (raw text elements)</p>
+</li>
+<li><p>Niiden sisältöä ei jäsennetä HTML:ksi</p>
+</li>
+<li><p>Esim. <code>textarea</code>:</p>
+</li>
+</ul>
+<pre><code class="hljs html">&amp;lt;textarea&amp;gt;
+
+  T&amp;auml;m&amp;auml; &amp;lt;em&amp;gt;on&amp;lt;/foo&amp;gt; salittua &amp;lt;koska /&amp;gt;
+  &amp;lt;textarea&amp;gt;:n sis&amp;auml;lt&amp;ouml;&amp;auml; ei tulkita html:ksi.   
+
+&amp;lt;/textarea&amp;gt;</code></pre>
+
+
+<ul>
+<li>Raakatekstielementtienkin sisältöön on
+<a href="http://www.w3.org/TR/html5/syntax.html#cdata-rcdata-restrictions">pieniä rajoituksia</a><ul>
+<li>Esim. tekstiä <code>&amp;lt;/textarea&gt;</code> ei saa tietenkään olla <code>textarea</code>:n sisällä, koska tällöin ei tiedettäisi mihin elementti loppuu</li>
+<li>Tarvittaessa erikoismerkit voidaan
+<a href="http://www.w3.org/International/questions/qa-escapes">escapoida</a><ul>
+<li><code>&amp;lt;/textarea&amp;gt;</code> --&gt; <code>&amp;amp;lt;/textarea&amp;amp;gt;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="attribuutit">Attribuutit</h2>
+<ul>
+<li><p>HTML-elementit voivat sisältää <em>attribuutteja</em></p>
+</li>
+<li><p>Merkataan elementin alkutagiin muodossa <code>nimi=&quot;arvo&quot;</code></p>
+</li>
+<li><p>Esim. linkkielementissä <code>a</code> on attribuutti nimeltä <code>href</code>,
+joka määrää linkin kohteen</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"http://www.tut.fi"</span>&gt;</span>TTY<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre>
+
+<ul>
+<li><p>Sallitut ja vaaditut attribuutit riippuvat elementin tyypistä</p>
+</li>
+<li><p>Muutama attribuutti on ns. <em>globaaleja</em>, eli ne sallitaan kaikissa
+elementeissä</p>
+<ul>
+<li>Mm. <code>id</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="html-n-validointi">HTML:n validointi</h2>
+<ul>
+<li>HTML-dokumentin oikeellisuuden voi tarkistaa vaikkapa
+W3C:n validaattorilla osoitteessa
+<a href="https://validator.w3.org">https://validator.w3.org</a></li>
+</ul>
+<p><img src="../img/validatortutfi.png" alt=""></p>
+<ul>
+<li>Myös selainlaajennoksia HTML:n validointiin on olemassa</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<ul>
+<li>Onko tämä HTML-dokumentti <a href="https://validator.w3.org">https://validator.w3.org</a> -validaattorin
+mielestä validi:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"fi"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"otsikko"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"eka"</span>&gt;</span>Eka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Toka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+<ul>
+<li><p>Kokeile tehdä dokumenttiin pieniä muokkauksia.
+Esim. poista joku lopputagi. Mitä validaattori nyt sanoo?</p>
+</li>
+<li><p>Kokeile validoida vielä joku vapaavalintainen webbisivu.
+Minkälaisia virheitä, jos mitään, löytyi?</p>
+</li>
+</ul>
+<hr>
+<h2 id="html-dokumentin-rakenne">HTML-dokumentin rakenne</h2>
+<ul>
+<li>Lähes minimaalinen HTML5-dokumentti:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>.<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+<ul>
+<li>Jokaisen dokumentin alussa on oltava <code>DOCTYPE</code>-määritys, joka HTML5:n
+tapauksessa näyttää tältä:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span></code></pre>
+
+<ul>
+<li>Dokumentin juurielementti on tyyppiä <code>html</code>,
+jonka sisällä on oltava <code>head</code> ja <code>body</code><ul>
+<li><small>(Ei aivan välttämättä, mutta lähes aina.)</small></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="head">HEAD</h2>
+<ul>
+<li><p><code>head</code>-elementissä määritellään dokumenttia koskevaa metadataa</p>
+</li>
+<li><p>Vähintään sen täytyy sisältää otsikko, <code>title</code></p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Kotisivu<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span></code></pre>
+
+<ul>
+<li>Lisäksi <code>head</code> voi sisältää mm. <code>link</code>-elementtejä, joilla voidaan liittää
+vaikkapa css-resursseja dokumenttiin</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"tyyli.css"</span>&gt;</span></code></pre>
+
+<ul>
+<li><code>meta</code> on geneerinen metadataelementti, esim.</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"keywords"</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">"web-ohjelmointi,pilvipalvelut"</span>&gt;</span></code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/html/html_head.asp">Myös muutama muu <code>head</code>:iin kelpaava elementti on</a></li>
+</ul>
+<hr>
+<h2 id="body">BODY</h2>
+<ul>
+<li><p><code>body</code>-elementissä määritellään dokumentin sisältö</p>
+</li>
+<li><p>HTML5:ssa on satakunta erityyppistä elementtiä joista valita</p>
+<ul>
+<li>käydään läpi yleisimpiä -&gt;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="div">div</h2>
+<ul>
+<li><p><code>div</code> on yksi harvoista HTML5:n elementeistä jolle ei ole määritelty
+semantiikkaa eli merkitystä</p>
+</li>
+<li><p>Se on vain geneerinen alue dokumentissa</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"sisalto"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"laatikko"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>Jotain<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>Jotain muuta<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"laatikko"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>Vielä jotain<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<ul>
+<li><p><code>div</code>-elementtejä käytetään usein web-sivun layoutin luontiin</p>
+</li>
+<li><p>HTML5:ssä on kuitenkin yleensä parempia, merkityksellisempiäkin vaihtoehtoja -&gt;</p>
+</li>
+</ul>
+<hr>
+<h2 id="dokumentin-osiot">Dokumentin osiot</h2>
+<ul>
+<li>HTML5:ssa on erilaisia elementtejä joilla dokumenttia voidaan jakaa
+osioihin niiden sisällön perusteella</li>
+</ul>
+<p><img src="../img/html5sections.png" alt=""></p>
+<p>Kuva varastettu <a href="http://www.developer.com/lang/understanding-the-proper-way-to-lay-out-a-page-with-html5.html">täältä</a></p>
+<hr>
+<h2 id="osioiden-m-ritelm-t">Osioiden määritelmät</h2>
+<p>Elementtien määritelmät <a href="http://www.w3.org/TR/html5/sections.html">speksistä</a></p>
+<blockquote>
+<p>The <strong><code>article</code></strong> element represents a complete, or self-contained, composition in a document, page, application, or site, and that is, in principle, independently distributable or reusable, e.g. in syndication.</p>
+<p>The <strong><code>section</code></strong> element represents a generic section of a document or application.</p>
+<p>The <strong><code>nav</code></strong> element represents a section of a page that links to other pages or to parts within the page: a section with navigation links.</p>
+<p>The <strong><code>aside</code></strong> element represents a section of a page that consists of
+content that is tangentially related to the content around the aside
+element, and which could be considered separate from that content.</p>
+<p>The <strong><code>header</code></strong> element represents introductory content for its nearest ancestor sectioning content or sectioning root element.</p>
+<p>The <strong><code>footer</code></strong> element represents a footer for its nearest ancestor
+sectioning content or sectioning root element.</p>
+</blockquote>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<p>Avaa <a href="http://yle.fi/uutiset">http://yle.fi/uutiset</a></p>
+<ul>
+<li><p>Etsi selaimen kehitystyökalujen (Firefoxissa <em>Inspect</em>-välilehti ja
+<img src="../img/firefox-dev-select.png" alt="">-painike) mitä edellisellä kalvolla
+mainittuja semanttisia &quot;osioelementtejä&quot; sivulta löytyy ja miltä ne
+näyttävät.</p>
+</li>
+<li><p>Mitä hyötyä on käyttää näitä elementtejä sen sijaan, että
+käytettäisiin kaikkien tilalla vain <code>div</code>-elementtiä?</p>
+</li>
+</ul>
+<hr>
+<h2 id="sis-ll-n-ryhmittely">Sisällön ryhmittely</h2>
+<ul>
+<li><p>Myös osioiden sisällä voidaan sisältöä ryhmitellä erilaisin elementein</p>
+</li>
+<li><p><code>p</code> on tekstikappale (paragraph)</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+Sed posuere interdum sem. Quisque ligula eros ullamcorper quis,
+lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.
+<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.
+Sed augue orci, lacinia eu tincidunt et eleifend nec lacus.
+Donec ultricies nisl ut felis, suspendisse potenti.
+<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span></code></pre>
+
+
+<hr>
+<h2 id="luettelot">Luettelot</h2>
+<ul>
+<li>Luettelo jonka järjestyksellä ei ole väliä: <code>ul</code> (unordered list)</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>Prinsiippi 1<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>Prinsiippi 2<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span></code></pre>
+
+<ul>
+<li>Luettelo jonka järjestyksellä <strong>on</strong> väliä: <code>ol</code> (ordered list)</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">ol</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>SJK<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>RoPS<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>HJK<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ol</span>&gt;</span></code></pre>
+
+
+<div class="htmlsample">
+<ul>
+  <li>Prinsiippi 1</li>
+  <li>Prinsiippi 2</li>
+</ul>
+</div>
+
+
+
+
+
+<div class="htmlsample">
+<ol>
+  <li>SJK</li>
+  <li>RoPS</li>
+  <li>HJK</li>
+</ol>
+</div>
+
+
+
+
+<hr>
+<h2 id="taulukot">Taulukot</h2>
+<ul>
+<li>Taulukkoelementti <code>table</code> sisältää rivejä <code>tr</code>, jotka puolestaan
+sisältävät taulukon soluja <code>td</code></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">table</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>Pituus<span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>200cm<span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">tr</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>Paino<span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>100kg<span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">tr</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">table</span>&gt;</span></code></pre>
+
+<div class="htmlsample">
+<table>
+  <tr>
+    <td>Pituus</td>
+    <td>200cm</td>
+  </tr>
+  <tr>
+    <td>Paino</td>
+    <td>100kg</td>
+  </tr>
+</table>
+</div>
+
+<ul>
+<li>Taulukko <a href="http://www.w3.org/TR/html5/tabular-data.html">voi sisältää muitakin elementtejä</a>
+kuten otsikkosolu <code>th</code></li>
+</ul>
+<hr>
+<h2 id="otsikot">Otsikot</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Otsikko 1<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Otsikko 2<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h3</span>&gt;</span>Otsikko 3<span class="hljs-tag">&lt;/<span class="hljs-title">h3</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h4</span>&gt;</span>Otsikko 1<span class="hljs-tag">&lt;/<span class="hljs-title">h4</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h5</span>&gt;</span>Otsikko 2<span class="hljs-tag">&lt;/<span class="hljs-title">h5</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h6</span>&gt;</span>Otsikko 3<span class="hljs-tag">&lt;/<span class="hljs-title">h6</span>&gt;</span></code></pre>
+
+<div class="htmlsample">
+<h1>Otsikko 1</h1>
+<h2>Otsikko 2</h2>
+<h3>Otsikko 3</h3>
+<h4>Otsikko 1</h4>
+<h5>Otsikko 2</h5>
+<h6>Otsikko 3</h6>
+</div>
+
+<hr>
+<h2 id="tekstin-semantiikat">Tekstin semantiikat</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">em</span>&gt;</span>Hän<span class="hljs-tag">&lt;/<span class="hljs-title">em</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-title">strong</span>&gt;</span>sanoi<span class="hljs-tag">&lt;/<span class="hljs-title">strong</span>&gt;</span> että
+<span class="hljs-tag">&lt;<span class="hljs-title">cite</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">code</span>&gt;</span>samp<span class="hljs-tag">&lt;/<span class="hljs-title">code</span>&gt;</span> on kiva tagi<span class="hljs-tag">&lt;/<span class="hljs-title">cite</span>&gt;</span>,
+<span class="hljs-tag">&lt;<span class="hljs-title">small</span>&gt;</span>mikä oli outoa.<span class="hljs-tag">&lt;/<span class="hljs-title">small</span>&gt;</span></code></pre>
+
+<div class="htmlsample">
+<em>Hän</em> <strong>sanoi</strong> että
+<cite><code>samp</code> on kiva tagi</cite>,
+<small>mikä oli outoa.</small>
+</div>
+
+<ul>
+<li>Kyse on siis semantiikasta, ei muotoilusta</li>
+</ul>
+<blockquote>
+<p>The <code>em</code> element represents stress emphasis of its contents.</p>
+<p>The <code>strong</code> element represents strong importance, seriousness, or urgency for its contents.</p>
+<p>The <code>cite</code> element represents a reference to a creative work.</p>
+<p>The <code>code</code> element represents a fragment of computer code.</p>
+<p>The <code>small</code> element represents side comments such as small print.</p>
+</blockquote>
+<ul>
+<li><a href="http://www.w3.org/TR/html5/text-level-semantics.html">Muitakin on</a></li>
+</ul>
+<hr>
+<h2 id="a">a</h2>
+<ul>
+<li><p>Elementti <code>a</code> on hyperlinkki</p>
+</li>
+<li><p>Sen <code>href</code>-attribuutti kertoo linkin kohteen</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"http://pilviteknologia.bitbucket.org/"</span>&gt;</span>Web-ohjelmointi<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre>
+
+<ul>
+<li><code>href</code> voi olla myös <em>suhteellinen</em> osoite</li>
+</ul>
+<p>Esim. osoitteessa <code>http://www.example.com/jee/index.html</code>
+oleva linkki</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"joo/toinen.html"</span>&gt;</span>Toinen<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre>
+
+<p>osoittaa osoitteeseen <code>http://www.example.com/jee/joo/toinen.html</code></p>
+<hr>
+<h2 id="img">img</h2>
+<ul>
+<li><p>Kuvia voidaan lisätä <code>img</code>-elementin avulla</p>
+</li>
+<li><p><code>src</code>-attribuutti kertoo kuvaresurssin URL:n</p>
+</li>
+<li><p><code>alt</code>-attribuutti selittää kuvan tekstimuodossa</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"../img/asiakaspalvelin.png"</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">"Asiakas-Palvelin-malli"</span>&gt;</span></code></pre>
+
+<div class="htmlsample">
+<img src="../img/asiakaspalvelin.svg" alt="Asiakas-palvelin-malli">
+</div>
+
+<ul>
+<li>Kuvan koon voi määrätä <code>width</code> ja <code>height</code> -attribuuteilla</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"kuva.png"</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">"..."</span> <span class="hljs-attribute">width</span>=<span class="hljs-value">"100"</span> <span class="hljs-attribute">height</span>=<span class="hljs-value">"100"</span>&gt;</span></code></pre>
+
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<p>Plunker on kiva web-palvelu HTML:n (ja CSS:n ja JavaScriptin) kanssa
+askarteluun. Se löytyy osoitteesta <a href="http://plnkr.co">http://plnkr.co</a>.</p>
+<ul>
+<li>Avaa <a href="http://plnkr.co">Plunker</a> ja <em>Launch the Editor</em></li>
+</ul>
+<p>Plunker luo projektin, jossa on mm. tiedosto <code>index.html</code>.
+Voit esikatsella HTML-dokumenttia oikean sivupalkin silmäpainikkeella.
+Tekemäsi muutokset tiedostoihin päivittyvät automaattisesti
+esikatseluun.</p>
+<ul>
+<li>Muokkaa tiedostoa <code>index.html</code> lisäämällä siihen erilaisia
+HTML-elementtejä. Esimerkiksi linkkejä, kuvia, luetteloita,
+taulukoita, jne. Aseta myös dokumentille <code>title</code>.</li>
+</ul>
+<p>Esikatselun lisäksi voit tarkistaa
+<a href="https://validator.w3.org/">validaattorilla</a> dokumenttisi
+oikeellisuuden.</p>
+<hr>
+<h2 id="video">Video</h2>
+<ul>
+<li>Kuvien lisäksi HTML5-dokumentti voi sisältää videota ja audiota</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">video</span> <span class="hljs-attribute">controls</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">source</span>
+    <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://www.w3schools.com/html/mov_bbb.mp4"</span>
+    <span class="hljs-attribute">type</span>=<span class="hljs-value">"video/mp4"</span> &gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">source</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">video</span>&gt;</span></code></pre>
+
+<div class="htmlsample">
+<video controls>
+  <source
+    src="http://www.w3schools.com/html/mov_bbb.mp4"
+    type="video/mp4">
+  </source>
+</video>
+</div>
+
+<hr>
+<h2 id="audio">Audio</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">audio</span> <span class="hljs-attribute">controls</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">source</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://www.w3schools.com/html/horse.ogg"</span>
+          <span class="hljs-attribute">type</span>=<span class="hljs-value">"audio/ogg"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">source</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://www.w3schools.com/html/horse.mp3"</span>
+          <span class="hljs-attribute">type</span>=<span class="hljs-value">"audio/mpeg"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">audio</span>&gt;</span></code></pre>
+
+<div class="htmlsample">
+<audio controls>
+  <source src="http://www.w3schools.com/html/horse.ogg"
+          type="audio/ogg">
+  <source src="http://www.w3schools.com/html/horse.mp3"
+          type="audio/mpeg">
+</audio>
+</div>
+
+<hr>
+<h2 id="lomakkeet">Lomakkeet</h2>
+<ul>
+<li><p>Lomakkeiden avulla web-sivulta voi lähettää dataa palvelimelle</p>
+</li>
+<li><p>Lomake määritellään elementillä <code>form</code></p>
+</li>
+<li><p>Esimerkkilomake:</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/minne"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"GET"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">"nimi-input"</span> &gt;</span>Nimi:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"nimi-input"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>
+         <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">"Kirjoita jotain"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Lähetä"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<div class="htmlsample">
+<form action="/minne" method="GET">
+  <label for="nimi-input" >Nimi:</label>
+  <input id="nimi-input" type="text" name="nimi"
+         placeholder="Kirjoita jotain"></input>
+  <input type="submit" value="Lähetä"></input>
+</form>
+</div>
+
+<hr>
+<h2 id="form">form</h2>
+<ul>
+<li><p><code>form</code>-elementin attribuutti <code>action</code> määrää sen mihin
+URL-osoitteeseen lomakkeen data lähetetään</p>
+</li>
+<li><p>Attribuutti <code>method</code> määrää lähetyksessä käytettävän HTTP-metodin</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"https://www.example.com/dataa"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"POST"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<ul>
+<li>Lähetettävä data määritellään <code>form</code>-elementin sisällä olevilla
+<code>input</code>-elementeillä</li>
+</ul>
+<hr>
+<h2 id="input">input</h2>
+<ul>
+<li><code>input</code>-elementin attribuuteilla ilmoitetaan millaista dataa käyttäjän
+halutaan siihen syöttävän</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Attribuutti</th>
+<th style="text-align:left">Selitys</th>
+<th style="text-align:left">Esimerkki</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>type</code></td>
+<td style="text-align:left"><code>input</code>-elementin tyyppi</td>
+<td style="text-align:left"><code>type=&quot;text&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>name</code></td>
+<td style="text-align:left">Nimi joka datalle annetaan lomakkeen lähetyksessä</td>
+<td style="text-align:left"><code>name=&quot;etunimi&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>value</code></td>
+<td style="text-align:left">Datan arvo (alussa)</td>
+<td style="text-align:left"><code>value=&quot;Anna&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>placeholder</code></td>
+<td style="text-align:left">Vihje käyttäjälle kun mitään ei ole vielä syötetty</td>
+<td style="text-align:left"><code>placeholder=&quot;Syötä etunimesi&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><a href="http://www.w3schools.com/tags/tag_input.asp">Attribuutteja on paljon muitakin</a></li>
+</ul>
+<hr>
+<h2 id="input-type">input type</h2>
+<ul>
+<li><p>Erilaisia sallittuja <code>input</code>-elementin <code>type</code>-attribuutteja
+<a href="http://www.w3schools.com/tags/att_input_type.asp">on HTML5:ssä aika paljon</a></p>
+</li>
+<li><p><code>button</code>,
+<code>checkbox</code>,
+<code>color</code>,
+<code>date</code>,
+<code>datetime</code>,
+<code>datetime-local</code>,
+<code>email</code>,
+<code>file</code>,
+<code>hidden</code>,
+<code>image</code>,
+<code>month</code>,
+<code>number</code>,
+<code>password</code>,
+<code>radio</code>,
+<code>range</code>,
+<code>reset</code>,
+<code>search</code>,
+<code>submit</code>,
+<code>tel</code>,
+<code>text</code>,
+<code>time</code>,
+<code>url</code>,
+<code>week</code></p>
+</li>
+<li><p><a href="http://caniuse.com/#feat=forms">Selaintuki vaihtelee</a></p>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"number"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">""</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Lähetä"</span>&gt;</span></code></pre>
+
+<hr>
+<h2 id="lomakkeen-metodi">Lomakkeen metodi</h2>
+<ul>
+<li><p>Lomakkeiden <code>method</code>-attribuutiksi voidaan määritellä joko <code>GET</code> tai <code>POST</code></p>
+<ul>
+<li>Lomakkeen lähettämiseen käytetään vastaavaa HTTP-metodia</li>
+<li><code>GET</code>: datan hakeminen (turvallinen metodi)</li>
+<li><code>POST</code>: kaikki muu</li>
+</ul>
+</li>
+<li><p>Miksei <code>PUT</code> tai <code>DELETE</code>?</p>
+<ul>
+<li>Ei mitään erityisen hyvää syytä muiden HTTP-metodien puuttumiseen (?)</li>
+<li>Joka tapauksessa ne puuttuvat HTML-lomakkeiden spesifikaatiosta
+eikä niitä ole toteutettu selaimissa</li>
+<li>Joudutaan tarvittaessa emuloimaan käyttämällä <code>POST</code>:ia ja kertomalla
+jotenkin (esim. <em>hidden</em>-<em>input</em>-elementillä)
+että oikeasti kyseessä onkin <code>PUT</code>/<code>DELETE</code>.</li>
+<li><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10671">Keskustelua aiheesta</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="get-lomake">GET-lomake</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/minne"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"GET"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"piilo"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"piilodata"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Lähetä"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<p>tuottaa HTTP-pyynnön</p>
+<pre><code class="hljs http">GET /minne?nimi=jotain&amp;piilo=piilodata HTTP/1.1
+Host: example.com
+...
+(loput otsikkotiedot)
+(ei runko-osaa)</code></pre>
+
+<p>Käytännössä sama kuin avata URL-osoite</p>
+<pre><code class="hljs http">http://example.com/minne?nimi=jotain&amp;piilo=piilodata</code></pre>
+
+<ul>
+<li><code>GET</code>-pyynnön koko on rajoitettu<ul>
+<li>Yleensä muutama kilotavu</li>
+<li>Raja riippuu selaimesta ja palvelimesta</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="post-lomake">POST-lomake</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/minne"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"POST"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"piilo"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"piilodata"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Lähetä"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<p>tuottaa HTTP-pyynnön</p>
+<pre><code class="hljs http">POST /minne HTTP/1.1
+Host: example.com
+Content-Length: 27
+Content-Type: application/x-www-form-urlencoded
+...
+(loput otsikkotiedot)
+
+nimi=jotain&amp;piilo=piilodata</code></pre>
+
+<hr>
+<h2 id="linkkej-">Linkkejä</h2>
+<ul>
+<li><p><a href="http://www.w3.org/TR/html5/">HTML5:n spesifikaatio</a></p>
+</li>
+<li><p>W3Schools.com:n
+<a href="http://www.w3schools.com/html/default.asp">HTML-tutoriaali</a> ja
+<a href="http://www.w3schools.com/tags/default.asp">referenssi</a></p>
+</li>
+<li><p>Mozilla Developer Networkin
+<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Introduction">HTML-intro</a> ja
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference">referenssi</a></p>
+</li>
+<li><p><a href="https://validator.w3.org/">W3C HTML Validator</a></p>
+</li>
+<li><p><a href="http://caniuse.com">caniuse.com</a></p>
+</li>
+<li><p><a href="http://plnkr.co">Plunker</a></p>
+</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<p>Osoite <a href="http://pilvilomake.appspot.com/supersankari">http://pilvilomake.appspot.com/supersankari</a> vastaanottaa
+HTTP:n <code>POST</code>-metodilla lähetettyä lomakedataa. Datassa täytyy olla
+kaksi attribuuttia: <code>nimi</code> ja <code>supersankari</code>.</p>
+<p><code>nimi</code> = oma nimi, <code>supersankari</code> = suosikkisupersankarin nimi</p>
+<ul>
+<li>Luo HTML-lomake, jossa voi valita suosikkisupersankarinsa.
+Lomakkeeseeen syötetään oma nimi ja supersankari valitaan listasta.
+Lomake lähettää datansa yllämainittuun osoitteeseen.</li>
+</ul>
+<p><img src="../img/suosikkisupersankari.png" alt=""></p>
+<ul>
+<li>Voit käyttää <a href="http://plnkr.co">Plunkeria</a> tai muokata tiedostoja
+omalla koneellasi. Tallenna lopuksi teoksesi, jatkamme siitä
+myöhemmin.</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>webarchitectures</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="web-sovellusten-arkkitehtuurit">Web-sovellusten arkkitehtuurit</h1>
+<h3 id="tie-23500-web-ohjelmointi">TIE-23500 Web-ohjelmointi</h3>
+<hr>
+<h1 id="luennon-aiheita-">Luennon aiheita:</h1>
+<ul>
+<li>Arkkitehtuurit<ul>
+<li>Kerrosarkkitehtuuri</li>
+<li>MVC</li>
+<li>MVC-variantit</li>
+</ul>
+</li>
+<li>Sivupohjat</li>
+</ul>
+<hr>
+<h1 id="kerrosarkkitehtuuri">Kerrosarkkitehtuuri</h1>
+<ul>
+<li>Käsiteltiin jo pääpiirteissään aikaisemmalla luennolla, mutta kertauksena:</li>
+</ul>
+<p><img src="../img/layers.png" alt=""></p>
+<ul>
+<li>Usein käytetty jaottelu on kolme kerrosta:<ol>
+<li>Esityskerros (Presentation Layer)<ul>
+<li>Näkymän manipulointi</li>
+</ul>
+</li>
+<li>Logiikkakerros (Business Logic Layer)<ul>
+<li>Sovelluksen toimintalogiikka</li>
+</ul>
+</li>
+<li>Datakerros (Data Layer)<ul>
+<li>Datan lukeminen ja kirjoittaminen</li>
+<li>Yhteys tietokantaan</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h1 id="mvc">MVC</h1>
+<ul>
+<li><p>Model-View-Controller</p>
+</li>
+<li><p>Arkkitehtuurimallissa sovellus jaetaan kolmeen osaan:</p>
+<ul>
+<li>Malli (model) varastoi ja käsittelee tietosisältöä.</li>
+<li>Näkymä (view) tarjoaa käyttöliittymän tai jonkun muun tavan esittää tietosisältö.</li>
+<li>Kontrolleri (controller) käsittelee mallia ja ottaa vastaan näkymän vaatimat toiminnot.</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/mvc.png" alt=""></p>
+<hr>
+<h1 id="mvc-web-sovelluksissa">MVC Web-sovelluksissa</h1>
+<ul>
+<li>MVC:n hyödyt ovat ilmeiset:<ul>
+<li>Malli toimii tietokantana.</li>
+<li>Näkymä kertoo sovelluksen tilan ja tarjoaa käyttöliittymän (HTML).</li>
+<li>Kontrolleri käsittelee mallia ja valitsee näkymän, joka näytetään käyttäjälle.</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/web_mvc.png" alt=""></p>
+<hr>
+<h1 id="perinteinen-tapa">Perinteinen tapa</h1>
+<ul>
+<li>Edellä esitetty on perinteinen tapa organisoida web-sovelluksen arkkitehtuuri.<ul>
+<li>Pyyntöperusteinen toiminta</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/request-response.png" alt=""></p>
+<ul>
+<li>Ratkaisussa rakennetaan kontrollerit, jotka vastaavat suoraan asiakkaiden tekemiin pyyntöihin.<ul>
+<li>Perusratkaisu tilaton.</li>
+<li>Pyyntöjen parametrisointi helppoa.</li>
+<li>Kokonaisuus helppo ymmärtää.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="kontrollerien-suunnittelu">Kontrollerien suunnittelu</h1>
+<ul>
+<li>Kontrollereita suunniteltaessa pitää päättää URI-avaruus sekä kontrollereiden mallitaminen.</li>
+<li>URI:t sidotaan kontrollereihin järjestelmästä riippuen eri tavoilla<ul>
+<li>annotaatiot (Spring MVC) - @RequestMapping(&quot;/helloWorld&quot;)</li>
+<li>säännölliset lausekkeet ja callback-funktiot (Django)</li>
+<li>luokan sisällä ilman erillisiä konfiguraatiotiedostoja (Node.js)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="node-js-esimerkki">Node.js esimerkki</h1>
+<ul>
+<li>Node.js:ää käsitellään ensiluennolla tarkemmin.</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> app = express();
+
+  app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>)</span>{
+    res.send(<span class="hljs-string">"hello"</span>);
+  });
+
+  app.get(<span class="hljs-string">'/users'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>)</span>{
+    res.json([<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>, <span class="hljs-string">"baz"</span>]);
+  });
+
+  app.post(<span class="hljs-string">'/user/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>)</span>{});
+
+  app.put(<span class="hljs-string">'/user/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>)</span>{});
+
+  app.delete(<span class="hljs-string">'/user/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>)</span>{});</code></pre>
+
+<hr>
+<h1 id="mvc-variantit">MVC-variantit</h1>
+<ul>
+<li>Harva web-sovellus on puhdas MVC, usein logiikka on jaettu useaan osaan ja eri tavoilla.</li>
+<li><p>Varsinkin frontend painoitteisissa web-sovelluksissa, näkymissä saattaa olla hyvinkin paljon logiikkaa.</p>
+</li>
+<li><p>Kategorisointi voi olla hyvinkin hankalaa.</p>
+<ul>
+<li>Angular.js:n kehittäjät päättivät lopettaa koko kategorisoinnin.</li>
+<li>MVW -- Model-View-Whatever</li>
+</ul>
+</li>
+<li><p>Ei ole juuri väliä miten sovelluksen toteuttaa, kunhan huomio tietoturvan.</p>
+</li>
+</ul>
+<hr>
+<h1 id="sivupohjamoottorit">Sivupohjamoottorit</h1>
+<ul>
+<li>Selaimelle täytyy jossain vaiheessa tuottaa HTML-muotoinen vastaus.</li>
+<li><p>Periaattessa on mahdollista, että HTML koostetaan pyynnön käsittelevässä funktiossa.</p>
+<ul>
+<li>Logiikka ja ulkoasu on sidottu toisiinsa.</li>
+<li>Merkkijono käsittelyn vuoksi vaivanloista.</li>
+<li>Toistuu usein.</li>
+</ul>
+</li>
+<li><p>Sivupohjamoottorien (template engine) avulla sivun luonti voidaan abstrahoida omaksi kokonaisuudekseen. Kontrollerien vastuulle jää pyyntöjen parametrisointi ja muusta logiikasta vastaaminen.</p>
+</li>
+</ul>
+<hr>
+<h1 id="mallimoottori">Mallimoottori</h1>
+<ul>
+<li><p>Mallimoottori (template processor) on järjestelmä, joka on suunniteltu:</p>
+<ul>
+<li>yhdistämään malli sen käyttämän tiedon kanssa</li>
+<li>tuottamaan tulosdokumentteja</li>
+</ul>
+</li>
+<li><p>Järjestelmässä on:</p>
+<ul>
+<li>tietovarasto</li>
+<li>joukko malleja</li>
+<li>mallimoottori</li>
+</ul>
+</li>
+<li><p>Näistä voidaan generoida dokumentteja, CSV-tiedostoja, sähköposteja ja HTML-sivuja.</p>
+</li>
+</ul>
+<hr>
+<h1 id="sivupohjamoottorit-eri-kieliss-">Sivupohjamoottorit eri kielissä</h1>
+<ul>
+<li><p>Sivupohjamoottorit ovat tyypillisesti kielispesifisiä</p>
+<ul>
+<li>Java Server Pages (JSP)</li>
+<li>Razor (Asp.net MVC)</li>
+<li>Express.js:n sivupohjamoottorit (JavaScript)</li>
+</ul>
+</li>
+<li><p>Sivupohjamoottorit myös eroavat toisistaan mm. siinä</p>
+<ul>
+<li>voiko niitä käyttää ilman tiettyä ohjelmointikehystä</li>
+<li>miten ne sallivat varsinaisen rungon ja laskennalisten lausekkeiden sekottamisen.</li>
+</ul>
+</li>
+<li><p>Yhtä ainoaa oikeaa ratkaisua ei ole, valinta kannattaa tehdä sovelluksen mukaan.</p>
+</li>
+</ul>
+<hr>
+<h1 id="express-js-n-sivupohjamoottorit">Express.js:n sivupohjamoottorit</h1>
+<ul>
+<li><p>Express.js:n sivupohjamoottorit perustuu</p>
+<ul>
+<li>vapaamuotoiseen tekstiin ja</li>
+<li>soveltuu minkä tahansa tekstimuotoisen tekstidokumentin luontiin</li>
+</ul>
+</li>
+<li><p>Sivupohjissa on</p>
+<ul>
+<li>normaalia tekstiä</li>
+<li>muuttujia sekä niihin liitettäviä suotimia, sekä</li>
+<li>tageja</li>
+</ul>
+</li>
+<li><p>Yhdessä annetun kontekstin kanssa sivupohjasta tuotetaan tulostiedosto.</p>
+</li>
+<li>Express.js:ään on useita sivupohjamoottoreita, tässä esitellään niistä kaksi: EJS ja Jade.</li>
+</ul>
+<hr>
+<h1 id="ejs">EJS</h1>
+<ul>
+<li>EJS:n sivupohjat pitkälti näyttävät HTML:tä.</li>
+</ul>
+<pre><code class="hljs html">&lt;!doctype html&gt;
+&lt;head&gt;
+    &lt;title&gt;Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;% for ( var i = 0; i &lt; count; ++i) {%&gt;
+        Hello &lt;%= name %&gt;
+    &lt;% } %&gt; 
+&lt;/body&gt;</code></pre>
+
+<ul>
+<li>Kontekstissa name == world, count == 3</li>
+</ul>
+<hr>
+<h1 id="ejs">EJS</h1>
+<ul>
+<li>Esimerkki tuottaa HTML-sivun:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Demo<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    Hello world
+    Hello world
+    Hello world
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span></code></pre>
+
+<hr>
+<h1 id="ejs">EJS</h1>
+<ul>
+<li>&lt;% %&gt; erottelevat sivupohjakoodin.</li>
+<li><p>&lt;%= %&gt; tuottaa tekstiä lopulliselle sivulle.</p>
+</li>
+<li><p>Toistuvia elementtejä voidaan jakaa eri sivupohjiin.</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">%</span> <span class="hljs-attribute">users.forEach</span>(<span class="hljs-attribute">function</span>(<span class="hljs-attribute">user</span>){ %&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">%</span> <span class="hljs-attribute">include</span> <span class="hljs-attribute">user</span>/<span class="hljs-attribute">show</span> %&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">%</span> }) %&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span></code></pre>
+
+<ul>
+<li>&lt;% include %&gt; sisällyttää user/show.ejs:n sisällön kyseiseen kohtaan</li>
+</ul>
+<hr>
+<h1 id="ejs-n-muut-ominaisuudet">EJS:n muut ominaisuudet</h1>
+<ul>
+<li>Suotimet:<ul>
+<li>first</li>
+<li>last</li>
+<li>capitalize</li>
+<li>downcase</li>
+<li>upcase</li>
+<li>sort</li>
+<li>size</li>
+<li>myös muita <a href="https://github.com/tj/ejs#filter-list">EJS:n suotimet</a></li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">%=:</span> <span class="hljs-attribute">users</span> | <span class="hljs-attribute">first</span> | <span class="hljs-attribute">capitalize</span> %&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span></code></pre>
+
+<ul>
+<li>users sisältää taulukon, sivupohja tulostaa ensimmäisen siten että ensimmäinen kirjan on isolla kirjoitettu.</li>
+</ul>
+<hr>
+<h1 id="jade">Jade</h1>
+<ul>
+<li>Jade on toinen ääripää sivupohjamoottoreissa.</li>
+<li>Sivupohjat eivät sisällä HTML:ää ollenkaan.</li>
+</ul>
+<pre><code>doctype html
+html(lang="en")
+  head
+    <span class="hljs-built_in">title</span>= pageTitle
+    script(<span class="hljs-built_in">type</span>='text/javascript').
+      <span class="hljs-flow">if</span> (foo) {
+         bar(<span class="hljs-number">1</span> + <span class="hljs-number">5</span>)
+      }
+  body
+    h1 Jade - node template engine
+    #container.col
+      <span class="hljs-flow">if</span> youAreUsingJade
+        p You are amazing
+      <span class="hljs-flow">else</span>
+        p Get on it!
+      p.
+        Lo<span class="hljs-comment">rem Ipsum</span></code></pre>
+
+<hr>
+<h1 id="jade">Jade</h1>
+<ul>
+<li>Esimerkki tuottaa sivun.</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"en"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Jade<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/javascript"</span>&gt;</span><span class="actionscript">
+      <span class="hljs-keyword">if</span> (foo) {
+         bar(<span class="hljs-number">1</span> + <span class="hljs-number">5</span>)
+      }
+    </span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Jade - node template engine<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"container"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"col"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>You are amazing<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+        Lorem Ipsum
+      <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+---
+# Jaden periytyminen
+
+* Jadessa toistuvia sivupohjien osia voi jakaa osiin käyttämällä blockeja
+
+<pre><code class="hljs"><span class="hljs-comment">//- layout.jade</span>
+doctype <span class="hljs-tag">html</span>
+<span class="hljs-tag">html</span>
+  head
+    block title
+      title Default title
+  <span class="hljs-tag">body</span>
+    block <span class="hljs-attribute">content</span></code></pre>
+
+<hr>
+<h1 id="jaden-periytyminen">Jaden periytyminen</h1>
+<ul>
+<li>Periytetyssä sivussa voidaan korvata blockien sisältö.</li>
+</ul>
+<pre><code class="hljs"><span class="hljs-comment">//- index.jade</span>
+extends ./layout<span class="hljs-class">.jade</span>
+
+block title
+  title Article Title
+
+block <span class="hljs-attribute">content</span>
+  <span class="hljs-tag">h1</span> My Article</code></pre>
+
+<hr>
+<h1 id="jaden-periytyminen">Jaden periytyminen</h1>
+<ul>
+<li>Tämä tuottaa sivun:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Article Title<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>My Article<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+<ul>
+<li>Näitä periytymisiä voidaan putkittaa, joka taipuu hyvinkin monimuotoisiin sivupohjiin.</li>
+</ul>
+<hr>
+<h1 id="tiedotteita-">Tiedotteita:</h1>
+<ul>
+<li>Vierailuluennot ovat varmistuneet.<ul>
+<li>14.4. Riku Rouvila (Leonidas)</li>
+<li>21.4. Jaakko Salonen (Gofore) &amp; Timo Lehtonen (Solita)</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>tools</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="web-ohjelmointia-tukevat-ty-kalut">Web-ohjelmointia tukevat työkalut</h1>
+<h3 id="tie-23500-web-ohjelmointi">TIE-23500 Web-ohjelmointi</h3>
+<hr>
+<h1 id="luennon-aiheita-">Luennon aiheita:</h1>
+<ul>
+<li>IDE:t</li>
+<li>Testaus</li>
+<li>Tyylit</li>
+<li>Task runnerit</li>
+</ul>
+<hr>
+<h1 id="ide">IDE</h1>
+<ul>
+<li>IDE eli Integrated Development Environment</li>
+<li>Pohjalla editori, jolla koodi kirjoitetaan.</li>
+<li>Voi sisältää myös paljon muita toimintoja:<ul>
+<li>Kääntäminen</li>
+<li>Suoritus</li>
+<li>Debuggeri</li>
+<li>Testien suoritus</li>
+<li>Usein myös laajennettavissa lisäosilla.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="ide">IDE</h1>
+<ul>
+<li>Atom</li>
+<li><a href="https://atom.io/">https://atom.io/</a></li>
+<li>Ilmainen muokattava tekstieditori</li>
+<li><p>Voidaan laajentaa paketeilla</p>
+<ul>
+<li><a href="https://atom.io/packages">https://atom.io/packages</a></li>
+</ul>
+</li>
+<li><p>Oletuksena sisältää syntaksin korostuksen ja koodin täydennyksen.</p>
+</li>
+</ul>
+<hr>
+<h1 id="ide">IDE</h1>
+<ul>
+<li>Jetbrains Webstorm</li>
+<li>Kaupallinen Javascript, HTML ja CSS IDE</li>
+<li>Sisältää syntaksin korostuksen, koodin täydennyksen, debuggerin ja paljon muuta.</li>
+<li>Omat IDEt myös muille kielille.</li>
+<li>Opiskelijat saavat opiskelukäyttöön ilmaiseksi.<ul>
+<li><a href="https://www.jetbrains.com/student/">https://www.jetbrains.com/student/</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="testaus">Testaus</h1>
+<ul>
+<li>Web-sovellusten testauksessa on useita testattavia näkökulmia.</li>
+<li>Ohjelmalliset rajapinnat</li>
+<li><p>Käyttöliittymät selaimessa</p>
+</li>
+<li><p>Lisäksi on hyvä huomioida:</p>
+<ul>
+<li>Yksikkötestien jatkuva ajaminen (continuous integration)</li>
+<li>Suorituskyky</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="testaus">Testaus</h1>
+<ul>
+<li>Web-sovelluksissa testattava kohde on pääsääntöisesti yksi HTTP-pyyntö.</li>
+<li><p>Yhdessä HTTP-pyynnössä testattavaksi joutuu:</p>
+<ul>
+<li>Pyynnön käsittely</li>
+<li>lomakkeiden toiminta</li>
+<li>Parametrien välittäminen sivupohjalle</li>
+</ul>
+</li>
+<li><p>Jotta kaikkea testausta ei tarvitsisi suorittaa monimutkaisten HTTP-pyyntöjen avulla, pitäisi yksikkötestauksella päästä käsiksi yksittäisiin sovelluksen funkioihin.</p>
+<ul>
+<li>Web-kehykseltä vaaditaan tukea tähän.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="node-js-ja-testaus">Node.js ja testaus</h1>
+<ul>
+<li>Node.js itsessään tarjoaa testaukseen assert-moduulin, jolla voi tutkia onko jokin muuttuja yhtä suuri tai eri suuri kuin haluttu testin tulos.</li>
+<li>Jos testi ei päde, assert heittää poikkeuksen.</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> assert = <span class="hljs-built_in">require</span>(‘assert’);
+<span class="hljs-keyword">var</span> Todo = <span class="hljs-built_in">require</span>(‘./todo’);
+<span class="hljs-keyword">var</span> todo = <span class="hljs-keyword">new</span> Todo();
+<span class="hljs-keyword">var</span> testsCompleted = <span class="hljs-number">0</span>;</code></pre>
+
+<hr>
+<h1 id="assert">Assert</h1>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Todo</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>.todos = [];
+}
+
+Todo.prototype.add = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>)</span>{
+    <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Todo#add requires an item'</span>);
+    <span class="hljs-keyword">this</span>.todos.push(item);
+}
+
+Todo.prototype.deleteAll = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">this</span>.todos = [];
+}
+
+Todo.prototype.getCount = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.todos.length;
+}
+
+<span class="hljs-built_in">module</span>.exports = Todo;</code></pre>
+
+<hr>
+<h1 id="assert">Assert</h1>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteTest</span>(<span class="hljs-params"></span>)</span>{
+    todo.add(‘Delete me’);
+    assert.equal(todo.getCount(), <span class="hljs-number">1</span>, ‘<span class="hljs-number">1</span> item should exist’);
+    todo.deleteAll();
+    assert.equal(todo.getCount(), <span class="hljs-number">0</span>, ‘No items should exist’);
+    testsCompleted++;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addTest</span>(<span class="hljs-params"></span>)</span>{
+    todo.deleteAll();
+    todo.add(‘added’);
+    assert.notEqual(todo.getCount(), <span class="hljs-number">0</span>, ‘<span class="hljs-number">1</span> item should exist’);
+    testsCompleted++;
+}</code></pre>
+
+<hr>
+<h1 id="mocha">Mocha</h1>
+<ul>
+<li>Assertilla testaaminen on työlästä, joten sen päälle on rakennettu työkaluja kuten Nodeunit, Karma ja Mocha.</li>
+<li>Mocha on monipuolinen testaus framework, jossa on mahdollista käyttää useita assertiotyökaluja.</li>
+<li>Mochassa BDD testit määritetään määreillä:</li>
+<li><a href="http://mochajs.org/">http://mochajs.org/</a></li>
+</ul>
+<pre><code class="hljs">describe, <span class="hljs-keyword">it</span>, <span class="hljs-keyword">before</span>, <span class="hljs-keyword">after</span>, beforeEach ja afterEach</code></pre>
+* tai TDD testeissä:
+
+<pre><code class="hljs">suite, <span class="hljs-keyword">test</span>, setup <span class="hljs-keyword">ja</span> teardown.</code></pre>
+
+<hr>
+<h1 id="mocha">Mocha</h1>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> todo = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./todo'</span>)
+<span class="hljs-keyword">var</span> assert = <span class="hljs-built_in">require</span>(<span class="hljs-string">"assert"</span>);
+
+describe(<span class="hljs-string">'todo'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    describe(<span class="hljs-string">'.add(doc)'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        it(<span class="hljs-string">'should add the document'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+            todo.add(‘added’);
+            assert.notEqual(todo.getCount(), <span class="hljs-number">0</span>, ‘<span class="hljs-number">1</span> item should exist’);
+        })
+    })
+})</code></pre>
+---
+# Mocha
+
+* Mocha asennetaan npm:llä
+
+<pre><code class="hljs">npm <span class="hljs-operator"><span class="hljs-keyword">install</span> -<span class="hljs-keyword">g</span> mocha</span></code></pre>
+
+<ul>
+<li>ja testit ajetaan projektin juuressa oletuksella että testit on hakemistossa test:</li>
+</ul>
+<pre><code class="hljs">mocha</code></pre>
+
+<hr>
+<h1 id="mocha">Mocha</h1>
+<ul>
+<li>Pääsääntöisesti testien pitäisi olla toisistaan riippumattomia, joten testien aloitustila pitää asettaa.</li>
+<li>Tähän on tarkoitettu Mochan beforeEach, afterEach, before ja after funktiot.</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> todo = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./todo'</span>)
+<span class="hljs-keyword">var</span> assert = <span class="hljs-built_in">require</span>(<span class="hljs-string">"assert"</span>);
+
+describe(<span class="hljs-string">'todo'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    beforeEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        todo.deleteAll();
+    })
+
+}</code></pre>
+
+<hr>
+<h1 id="should-js">should.js</h1>
+<ul>
+<li>Should.js on assertio kirjasto, joka mahdollistaa asserttien kirjoittamisen BDD-tyyliin.</li>
+</ul>
+<pre><code class="hljs">npm <span class="hljs-keyword">install</span> should</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> sum = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">prices</span>)</span>{
+    <span class="hljs-keyword">return</span> prices.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">currentSum, currentValue</span>)</span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(currentSum) + <span class="hljs-built_in">parseFloat</span>(currentValue);
+    });
+}
+
+<span class="hljs-keyword">var</span> should = <span class="hljs-built_in">require</span>(‘should’);
+
+<span class="hljs-keyword">var</span> total = tips.sum(prices);
+total.should.equal(‘<span class="hljs-number">38.10</span>’);</code></pre>
+
+<hr>
+<h1 id="should-js">should.js</h1>
+<ul>
+<li>Should.js:ää voidaan käyttää yksistään kuten asserttiakin mutta myös muiden testaus työkalujen kanssa helpottamaan testien luettavuutta.</li>
+<li><a href="http://shouldjs.github.io/">http://shouldjs.github.io/</a></li>
+</ul>
+<pre><code class="hljs javascript">describe(<span class="hljs-string">'todo'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    describe(<span class="hljs-string">'.add(doc)'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        it(<span class="hljs-string">'should add the document'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+          todo.add(‘added’);
+          todo.getCount().should.equal(<span class="hljs-number">1</span>);
+        })
+    })
+})</code></pre>
+---
+# Supertest
+
+* Supertest assertikirjastolla voidaan testata HTTP pyyntöjä
+* https://github.com/visionmedia/supertest
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> request = <span class="hljs-built_in">require</span>(<span class="hljs-string">'supertest'</span>);
+
+describe(<span class="hljs-string">'get foo'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+  it(<span class="hljs-string">'should get list'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    request.get(<span class="hljs-string">'/foo'</span>)
+    .except(<span class="hljs-number">200</span>)
+    .end(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>)</span>{
+      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err
+    })
+  })
+})</code></pre>
+
+<hr>
+<h1 id="k-ytt-liittym-testaus">Käyttöliittymätestaus</h1>
+<ul>
+<li><p>Kaikki web-sovellukset jotka tarjoavat selainrajapinnan täytyy periaatteessa testata.</p>
+<ul>
+<li>Selaimet toimivat eri tavalla.</li>
+<li>Testaus on hidasta.</li>
+</ul>
+</li>
+<li><p>Tähän on ratkaisuna sovellukset joilla testaus voidaan automatisoida ja siten suorittaa usein.</p>
+</li>
+</ul>
+<hr>
+<h1 id="tobi">Tobi</h1>
+<ul>
+<li><a href="https://github.com/LearnBoost/tobi">https://github.com/LearnBoost/tobi</a></li>
+<li>Tobi simuloi selainta ja käyttää should.js:ää assertointiin. Tämä mahdollistaa esimerkiksi veppisivun linkkien automaattisen klikkailun ja tarkistukset että jotain on veppisivulla.</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> tobi = <span class="hljs-built_in">require</span>(<span class="hljs-string">"tobi"</span>);
+<span class="hljs-keyword">var</span> browser = tobi.createBrowser(<span class="hljs-number">3000</span>, <span class="hljs-string">'127.0.0.1'</span>);
+
+browser.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res, $</span>)</span>{
+    $(<span class="hljs-string">'form'</span>)
+    .fill({description: <span class="hljs-string">'Floss the cat'</span> })
+    .submit(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res, $</span>)</span>{
+        $(<span class="hljs-string">'td:nth-child(3)'</span>).text().should.equal(<span class="hljs-string">'Floss the cat'</span>);
+    })
+})
+
+<span class="hljs-keyword">var</span> app = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./app'</span>);
+<span class="hljs-keyword">var</span> browser = tobi.createBrowser(app);
+browser.get(<span class="hljs-string">'/about'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res, $</span>)</span>{
+    res.should.have.status(<span class="hljs-number">200</span>);
+    $(<span class="hljs-string">'div'</span>).should.have.one(<span class="hljs-string">'h1'</span>, <span class="hljs-string">'About'</span>);
+    app.close();
+});</code></pre>
+
+<hr>
+<h1 id="soda">Soda</h1>
+<ul>
+<li><a href="https://github.com/LearnBoost/soda">https://github.com/LearnBoost/soda</a></li>
+<li>Soda käyttää oikeita selaimea käyttöliittymätestaukseen simuloinnin sijaan.</li>
+<li>Soda joko etäohjaa Selenium serveriä tai Sauce Labs:n testauspalvelua.</li>
+<li>Selenium serveriä voi ajaa jollain valinnaisella koneella, kun taas Sauce Labs:n palvelu on jossain päin intternettiä.</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> soda = <span class="hljs-built_in">require</span>(‘soda’);
+<span class="hljs-keyword">var</span> assert = <span class="hljs-built_in">require</span>(‘assert’);
+
+<span class="hljs-keyword">var</span> browser = soda.createClient({
+    host: ‘<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>’,
+    port: <span class="hljs-number">4444</span>,
+    url: ‘http:<span class="hljs-comment">//www.reddit.com’,</span>
+    browser: ‘firefox’
+});</code></pre>
+
+<hr>
+<h1 id="soda">Soda</h1>
+<pre><code class="hljs javascript">browser
+    .chain
+    .session()
+    .open(‘/’)
+    .type(‘user’, ‘mcantelon’)
+    .type(‘passwd’, ‘mahsecret’)
+    .clickAndWait(‘<span class="hljs-comment">//button[@type=”submit”]’)</span>
+    .assertTextPresent(‘logout’)
+    .testComplete()
+    .end(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>)</span>{
+        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> err;
+        <span class="hljs-built_in">console</span>.log(‘done’);
+});</code></pre>
+
+<hr>
+<h1 id="kuormitustestaus">Kuormitustestaus</h1>
+<ul>
+<li><p>Kuormitustestauksen tarkoituksena on selvittää kehitettävän järjestelmän toimintaa</p>
+<ul>
+<li>skaalautuvuutta</li>
+<li>suorituskykyä</li>
+</ul>
+</li>
+<li><p>Web-sovelluksille tarkoitettuja (OpenSource) työkaluja ovat mm. Tsung ja Jmeter</p>
+</li>
+<li>Kuormitustestauksessa on otettava huomioon, että testausympäristön rakentaminen vaatii asiantuntemusta. Mittauksia tehdessä pitää tietää, mitä mittaa ja mitä tulokset tarkoittavat</li>
+</ul>
+<hr>
+<h1 id="tyylit">Tyylit</h1>
+<ul>
+<li>Web-sovelluksissa ulkonäkö määritetään CSS-tyyleillä.</li>
+<li>luokkiin viitataan määrellä .luokka</li>
+<li><p>id:hin määrellä #id</p>
+</li>
+<li><p>Hierarkia määritetään ketjuttamalla määreitä</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-class">.luokka</span> <span class="hljs-class">.toinenluokka</span><span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"luokka"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"toinenluokka"</span>&gt;</span>
+    foo
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<hr>
+<h1 id="less">Less</h1>
+<ul>
+<li>Isommissa web-sovelluksissa voi tulla satoja ellei tuhansia rivejä css-määreitä.</li>
+<li><p>Tämän hallitsemiseen on kehitetty vaihtoehtokieliä, jotka käännetään CSS:ksi</p>
+<ul>
+<li>Less</li>
+<li>Sass</li>
+</ul>
+</li>
+<li><p>Lessissä hierarkia voidaan määrittää suoraan:</p>
+</li>
+</ul>
+<pre><code class="hljs less"><span class="hljs-class">.luokka</span>{
+  <span class="hljs-class">.toinenluokka</span>{
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">10px</span>;
+  }
+}</code></pre>
+---
+# Less
+
+* Jos elementillä on monta luokkaa, niin CSS:ssä luokat kirjoitetaan yhteen.
+
+<pre><code class="hljs css"><span class="hljs-class">.foo</span><span class="hljs-class">.bar</span><span class="hljs-pseudo">:before</span><span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> red</span></span>;
+}</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"foo bar"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<ul>
+<li>Lessissä voidaan viitata parent määreeseen merkinnällä &amp;:</li>
+</ul>
+<pre><code class="hljs less"><span class="hljs-class">.foo</span><span class="hljs-class">.bar</span>{
+  <span class="hljs-keyword">&amp;</span><span class="hljs-pseudo">:before</span>{
+    <span class="hljs-attribute">background-color</span>: red;
+  }
+}</code></pre>
+
+<hr>
+<h1 id="task-runnerit">Task runnerit</h1>
+<ul>
+<li><p>Web-sovellusten monimutkaistuessa, frontendin rakentamiseen on luotu työkaluja</p>
+<ul>
+<li>Grunt</li>
+<li>Gulp</li>
+</ul>
+</li>
+<li><p>Nämä työkalut automatisoivat monia kehityksen vaiheita</p>
+<ul>
+<li>Kääntää less-tiedostot</li>
+<li>kopioi tiedostoja paikasta toiseen</li>
+<li>minifioi css ja javascript-tiedostot</li>
+<li>optimoi kuvia</li>
+<li>prefixoi selainmääreet css:ään</li>
+<li>ja monia muita.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="gulp">Gulp</h1>
+<ul>
+<li><a href="http://gulpjs.com/">http://gulpjs.com/</a></li>
+<li>Gulp perustuu lisäosiin joita voi asentaa npm:llä.</li>
+<li>Gulpille luodaan gulpfile.js, joka on yksinkertaisimmillaan:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> gulp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp'</span>);
+
+gulp.task(<span class="hljs-string">'default'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// place code for your default task here</span>
+});</code></pre>
+
+<hr>
+<h1 id="gulp">Gulp</h1>
+<ul>
+<li>Gulpille määritetään polut josta lähdetiedostoja haetaan</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> paths = {
+  src: {
+    less: <span class="hljs-string">'src/less'</span>
+  }
+}</code></pre>
+
+<ul>
+<li>Less käännös voidaan ajaa:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> less = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gulp-less'</span>);
+
+gulp.task(<span class="hljs-string">'less'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+  <span class="hljs-keyword">return</span> gulp.src(paths.src.less + <span class="hljs-string">'/*.less'</span>)
+  .pipe(less({
+    paths: [paths.src.less]
+  }))
+  .pipe(gulp.dest(<span class="hljs-string">'./public/css'</span>))
+})</code></pre>
+
+<hr>
+<h1 id="gulp">Gulp</h1>
+<ul>
+<li>Yksittäinen task voidaan komentoriviltä:</li>
+</ul>
+<pre><code class="hljs"><span class="hljs-title">gulp</span> taskinnimi</code></pre>
+
+<ul>
+<li>Pelkkä gulp ajaa default taskin, johon voidaan liittää riippuvuuksia</li>
+</ul>
+<pre><code class="hljs javascript">gulp.task(<span class="hljs-string">'default'</span>, [<span class="hljs-string">'less'</span>, <span class="hljs-string">'jokutoinentask'</span>]<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// place code for your default task here</span>
+});</code></pre>
+
+<hr>
+<h1 id="kysytt-v-">Kysyttävää?</h1>
+<ul>
+<li><a href="http://www.cs.tut.fi/~seitti/2015/harjoitustyot/vinkkeja.html">http://www.cs.tut.fi/~seitti/2015/harjoitustyot/vinkkeja.html</a></li>
+<li>Harjoitustyöhön vinkkejä yleisiin kysymyksiin.</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

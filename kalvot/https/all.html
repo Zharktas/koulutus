@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>https</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="https">HTTPS</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="https">HTTPS</h2>
+<ul>
+<li><p>Koko HTTP-viestiliikenne voidaan salata <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security">SSL/TLS</a>-protokollalla</p>
+</li>
+<li><p>HTTP + SSL/TLS = HTTPS</p>
+</li>
+<li><p>Ratkaisee monta tietoturvaongelmaa</p>
+</li>
+<li><p>Nykyään useimmiten käytössä Transport Layer Security (TLS) -protokolla</p>
+<ul>
+<li>Versiot: 1.0, 1.1, 1.2, 1.3 (tulossa)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="https-lyhyesti">HTTPS lyhyesti</h2>
+<ul>
+<li><p>HTTPS-yhteydessä kaikki HTTP-viestit salataan käyttäen symmetristä salausavainta</p>
+<ul>
+<li>Asiakkaalla ja palvelimella sama avain</li>
+<li>Samaa avainta käytetään sekä salaukseen että salauksen purkuun</li>
+</ul>
+</li>
+<li><p>Ennen ensimmäisen HTTP-viestin lähetystä suoritetaan &quot;kättely&quot;
+(handshake), jossa salausavain luodaan</p>
+</li>
+<li><p>Kättelyssä käytetään julkisen avaimen (asymmetrista)
+kryptografiaa, jonka avulla</p>
+<ul>
+<li>varmistetaan palvelimen identiteetti</li>
+<li>taataan, että kukaan kolmas osapuoli ei saa haltuunsa salausavainta</li>
+<li>eikä muutenkaan pysty muuntelemaan kommunikaatiota</li>
+</ul>
+</li>
+<li><p>Yksityiskohdat vaihtelevat eri SSL/TLS-versioiden välillä</p>
+</li>
+</ul>
+<hr>
+<h2 id="palvelimen-identiteetti">Palvelimen identiteetti</h2>
+<ul>
+<li><p>Ennen HTTPS-yhteyden muodostamista asiakas tarkistaa, että
+kommunikaation toinen osapuoli (palvelin) on kuka väittää olevansa</p>
+</li>
+<li><p>Palvelimen identiteetin tarkistuksessa asiakas saa palvelimen
+<em>varmenteen</em> (<em>certificate</em>) ja tarkistaa, että se on</p>
+<ul>
+<li>luotetun tahon (<a href="http://en.wikipedia.org/wiki/Certificate_authority">certificate authority</a>)
+digitaalisesti allekirjoittama</li>
+<li>oikealle domainille</li>
+<li>yhä voimassa</li>
+<li>sekä mahdollisesti muita tarkistuksia</li>
+</ul>
+</li>
+<li><p>Selain/käyttöjärjestelmä sisältää listan luotetuista <em>certificate
+authority</em>:istä</p>
+<ul>
+<li>Vain näiden (tai jonkun niiden valtuuttaman tahon)
+allekirjoittamat varmenteet hyväksytään</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="https-n-hy-tyj-">HTTPS:n hyötyjä</h2>
+<ul>
+<li><p>Ulkopuoliset eivät näe HTTP-viestien sisältöä</p>
+<ul>
+<li>Salaus koskee koko viestiä (otsikkotiedot, runko, ...)</li>
+</ul>
+</li>
+<li><p>Voidaan käyttää olemassaolevaa HTTP-palvelinta sellaisenaan</p>
+<ul>
+<li>Palvelimeen ei tarvitse tehdä muutoksia</li>
+<li>Salauksen voi hoitaa kokonaan erillinen ohjelmisto/laitteisto</li>
+</ul>
+</li>
+<li><p>Voidaan lähetellä salasanoja ja muita sensitiivistä dataa asiakkaan ja
+palvelimen välillä</p>
+<ul>
+<li>Mm. istuntotunnisteiden välittäminen ja HTTP Basic -autentikointi on turvallista HTTPS-yhteyden yli</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

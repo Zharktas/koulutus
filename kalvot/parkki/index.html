@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>parkki</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Parkkikartta
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Parkkikartta
+
+* Yksi ehdotus harjoitustyöksi on sovellus,
+joka näyttää kartalla Tampereen parkkipaikat
+tilatietoineen
+    * Eli jotain [tämän näköistä](http://jejeje.herokuapp.com/map)
+
+* Kartan voi näyttää [angular-google-maps](https://angular-ui.github.io/angular-google-maps/)-moduulin avulla
+
+* Parkkipaikkatiedot saa
+[Finnparkin rajapinnasta](http://parkingdata.finnpark.fi:8080/Datex2/OpenData)
+    * Datan hakemiseen voi käyttää [request](https://github.com/request/request)-moduulia
+    * Saadun XML-datan voi muuttaa JavaScript-olioksi
+      [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js)-moduulin avulla
+
+* Lisäominaisuutena käyttäjät voivat arvostella parkkipaikkoja
+(jotta tulee tietokannallekin jotain käyttöä)
+
+* Aivan aluksi täytyy luoda uusi Cloud9-workspace
+käyttäen harjoitustyöpohjaa
+[näiden ohjeiden mukaan](../htpohja/#7)
+
+---
+
+## Uusi näkymä
+
+* Kun harjoitustyöpohja on avattu, voidaan aloittaa vaikka siitä,
+että luodaan uusi näkymä karttaa varten
+
+* Yeomanin [angular-fullstack](https://github.com/DaftMonk/generator-angular-fullstack)-generaattorin avulla voimme luoda näkymän automaattisesti
+
+* Yeoman ja generaattori täytyy olla asennettuna
+```bash
+npm install -g yo generator-angular-fullstack
+```
+
+* Sitten, kuten [dokumentaatiossa](https://github.com/DaftMonk/generator-angular-fullstack) todetaan, voi uuden `map`-nimisen näkymän voi luoda komennolla
+```bash
+yo angular-fullstack:route map
+```
+
+* Kysymyksiin voi vastata oletusarvoilla, jolloin luodaan tiedostoja
+  hakemistoon `client/app/map/`
+
+---
+
+## Karttanäkymä
+
+* Yeoman loi seuraavat tiedostot hakemistoon
+`client/app/map`
+
+| Tiedosto |     |
+|:-----|:----|
+| `map.controller.js` | Angularin *controller* |
+| `map.controller.spec.js` | Testit controllerille |
+| `map.css` | Tyylitiedosto |
+| `map.html` | Näkymä |
+| `main.js` | Konfiguraatio |
+
+---
+
+## Navbar
+
+* Ennen karttanäkymän muokkaamista luodaan siihen osoittava linkki navigointipalkkiin
+
+* Tiedostossa `client/components/navbar/navbar.controller.js` on
+  navigointipalkin *controller*
+    * Lisätään uusi näkymä `$scope.menu`-muuttujaan
+
+```javascript
+$scope.menu = [{
+  'title': 'Home',
+  'link': '/'
+},
+{
+  'title': 'Map',
+  'link': '/map'
+}];
+```
+
+* `$scope`:n `menu`-muuttujaa käytetään tiedostossa `navbar.html`,
+joten nyt navigointipalkkiin pitäisi ilmestyä uusi linkki
+
+
+---
+
+## Näkymän layout
+
+ * Navigointipalkin (tai minkä tahansa komponentin)
+    voi liittää näkymään käyttäen `ng-include`-attribuuttia
+
+* Muokkaa tiedosto `client/app/map/map.html`:
+
+```html
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">Kahdeksan</div>
+    <div class="col-md-4">Neljä</div>
+  </div>
+</div>
+```
+
+* Bootstrapin responsiivinen layout vaatii juurekseen
+  elementin, jossa on `container`-luokka
+    * Containerissa puolestaan on rivejä (`class="row"`)
+    * Ja rivissä on soluja (`class="col-md-5"` ym.)
+    * Riville mahtuu enintään 12 "saraketta"
+
+
+* [Lisätietoa Bootstrapin grid-layoutista](http://getbootstrap.com/css/#grid)
+
+
+---
+
+## Angular-google-maps
+
+* Seuraavaksi voimme lisätä kartan [angular-google-maps](https://angular-ui.github.io/angular-google-maps/)-moduulin avulla
+
+```bash
+bower install angular-google-maps --save
+```
+
+* Kartan saa näkyviin soveltamalla
+[näitä ohjeita](https://angular-ui.github.io/angular-google-maps/#!/use)
+    * Kohdan 2 voi ohittaa, koska bower tekee tämän automaattisesti
+    * Kohta 3: kts. seuraava kalvo ->
+    * Kohta 4: muokkaa tiedostoa `client/app.js`
+    * Kohta 5: tiedostoon `client/app/map/map.controller.js`
+    * Kohta 6: tiedostoon `client/app/map/map.html`
+    * Kohta 7: tiedostoon `client/app/map/map.css`
+
+-->
+
+---
+
+## map.controller.js
+
+* `map.controller.js` kun
+[ohjeen](https://angular-ui.github.io/angular-google-maps/#!/use)
+kohta 3 tehdään
+[ensinmainitulla tavalla](https://angular-ui.github.io/angular-google-maps/#!/api/GoogleMapApi):
+
+```javascript
+/* globals angular */
+'use strict';
+
+angular.module('workspaceApp')
+.controller('MapCtrl', function ($scope, $log, uiGmapGoogleMapApi) {
+
+  // Kohdistetaan kartta Hervantaan
+  $scope.map = { center: {
+                   latitude: 61.450524290834196,
+                   longitude: 23.85979997253412 },
+                 zoom: 12 };
+
+  uiGmapGoogleMapApi.then(function(maps) {
+    $log.log("Kartta on valmis käyttöön", maps);
+  });
+});
+```
+
+* `angular-google-maps`:n
+  [dokumentaatiosta](https://angular-ui.github.io/angular-google-maps/#!/api/GoogleMapApi) saa tarvittaessa lisätietoa
+
+---
+
+## markers-esimerkki
+
+* Tiedostoon `map.controller.js`:
+
+```javascript
+$scope.markers = [{
+  id: 0,
+  coords: {
+    latitude: 61.450524290834196,
+    longitude: 23.85979997253412
+  }
+}];
+```
+
+* Tiedostoon `map.html`
+
+```html
+<ui-gmap-google-map center="map.center" zoom="map.zoom">
+  <ui-gmap-markers
+      models = "markers"
+      coords = "'coords'"
+      options = "'options'">
+  </ui-gmap-markers>
+</ui-gmap-google-map>
+```
+
+* Dokumentaatio: [Marker](https://angular-ui.github.io/angular-google-maps/#!/api/marker)
+  ja [Markers](https://angular-ui.github.io/angular-google-maps/#!/api/marker)
+
+---
+
+## Parkkipaikkadata
+
+* Siirrytään välillä palvelimelle
+
+* Toteutetaan palvelimelle reitti `/api/parking`, joka palauttaa
+  parkkipaikkojen tiedot
+
+* Palvelin puolestaan hakee tiedot
+[Finnparkin rajapinnasta](http://parkingdata.finnpark.fi:8080/Datex2/OpenData)
+
+
+![](../img/finnpark1.jpg)
+
+---
+
+## Miksei client->finnpark.fi?
+
+![](../img/finnpark2.jpg)
+
+* Selaimissa on "ikävä" tietoturvamekanismi nimeltä
+[same-origin policy](http://localhost:8000/build/kalvot/sop/)
+joka estää toisiin *originiin* (palvelimiin) tehtävät Ajax-pyynnöt
+oletuksena
+    * Jos finnpark.fi toteuttaisi ominaisuuden nimeltä
+      [CORS](http://localhost:8000/build/kalvot/sop/#9),
+      voisi tehdä pyyntöjä suoraan selaimesta
+    * Se ei kuitenkaan toteuta, joten kierretään palvelimen kautta
+      (mikä voisi tosin muutenkin olla järkevää)
+
+---
+
+## /api/parkingspace
+
+* Luodaan Yeomanilla
+  [endpoint](https://github.com/DaftMonk/generator-angular-fullstack#endpoint)
+  nimeltä `parkingspace`
+
+```bash
+yo angular-fullstack:endpoint parkingspace
+```
+
+* Oletusasetuksilla Yeoman luo seuraavat tiedostot
+hakemistoon `server/api/parkingspace`
+
+| Tiedosto |   |
+|:--|:--|
+| index.js | Reittien määrittely |
+| parkingspace.controller.js | Reittien toteutus |
+| parkingspace.spec.js | Testit |
+
+---
+
+## routes.js
+
+* ~~Luotu reitti pitää vielä ottaa käyttöön tiedostossa `server/routes.js`~~
+    * Ei tarvikaan, sellainen on siellä jo:
+
+```javascript
+app.use('/api/parkingspaces', require('./api/parkingspace'));
+```
+
+---
+
+## Datan hakeminen
+
+* Data voidaan hakea vaikka `request`-moduulilla
+
+```bash
+npm install request --save
+```
+
+* Esim.
+
+```javascript
+var request = require('request');
+
+request.get(FINNPARK_URL, function(error, response, body) {
+  // ...
+});
+```
+
+---
+
+## xml2js
+
+* [Finnparkin rajapinta](http://parkingdata.finnpark.fi:8080/Datex2/OpenData)
+tarjoaa datan XML-muodossa
+
+* Data pitää muuntaa JSON-muotoon, mikä onnistuu `xml2js`-moduulilla
+
+```bash
+npm install xml2js --save
+```
+
+* Esim.
+
+```javascript
+var xml2js = require('xml2js');
+
+xml2js.parseString(data, function(err, result) {
+  // ...
+});
+```
+
+* Muuntaminen Google Mapsille soveltuvaan muotoon vaatii vielä
+jokusen rivin koodia
+    * Annetaan toteutus valmiina ->
+
+
+---
+
+## parkingspace.controller.js
+
+* Valmis toteutus:
+[parkingspace.controller.js](../../assets/misc/parkingspace.controller.js)
+
+* Se muuntaa XML:n taulukoksi, jonka alkiot ovat tämän näköisiä
+
+```json
+{
+  "id": "FNPK.13",
+  "name": "P-Duo",
+  "coords": {
+    "latitude": 61.4509,
+    "longitude": 23.8517
+  },
+  "status": {
+    "spacesAvailable": true,
+    "open": true
+  }
+}
+```
+
+* Voit kokeilla että parkkipaikkojen lukeminen ja jäsentäminen onnistuu
+  katsomalla palauttaako `http://***.c9users.io/api/parkingspaces`
+  jotain järkevää
+
+---
+
+## Parkkipaikat kartalle
+
+* Jos palvelinpään rajapinta `/api/parkingspaces` toimii,
+voidaan siirtyä jälleen selainpäähän
+
+* Haetaan parkkipaikat tiedostossa `map.controller.js`
+
+* Käytetään Angularin `$resource`-oliota
+    * Se täytyy ottaa käyttöön lisäämällä se controller-funktion parametriksi:
+
+```javascript
+function($scope, $log, $resource, uiGmapGoogleMapApi) {
+```
+
+* Yksinkertainen käyttö on yksinkertaista:
+
+```javascript
+var ParkingSpace = $resource('/api/parkingspaces');
+$scope.markers = ParkingSpace.query();
+```
+
+
+[Documentation: `$resource`](https://docs.angularjs.org/api/ngResource/service/$resource)
+
+---
+
+## Parkkipaikka-markkerit
+
+![](../img/markers.png)
+
+---
+
+## transformresponse
+
+* Jos haluamme esimerkiksi asettaa klikkaustenkuuntelijoita markkereille,
+emme voi suoraan antaa palvelimelta tullutta `/api/parkingspaces`-resurssia
+kartalle, kuten edellä
+
+* Vaan täytyy muuttaa saamaamme vastausoliota
+    * Tämä onnistuu määrittelemällä `$resource`:lle oma metodi ja
+tälle `transformResponse`-attribuutti
+
+```javascript
+var ParkingSpace = $resource('/api/parkingspaces/', null,
+  {
+    query: {
+      isArray: true,
+      transformResponse: function(data) {
+        var markers = angular.fromJson(data);
+        angular.forEach(markers, transformMarker);
+        return markers;
+      }
+    }
+  });
+```
+
+* `transformMarker`-funktio -->
+
+---
+
+## transformMarker
+
+* Asetetaan kaikille markkereille *label* ja klikkaustenkuuntelija
+
+```javascript
+function transformMarker(m) {
+  m.options = {
+    labelContent: '<div class="markerlabel">' + m.name + '</div>'
+  };
+  m.events = {
+    click: function() {
+      $scope.selectedParkingspace = m;
+    }
+  };
+}
+```
+
+* Nyt viimeisimmäksi klikattu markkeri on `$scope`:ssa muuttujassa
+  `selectedParkingspace`
+
+* Voimme vaikka näyttää sen näkymässä -->
+
+---
+
+## reviewcol
+
+* Jaetaan `map.html`:ssä oleva `row` kahteen sarakkeeseen
+
+* Kartan leveydeksi 9 yksikköä ja `reviewcol`-elementti 3 yksikköä
+
+```html
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+        <!-- ... -->
+    </div>
+    <div class="col-md-3 reviewcol">
+      <h3>{{selectedParkingspace.name}}</h3>
+    </div>
+  </div>
+</div>
+```
+
+* `h3`-otsikon sisällöksi controllerissa asetetun
+  `selectedParkingspace`-muuttujan `name`-attribuutti
+
+---
+
+
+![](../img/markers2.png)
+
+---
+
+## Markkerin ikoni
+
+* Attribuutilla `options.icon` voi asettaa URL:n josta markkerin iconi
+  ladataan
+
+* Asetetaan markkerit erilaisiksi parkkipaikan tilan perusteella
+
+* Jos et halua luoda ikoneita itse, voit käyttää vaikka Googlen
+  tarjoamaa [urlia](http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=X|FFFF00),
+joka palauttaa kuvan attribuuttien perusteella
+
+* Funktiossa `transformMarker` esim.
+
+```javascript
+var color;
+if ('spacesAvailable' in m.status) {
+  color = '00FF00';
+}
+else if ('open' in m.status) {
+  color = '0000FF';
+}
+else {
+  color = 'FF0000';
+}
+m.options.icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=P|' + color;
+```
+
+---
+
+![](../img/markers3.png)
+
+---
+
+## Parkkipaikka-arvostelut
+
+* Käyttäjillä täytyy luonnollisesti olla mahdollisuus arvostella
+  parkkipaikkoja
+
+* Versiossa 1.0 arvostelu on pelkkä teksti
+
+* Luodaan arvostelua varten `Review`-tietokantamalli tiedostoon
+  `server/models/review.js`
+
+* -->
+
+---
+
+## server/models/review.js
+
+```javascript
+"use strict";
+
+module.exports = function(sequelize, DataTypes) {
+  var Review = sequelize.define("Review", {
+    parkingspaceId: DataTypes.STRING,
+    text: DataTypes.STRING
+  },
+  {
+    classMethods: {
+      associate: function(models) {
+        Review.belongsTo(models.User, {as: 'reviewer'});
+      }
+    },
+    indexes: [{
+      fields: ['parkingspaceId']
+    }]
+  });
+
+  return Review;
+};
+```
+
+---
+
+## reviews-API
+
+* Sitten täytyy luoda rajapinta, jonka kautta arvosteluja voi lukea ja
+  kirjoittaa
+
+* Voisimme luoda Yeomanilla uuden endpointin tai laajentaa
+  olemassaolevaa `/api/parkingspaces`-reittiä
+    * tehdään tässä jälkimmäisellä tavalla
+
+* Luodaan käsittelijä osoitteelle
+`/api/parkingspaces/:parkingspaceId/reviews`
+
+* `:parkingspaceId` tarkoittaa että sen tilalle tulee sen parkkipaikan
+  id, jonka arvosteluja luetaan/kirjoitetaan
+
+---
+
+## reviews
+
+* Tiedostossa `server/api/parkingspace/index.js`
+
+```javascript
+router.get('/:parkingspaceId/reviews', controller.reviewsIndex);
+router.post('/:parkingspaceId/reviews', controller.reviewsCreate);
+```
+
+* ja sitten varsinaiset toteutukset tiedostoon
+  `server/api/parkingspace/parkingspace.controller.js`
+
+```javascript
+exports.reviewsIndex = function(req, res) {
+  // TODO: haku tietokannasta
+  send.json([]);
+};
+
+exports.reviewsCreate = function(req, res) {
+  // TODO: lisäys tietokantaan
+  send.json({});
+};
+
+```
+
+---
+
+## reviewsIndex
+
+```javascript
+exports.reviewsIndex = function(req, res) {
+  models.Review.findAll({
+    where: {
+      parkingspaceId: req.params.parkingspaceId
+    },
+    include: [{model: models.User, as: 'reviewer'}]
+  }).then(function (reviews) {
+    res.json(reviews);
+  },
+  function(err) {
+    console.log(err);
+    res.status(500).send();
+  });
+};
+```
+
+---
+
+## reviewsCreate
+
+```javascript
+exports.reviewsCreate = function(req, res) {
+  var user = req.user;
+  var text = req.body.text;
+  var pid = req.params.parkingspaceId;
+
+  if (!text) {
+    return res.send(400);
+  }
+
+  var review = models.Review.build({
+    parkingspaceId: pid,
+    text: text
+  });
+  review.setReviewer(user);
+  review.save().then(function(review) {
+    res.json(review);
+  });
+
+};
+```
+
+---
+class: center, middle
+
+Jatkuu [osassa 2](../parkki2/)
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

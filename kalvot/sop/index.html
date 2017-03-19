@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sop</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Same-origin policy
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Same-origin policy
+
+* *Same-origin policy* on web-selaimen tietoturvamekanismi, joka rajoittaa
+  eri *originien* välistä kommunikaatiota
+
+* Origin = protokolla + host + portti
+
+* Esim. verrataan URI:a `http://www.tut.fi/fi`
+
+|URL|Same origin?|Syy|
+|:--|:--|:--|
+|`http:/www.tut.fi/en/?x=1`|Kyllä| |
+|`https:/www.tut.fi`|Ei|Eri protokolla|
+|`http:/www.tut.fi:8000`|Ei|Eri portti|
+|`http:/wiki.tut.fi`|Ei|Eri host|
+
+---
+
+## Same-origin policy
+
+* Same-origin policy koskee
+    * DOM:n käsittelyä
+    * XMLHttpRequest-pyyntöjä
+
+* Same-origin policy *ei* koske
+    * Lomakkeita (form)
+    * Sivulle liitettyjä elementtejä, jotka lataavat sisältöään muualta
+        * Esim:
+
+```html
+<script src="http://eriorigin1.com/skript.js"></script>
+
+<link rel="http://eriorigin2.com/style.css"></script>
+
+<img src="http://eriorigin3.com/kuva.png"></script>
+```
+
+
+---
+
+## Same-origin policy ja DOM
+
+* Web-sivun JavaScript-koodi saa käsitellä vain samasta originista ladattujen sivujen DOM:ia
+
+* Esim. sivulla `https://www.tut.fi/fi` oleva seuraavanlainen uuden
+  selainikkunan avaava ja sitä muokkaava JavaScript-koodi onnistuu:
+
+```javascript
+var w = open("http://www.tut.fi");
+// Kun sivu on latautunut...
+w.document.body.innerHTML = "<h1>Moi</h1>";
+```
+
+* Mutta seuraava ei:
+
+```javascript
+var w = open("http://www.google.fi");
+// Kun sivu on latautunut...
+w.document.body.innerHTML = "<h1>Moi</h1>";
+```
+
+```
+> SecurityError: Blocked a frame with origin "http://www.tut.fi"
+  from accessing a cross-origin frame.
+```
+
+---
+
+## Same-origin policy ja XMLHttpRequest
+
+* Oletuksena Ajax-kutsuja voi tehdä vain samaan originiin
+
+* Esim. originissa `http://www.tut.fi` suoritettava seuraava Ajax-pyyntö
+  ei onnistu
+
+```javascript
+$.get('http://google.com/');
+```
+
+```
+> XMLHttpRequest cannot load http://google.com/.
+No 'Access-Control-Allow-Origin' header is present on the requested
+resource. Origin 'http://www.tut.fi' is therefore not allowed access.
+```
+
+* HUOM: tämä pyyntö kävi kuitenkin google.com:n palvelimella asti
+
+* Same-origin policy ei estä viestin lähetystä, vain vastauksen
+  lukemisen
+
+
+---
+
+## Same-origin policyn kiertäminen
+
+* Usein on kuitenkin tarvetta tehdä HTTP-pyyntöjä selaimesta muihin origineihin
+
+* Tähän on useita tapoja. Esim:
+    1. Pyynnön kierrättäminen oman palvelimen kautta
+    2. JSONP (JSON with Padding)
+    3. CORS (Cross-Origin Resource Sharing)
+
+* Kaksi jälkimmäistä vaatii yhteistyötä siltä palvelimelta, josta
+  resurssi haetaan
+
+---
+
+## Ajax-pyynnön kierrättäminen
+
+* Same-origin policy on vain *selaimen* ominaisuus
+    * Web-palvelimet voivat tehdä mitä pyyntöjä haluavat
+
+![](../img/viapalvelin.png)
+
+
+---
+
+## JSONP
+
+* [JSON with Padding (JSONP)](http://en.wikipedia.org/wiki/JSONP)
+  on kikka, jolla voidaan lukea dataa toisesta originista
+
+```javascript
+function jokuFunktio(data) {
+  // Dataa vastaanotettu...
+}
+
+$(document.body).append('<script src=' +
+               '"http://eriorigin.fi/dataa.js' +
+               '?callback=jokuFunktio"></script>');
+```
+
+* `http://eriorigin.fi/dataa.js?callback=jokuFunktio` vastaa
+  lähettämällä JavaScript-tiedoston joka kutsuu `callback`-parametrina annettua
+  funktiota
+    * funktion parametrina varsinainen data
+
+```javascript
+jokuFunktio({jotain: "dataa"});
+```
+
+* JSONP ei ole enää kovin tarpeellinen CORS:in yleistymisen myötä ->
+
+---
+
+## CORS
+
+* [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS)
+  on tapa, jolla HTTP-palvelin voi
+  eksplisiittisesti sallia toisesta originista tulevia pyyntöjä
+    * [W3C recommendation](http://www.w3.org/TR/cors/)
+
+* Esim. Ajax-pyyntö
+  * originista `http://www.tut.fi`
+  * originiin `http://eri.com`
+
+* Pyynnössä otsikko
+
+```http
+Origin: http://www.tut.fi
+```
+
+* ja `http://eri.com`:n vastauksessa
+
+```http
+Access-Control-Allow-Origin: http://www.tut.fi
+```
+
+* Tällöin selain sallii `http://www.tut.fi` -sivun lukea vastauksen data
+
+---
+
+## CORS: Simple & Preflighted Requests
+
+* CORS:n näkökulmasta on kahdenlaisia HTTP-pyyntöjä
+    1. Yksinkertaiset (simple)
+    2. Ei-yksinkertaiset (preflighted)
+
+* Yksinkertaiset pyynnöt
+    * Metodi joko `GET`, `HEAD` tai `POST`
+    * Lisäksi [rajoituksia otsikkotietoihin](http://www.w3.org/TR/cors/#simple-header)
+    * Tällaisia pyyntöjä voi web-sovellus muutenkin lähettää esimerkiksi
+      lomakkeilla
+
+* Palvelin voi hyväksyä yksinkertaisen pyynnön palauttamalla
+  vastauksen jossa on otsikkotieto
+
+```http
+Access-Control-Allow-Origin: <pyynnön Origin>
+```
+
+tai
+
+```http
+Access-Control-Allow-Origin: *
+```
+
+---
+
+## CORS: Preflighted Request
+
+* CORS:n ei-yksinkertaisille pyynnöille pitää tehdä *preflight*-vaihe
+
+* Siinä lähetetään ensin `OPTIONS`-pyyntö, jossa kysytään lupaa ei-yksinkertaisen
+  pyynnön suoritukseen
+
+```http
+OPTIONS /resurssi HTTP/1.1
+Host: eriorigin.com
+...
+Origin: http://www.tut.fi
+Access-Control-Request-Methods: PUT, DELETE
+Access-Control-Request-Headers: Content-Type, X-Foo, X-Bar
+```
+
+* johon palvelin vastaa
+
+```http
+HTTP/1.1 200 OK
+...
+Access-Control-Allow-Origin: http://www.tut.fi
+Access-Control-Allow-Methods: PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, X-Foo, X-Bar
+```
+
+* Tämän jälkeen selain voi lähettää varsinaisen HTTP-pyynnön
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

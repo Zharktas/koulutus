@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>js2</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# JavaScript
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Javascript-oliot
+
+* Olioiden avulla JavaScriptin perustietotyypeistä voidaan koostaa suurempia
+  kokonaisuuksia
+
+* Olio on joukko avain-arvo-pareja, joissa avain on merkkijono ja
+  arvo mitä vain
+
+* Esimerkki:
+
+```javascript
+var obj1 = {
+  viesti: "Moi kaikki",
+  tykkayksia: 43
+};
+
+// Olion attribuuttiin voidaan viitata joko . tai [] syntaksilla
+var v1 = obj1.viesti;
+var v2 = obj1["viesti"];
+
+// Myös uusia attribuutteja voidaan lisätä
+var obj1.uusi = "hehe";
+```
+
+* [W3Schools: JavaScript Objects](http://www.w3schools.com/js/js_objects.asp)
+
+---
+
+## Taulukko
+
+* JavaScriptissä on myös taulukko-tietotyyppi (Array)
+
+* Indeksoitava lista erityyppisiä alkioita
+
+* Esim.
+
+```javascript
+var juttuja = [200, true, "Moi!"];
+
+// Haetaan ensimmäinen (nollas) alkio, eli 200
+var x = juttuja[0];
+
+// Vaihdetaan alkio toiseksi
+juttuja[1] = 50;
+
+// Lisätään uusi alkio
+juttuja.push("heh");
+```
+
+* [W3Schools: JavaScript Arrays](http://www.w3schools.com/js/js_arrays.asp)
+ja [Array Methods](http://www.w3schools.com/js/js_array_methods.asp)
+
+---
+
+## Kontrollirakenteet
+
+* JavaScriptin kontrollirakenteet ovat samantapaisia kuin monessa muussa
+  ohjelmointikielessä
+
+```javascript
+if (x === 5 && y < 2) {
+  alert("jee");
+}
+else {
+  alert("buu");
+}
+```
+
+```javascript
+while (x < 10 || jotain()) {
+  x += 5;
+}
+```
+
+```javascript
+for (var i=0; i < taulukko.length; ++i) {
+  console.log(i, taulukko[i]);
+}
+```
+
+* W3Schools:
+[if](http://www.w3schools.com/js/js_if_else.asp),
+[for](http://www.w3schools.com/js/js_loop_for.asp),
+[while](http://www.w3schools.com/js/js_loop_while.asp)
+
+---
+
+## Vertailu
+
+* Vertailuoperaattoritkin näyttävät samoilta kuin monessa muussa
+kielessä, **mutta** erityisesti yhtäsuuruusvertailun kanssa on oltava
+tarkkana
+
+* Operaattori `==` testaa ovatko arvot mahdollisen tyyppimuunnoksen
+  jälkeen samat
+    * johtaa outouksiin, esimerkki:
+
+```javascript
+'' == 0   // false
+ 0 == ''  // true
+ 0 == '0' // true
+```
+
+* Operaattori `===` sen sijaan tarkastaa aidon yhtäsuuruuden
+    * Kannattaa lähes aina käyttää sitä
+    * Sama operaattoreille `!=` ja `!==`
+
+---
+
+## Funktioista
+
+* JavaScriptissä funktiot ovat ns. ensimmäisen luokan kansalaisia (first class functions).
+Funktioita voi näin ollen mm.
+    * sijoittaa muuttujiin
+    * välittää parametreina
+    * luoda nimettöminä
+    * luoda toistensa sisällä
+    * käyttää tiedon piilottamiseen
+    * ja olioiden luomiseen
+
+* Funktio on näin ollen hyvin keskeinen käsite JavaScriptissä
+
+---
+
+## Näkyvyysalueet
+
+* Monissa ohjelmointikielissä, kuten Javassa ja C++:ssa,
+  näkyvyysalue on koodilohkokohtainen (block scope)
+    * Muuttujat jotka määritellään koodilohkon sisällä, näkyvät vain ko. lohkon sisällä
+
+* JavaScriptissa tämä on tehty vähän toisella tavalla...
+
+---
+
+## JavaScriptin näkyvyysalueet
+
+* JavaScriptissä näkyvyysaluetta ei määritä koodilohko vaan funktio (function scope)
+    * Kaikki funktion sisällä määritellyt muuttujat näkyvät fuktion sisällä
+    * Esimerkiksi silmukan sisällä määritelty muuttuja on olemassa myös silmukan ulkopuolella!
+
+* JavaScriptissä on myös ns. eksplisiittinen globaali näkyvyysalue
+    * Kaikki muuttujat, joita ei ole määritelty funktion sisällä ovat globaaleja
+    * Kaikki muttujat, joiden määrittelyn edessä ei ole avainsanaa `var` ovat globaaleja!
+
+---
+
+## Näkyvyysalue-esimerkki
+
+```javascript
+function foo() {
+  var x = 0;
+
+  function bar() {
+    var y = 0;
+
+    // x ja y näkyvät täällä
+  }
+
+  // x näkyy, y ei
+
+  return bar;
+}
+
+// x ei näy, eikä y
+```
+
+* Funktio `bar` näkee `x`:n ja `y`:n niin kauan kuin se on olemassa,
+vaikka olemassaolo jatkuisi `foo`:n suoritusta kauemmin
+    * Näin voi käydä `return bar;` lauseesta johtuen
+
+---
+
+## Kapselointi
+
+* JavaScriptistä puuttuu moduulien ja kooditiedostojen riippuvuuksen hallinta.
+    * Tiedostot liitetään HTML-koodiin script elementillä
+    * Ohjelmoijan täytyy itse keksiä, miten hoitaa keskenäiset riippuvuudet
+
+* On kuitenkin harhakäsitys, että JavaScript-koodia ei pystyisi kapseloimaan ja jakamaan osiin.
+
+* JavaScriptissä tämä tehdään vain hieman eri tavalla
+    * sulkeumat (closure)
+    * anonyymit funktiot
+    * JavaScript objektit
+
+* JavaScript ei näin ollen kielenä oikeuta spaghettikoodin kirjoittamiseen!
+
+---
+
+## Klosuuri-esimerkki
+
+```javascript
+//Luodaan tilallinen counter funktio
+//anonyymin funktion ja sulkeuman avulla
+
+var counter = (function(){
+    var i = 0; //Tämä ei näy ulospäin
+    return function(){
+        return ++i;
+    }
+}());
+
+var id = counter();
+//ensimmäinen kutsu palauttaa arvon 1 ja seuraava 2 jne.
+```
+
+---
+
+## Klosuuri
+
+* Esimerkkikoodissa luodaan counter -funktio anonyymin funktion ja sulkeuman avulla
+
+* Anonyymi funktio suoritetaan heti ja sen suorituksen aikana muuttujan i arvo sidotaan.
+
+* Funktio ei kuitenkaan palauta i:n arvoa vaan funktion, joka näkee i:n arvon ja psytyy manipuloimaan sitä. Muuttuja counter viittaa siis sisempänä määriteltyyn funktioon!
+
+* Näin ollen, kun funktiota counter kutsutaan, palautetaan aina seuraava i:n arvo.
+
+
+
+---
+
+## Klosuuri
+
+* Klosuuria ei ole pakko luoda anonyyminä funktiona vaan siitä voi tehdä instantioitavan käyttämällä nimettyä funktiota. Mekanismia voidaan käyttää myös olioiden rakentamiseen.
+
+```javascript
+//Instantioitava laskuri
+var counter = function(initialValue){
+    var i = initialValue;
+    return function(){
+        return ++i;
+    }
+};
+
+var counter1 = counter(0);
+var counter2 = counter(30);
+
+var id1 = counter1();//1
+var id2 = counter2();//31
+
+```
+
+---
+
+## Klosuuri
+
+```javascript
+var counter = function(initialValue){
+    var i = initialValue;
+    var print = function(){
+        console.log(i);
+    }
+    var public = {};
+    public.increment = function(){
+        ++i;
+        print();
+        return i;
+    }
+    public.decrement = function(){
+        --i;
+        print();
+        return i;
+    }
+    return public;
+};
+```
+
+---
+
+## Nimiavaruuden rakentaminen JS-olioilla
+
+```javascript
+//Luodaan tyhjä JavaScript objekti nimiavaruudeksi,
+//jos sellaista ei ole jo määritelty
+var nimiavaruus = nimiavaruus || {};
+
+//Lisätään nimiavaruuteen metodeja
+nimiavaruus.counter = function(initialValue){
+    var i = initialValue;
+    var public = {};
+    public.increment = function(){
+        return ++i;
+    }
+    public.decrement = function(){
+        return --i;
+    }
+    return public;
+};
+
+```
+
+---
+
+## Nimiavaruuden rakentaminen JS-olioilla
+
+* Edellisessä esimerkissä käytettiin JavaScript -objektia nimiavaruutena. Ideana on yksinkertaisesti kapseloida kaikki omaan ohjelmaan liittyvät jutut yhden objektin sisään.
+
+* Mutta miksi ihmeessä näin kannattaa tehdä?
+
+---
+
+## Nimiavaruuden rakentaminen JS-olioilla
+
+* JavaScriptin gobaali näkyvyysalue on siitä pirullinen, että se on ihan oikeasti globaali eikä esimerkiksi tiedostokohtainen.
+
+* Jos määrittelet muuttujan a joka on globaali koodisasi ja kirjasto, jota käytät määrittelee globaalin muuttujan a, toinen tulee ylikirjoitetuksi. Jälkimmäisenä määritelty jää voimaan.
+
+* Ja mikä parasta, tästä ei edes välttämättä tule mitään virheilmoitusta vaan virhe voi esiintyä hyvinkin mystisenä koodin toiminnallisena bugina.
+
+---
+
+## Funktioiden kutsuminen ja suorituskonteksti
+
+* JavaScript funktioita voidaan kutsua usealla tavalla
+    * Funktioina
+    * Metodina
+    * Rakentajana
+    * Call ja apply -metodeilla
+
+* Funktion kutsutapa vaikuttaa siihen, missä kontekstissa koodia suoritetaan
+    * konteksti on talletettu `this` muuttujaan
+    * kontekesti voi olla kutsu tavasta riippuen
+        * funktiokonteksti
+        * globaalikonteksti
+        * eval-konteksti (erikoisuus, jota ei käydä läpi tällä kertaa)
+
+---
+
+## Funktion kutsuminen funktiona
+
+* Funktiota kutsutaan funktiona silloin kun se ei ole jäsen (metodi).
+
+* Tällöin `this` sidotaan globaaliin kontekstiin
+    * `this` viittaa window -objektiin
+
+```javascript
+var myFunction = function(){
+    console.log(this);
+};
+
+myFunction();
+//tulostaa konsoliin selaimen window-objektin
+```
+
+---
+
+## Funktion kutsuminen metodina
+
+* Kun funktiota kutsutaan metodina, konteksti sidotaan objektiin, jonka metodia kutsutaan (funktiokonteksti)
+    * Se missä ja miten metodi on määritelty, ei vaikuta kontekstin sidontaan
+    * Se, miten funktiota kutsutaan vaikuttaa
+
+```javascript
+var myObject = {};
+
+myObject.myMethod = function(){
+    console.log(this);
+};
+
+myObject.myMethod();
+//tulostaa konsoliin myObject -objektin
+```
+
+---
+
+## Funktion kutsuminen rakentajana
+
+* Funktioita on mahdollista kutsua rakentajina käyttäen new -avainsanaa.
+
+* JavaScriptissä new ei kuitenkaan varaa muistia vaan vaihtaa suorituksen kontekstia.
+    * Kun funktiota kutsutaan rakentajana `this` sidotaan luotuun objektiin (tai objektiin, jonka rakentaja eksplisiittisesti palauttaa)
+    * Suoritus on funktiokontekstissa
+
+* New on hieman kintsofreninen osa JavaScriptiä ja sen kanssa tulee olla hyvin varovainen
+    * Palataan tähän vielä tarkemmin prototyyppi -osiossa.
+
+---
+
+## Funktion kutsuminen rakentajana
+
+```javascript
+var MyObject = function(){
+    this.method = function(){
+        //toiminnallisuutta
+    }
+    console.log(this);
+}
+var myInstance = new MyObject();
+//tulostaa konsoliin viitteen MyObjektin -kontekstiin
+```
+
+---
+
+## Call ja Apply
+
+* `call` ja `apply` ovat erikoismetodeja, joiden avulla funktion kutsun yhteydessä voidaan määrittää funktion suorituskonteksti.
+
+* `call`:lle annetaan konteksti ja parametrit
+* `apply`:lle annetaan konteksti ja parametrit taulukkona
+
+```javascript
+
+metodi.call(konteksti, p1, p2, p3);
+metodi.apply(konteksti, [p1, p2, p3]);
+
+```
+
+---
+
+## Prototype ja periytyminen
+
+* Kuten ihan luennon alussa mainittiin, JavaScript on ns. prototyyppipohjainen kieli.
+
+* Sillä tarkoitetaan, että perintä JavaScriptissä on tehty porotyyppien avulla
+	* Jokaisella JavaScript objektilla on prototyyppi, joka sisältää objektin perimän
+	* Jos objektille kutsutaan metodia, jota siltä itseltään ei löydy, sitä etsitään seuraavaksi prototyypistä
+
+* Periytymishierarkia voi olla kuinka syvä tahansa
+	* Lopulta päädytään Object -objektiin, josta kaikki JavaScript objektit periytyvät.
+
+---
+
+## Prototype ja periytyminen
+
+```javascript
+if(typeof Object.create !== 'function'){
+    Object.create = function(o){
+        var F = function() {}
+        F.prototype = o;
+        return new F();
+    }
+}
+
+```
+
+* Object.create metodin avulla voidaan luoda uusi objekti, jonka prototyypiksi tulee funktion parametriksi asetettu objekti. --> Eli saatiin periytettyä objekti parametriksi annetusta objektista.
+
+* Object.create metodi tuli mukaan vasta ECMAScript 5.1. standardissa vuonna 2011
+
+---
+
+## Periytymisesimerkki
+
+```javascript
+var myMammal = {
+    name : "Herb the Mammal",
+    get_name : function(){
+        return this.name;
+    },
+    says : function(){
+        return this.saying || "";
+    }
+};
+
+var myCat = Object.create(myMammal);
+cat.name = "Henrietta";
+cat.saying = "meow";
+myCat.get_name = function(){
+    return this.says()+" "+this.name+" "+this.says();
+};
+
+```
+
+---
+
+## Yleisimmät sudenkuopat
+
+* Eksplisiittinen globaali näkyvyysalue
+    * Muista var
+    * Kapseloi koodisi!
+
+* `this` avainsana
+    * Se mihin `this` viittaa riippuu siitä, miten funktiota kutsutaan ei siitä, miten ja missä se on määritelty.
+    * Jotkut kirjastot, kuten jQuery pakottavat käytännössä käyttämään `this` -avainsanaa
+        * Kirjasto kuitenkin hoitaa homman siten, että funktiota kutsutaan käytännössä aina funktio kontekstissa.
+
+* `new` avainsana
+    * Ei varaa muistia vaan vaihtaa kontekstia
+    * Jos pystyt tekemään sen, mitä halaut ilman new:tä, niin tee mielummin niin
+
+---
+
+# Yleisimmät sudenkuopat
+
+* Vertailuoperaattorit == ja ===
+    * == tarkastaa, voiko arvot tyyppikonversioiden kautta tulkita samoiksi
+    * === tarkastaa aidon yhtäsuuruuden
+    * Löytyy myös != ja !== operaattorit
+
+* Vertailuoperaattoreista kannattaa lukea lisää vaikka [täältä](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators)
+
+---
+
+# Lähteitä ja Linkkejä
+
+* Prototyyppiin liittyvät esimerkit ovat otettu Crockfordin JavaScript: the Good Parts kirjasta
+    * Youtubesta löytyy myös Crockfordin [luento](https://www.youtube.com/watch?v=hQVTIJBZook)
+
+* Lähteenä on käytetty myös [Mozilla Developper Networkin](https://developer.mozilla.org/en-US/docs/Web/JavaScript) JavaScript materiaaleja, joita voin suositella referenssimateraaliksi.
+
+* Itseopiskeluun apua voi löytää myös [w3schoolsista](http://www.w3schools.com/js/)
+
+
+
+---
+
+## DOMContentLoaded
+
+* Kun JavaScriptia aletaan suorittaa, ei koko dokumentti välttämättä ole
+  vielä latautunut
+    * tällöin DOM:n käsittely voi epäonnistua tai aiheuttaa jotain
+  epätoivottua
+
+* Asia korjaantuu kun aloittaa JavaScriptin suorituksen
+  vasta dokumentin latauduttua
+    * onnistuu (mm.) kuuntelemalla `document`-olion
+      `DOMContentLoaded`-tapahtumaa
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+  // Dokumentti ladattu.
+  // Suoritettava koodi tänne.
+});
+```
+
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

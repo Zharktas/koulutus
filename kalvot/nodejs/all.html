@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>nodejs</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="node-js">Node.js</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="node-js">Node.js</h2>
+<ul>
+<li><p><a href="https://nodejs.org/en/">Node.js</a>
+on palvelinpuolen JavaScript-alusta</p>
+</li>
+<li><p>Perustuu Googlen
+<a href="https://developers.google.com/v8/">V8-JavaScript-moottoriin</a></p>
+</li>
+<li><p>Soveltuu hyvin aina pienistä protoista suuriin järjestelmiin saakka</p>
+</li>
+<li><p>Alustalla voi ajaa muitakin kuin weppisovelluksia,
+mutta keskitymme webbipuoleen</p>
+</li>
+<li><p>Node.js tarjoaa rajapinnat esimerkiksi tiedostojen käsittelyyn
+ja HTTP-toiminnallisuuteen</p>
+</li>
+</ul>
+<hr>
+<h2 id="node-js-k-yt-nn-ss-">Node.js käytännössä</h2>
+<ul>
+<li>Kaikessa yksinkertaisuudessaan Node.js on alusta jolla voidaan
+suorittaa JavaScript-koodia</li>
+</ul>
+<pre><code class="hljs bash">$ node hello.js
+Hello World!</code></pre>
+
+<ul>
+<li>Node.js tarjoaa myös interaktiivisen tulkin</li>
+</ul>
+<pre><code class="hljs javascript">$ node
+&gt; <span class="hljs-keyword">var</span> x = <span class="hljs-number">1</span> + <span class="hljs-number">3</span>;
+&gt; x * x
+<span class="hljs-number">16</span></code></pre>
+
+<ul>
+<li>Oleellisin ero selain-JavaScriptiin on ympäristön tarjoamissa rajapinnoissa<ul>
+<li>Node.js ei ole selaimessa joten tietenkään rajapintoja mm. DOM:n
+manipulointiin ei ole</li>
+<li>Sen sijaan voidaan tehdä mm. tiedostojenkäsittelyä ja
+HTTP-pyyntöjä/vastauksia</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="npm">NPM</h2>
+<ul>
+<li><p>Node.js:n mukana tulee paketinhallintatyökalu
+<a href="https://www.npmjs.com/">npm</a></p>
+</li>
+<li><p><code>npm</code>:llä voi liittää Node.js-sovellukseensa moduuleja laajasta
+valikoimasta</p>
+</li>
+<li><p>Esim. moduuli nimeltä <code>express</code></p>
+</li>
+</ul>
+<pre><code class="hljs bash">npm install express --save</code></pre>
+
+<ul>
+<li>Kun moduuli on asennettu, se voidaan ottaa JavaScriptissa käyttöön <code>require</code>-funktiolla</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);</code></pre>
+
+<ul>
+<li>Usein kannattaa käyttää valmista moduulia eikä keksiä pyörää uudelleen!</li>
+</ul>
+<hr>
+<h2 id="package-json">Package.json</h2>
+<ul>
+<li>Node.js-projektin riippuvuudet ja muut tiedot määritellään
+<a href="https://docs.npmjs.com/files/package.json">package.json</a>-tiedostossa</li>
+</ul>
+<pre><code class="hljs json">{
+  "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"esimerkki"</span></span>,
+  "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Esimerkkisovellus"</span></span>,
+  "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"0.0.1"</span></span>,
+  "<span class="hljs-attribute">devDependencies</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">mocha</span>": <span class="hljs-value"><span class="hljs-string">"*"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">dependencies</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">express</span>": <span class="hljs-value"><span class="hljs-string">"*"</span>
+  </span>}
+</span>}</code></pre>
+
+<ul>
+<li><a href="http://browsenpm.org/package.json">Interaktiivinen package.json -esimerkki</a></li>
+</ul>
+<hr>
+<h2 id="moduulien-asentaminen">Moduulien asentaminen</h2>
+<ul>
+<li><p>Asentaa packages.json:issa määritellyt riippuvuudet:</p>
+<pre><code class="hljs bash">npm install</code></pre>
+</li>
+<li><p>Asentaa uuden moduulin:</p>
+<pre><code class="hljs bash">npm install MODUULIN_NIMI</code></pre>
+</li>
+<li><p>Asentaa uuden moduulin JA lisää sen package.json:iin riippuvuudeksi:</p>
+<pre><code class="hljs bash">npm install MODUULIN_NIMI --save</code></pre>
+
+</li>
+</ul>
+<hr>
+<h2 id="riippuvuuksista">Riippuvuuksista</h2>
+<ul>
+<li><p><code>npm</code> asentaa automaattisesti moduulien riippuvuudet</p>
+</li>
+<li><p><code>npm</code>-moduulit ovat tyypillisesti pieniä ja tekevät yhden
+yksinkertaisen asian</p>
+</li>
+<li><p>Isommat moduulit käyttävät hyväkseen useita muita moduuleja</p>
+</li>
+<li><p>Asennetut moduulit riippuvuuksineen näkee komennolla <code>npm list</code></p>
+</li>
+</ul>
+<pre><code class="hljs bash">$ npm list
+esimerkki@<span class="hljs-number">0.0</span>.<span class="hljs-number">1</span> /home/ubuntu/workspace
+├─┬ express@<span class="hljs-number">4.13</span>.<span class="hljs-number">3</span>
+│ ├─┬ accepts@<span class="hljs-number">1.2</span>.<span class="hljs-number">13</span>
+│ │ ├─┬ mime-types@<span class="hljs-number">2.1</span>.<span class="hljs-number">7</span>
+│ │ │ └── mime-db@<span class="hljs-number">1.19</span>.<span class="hljs-number">0</span>
+│ │ └── negotiator@<span class="hljs-number">0.5</span>.<span class="hljs-number">3</span>
+│ ├── array-flatten@<span class="hljs-number">1.1</span>.<span class="hljs-number">1</span>
+│ ├── content-disposition@<span class="hljs-number">0.5</span>.<span class="hljs-number">0</span>
+│ ├── content-type@<span class="hljs-number">1.0</span>.<span class="hljs-number">1</span>
+│ ├── cookie@<span class="hljs-number">0.1</span>.<span class="hljs-number">3</span>
+...</code></pre>
+
+<hr>
+<h2 id="moduulien-k-ytt-">Moduulien käyttö</h2>
+<ul>
+<li>Kun moduuli on asennettu, voi sen ottaa JavaScript-tiedostossa
+käyttöön <code>require</code>-funktiolla</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);</code></pre>
+
+<ul>
+<li>Myös oman sovelluksen jako useaan tiedostoon tehdään käyttäen samaa
+moduulijärjestelmää</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> oma = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./oma.js'</span>);
+
+oma.jokuFunktio();</code></pre>
+
+<hr>
+<h2 id="omat-moduulit">Omat moduulit</h2>
+<ul>
+<li><p>Toisin kuin selaimen JavaScriptissa, Node.js:ssä muuttujat eivät suoraan näy tiedostosta toiseen</p>
+</li>
+<li><p>Muualla määritellyt muuttujat (funktiot, oliot, ym.) täytyy erikseen ottaa
+käyttöön <code>require</code>-funktiolla</p>
+</li>
+<li><p>Ulospäin näkyvät muuttujat taas tallennetaan
+<code>module.exports</code> tai <code>exports</code>-muuttujiin</p>
+</li>
+</ul>
+<p>hello.js</p>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tervehdi</span>(<span class="hljs-params">nimi</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Hello "</span> + nimi);
+}
+
+<span class="hljs-built_in">module</span>.exports = tervehdi;</code></pre>
+
+
+
+<p>toinen.js</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> he = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./hello.js'</span>);
+
+he(<span class="hljs-string">"Anna"</span>);</code></pre>
+
+
+<hr>
+<h2 id="moduuli-esimerkki">moduuli-esimerkki</h2>
+<ul>
+<li>Alla olevat määrittelyt tekevät saman asian, eli määrittelevät kolme
+muuttujaa näkymään moduulista ulos</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">eka</span>(<span class="hljs-params"></span>) </span>{}
+
+exports.eka = eka;
+exports.toka = <span class="hljs-number">100</span>;
+exports.kolmas = {};</code></pre>
+
+
+
+
+
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">eka</span>(<span class="hljs-params"></span>) </span>{}
+
+<span class="hljs-built_in">module</span>.exports = {
+  eka: eka,
+  toka: <span class="hljs-number">100</span>,
+  kolmas: {}
+};</code></pre>
+
+
+<p>Yllä määritellyn moduulin käyttö:</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> moduuli = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./moduuli.js'</span>);
+
+moduuli.eka();
+<span class="hljs-keyword">var</span> k = moduuli.toka;</code></pre>
+
+<hr>
+<h2 id="globaalit-muuttujat">Globaalit muuttujat</h2>
+<ul>
+<li>Node.js:ssä on kuitenkin sama JavaScript:n ominaisuus, jossa ilman
+<code>var</code>-avainsanaa määritellyt muuttujat ovat globaaleja<ul>
+<li>Tällainen muuttuja siis näkyy kaikissa tiedostoissa, mikä tuskin
+on hyvä asia</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-comment">// Jos muuttujaa ei ole aiemmin määritelty,</span>
+<span class="hljs-comment">// luodaan globaali muuttuja</span>
+muuttuja = <span class="hljs-number">100</span>;</code></pre>
+
+<ul>
+<li>Hyvä IDE osaa varoittaa tästä:</li>
+</ul>
+<p><img src="../img/c9-global.png" alt=""></p>
+<hr>
+<h2 id="express-js">Express.js</h2>
+<ul>
+<li><p><a href="http://expressjs.com/">Express.js</a> on suosittu sovelluskehys web-sovellusten tekoon
+Node.js:llä</p>
+</li>
+<li><p>Siinä web-sovellus on helppo jakaa MVC-mallin (Mode-View-Controller)
+mukaisesti</p>
+</li>
+<li><p>Expressin asennus:</p>
+<pre><code class="hljs bash">npm install express --save</code></pre>
+</li>
+<li><p>Uusin stabiili versio on Express 4, jota myös tässä käsitellään</p>
+</li>
+</ul>
+<hr>
+<h2 id="expressin-k-ytt-notto">Expressin käyttöönotto</h2>
+<ul>
+<li><p>Asennuksen jälkeen voidaan <code>express</code> ottaa käyttöön <code>require</code>:lla</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);</code></pre>
+</li>
+<li><p>Luodaan Express-sovellus</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> app = express();</code></pre>
+</li>
+<li><p>ja asetetaan sovellus kuuntelemaan HTTP-pyyntöjä:</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">// Kuunnellaan porttia 8080</span>
+app.listen(<span class="hljs-number">8080</span>);</code></pre>
+
+</li>
+</ul>
+<hr>
+<h2 id="reititys-esimerkki">Reititys-esimerkki</h2>
+<ul>
+<li><p>Jotta Express-sovelluksemme tekisi jotain, täytyy määritellä miten se
+vastaa HTTP-pyyntöihin</p>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">app.get(<span class="hljs-string">'/hello'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  res.send(<span class="hljs-string">"Hello World!"</span>);
+});</code></pre>
+
+<ul>
+<li><p>Nyt kun palvelimelle tulee HTTP GET -pyyntö osoitteeseen
+<code>http://palvelimemme.fi:8080/hello</code>, reitittyy pyyntö yllä määritellylle funktiolle</p>
+</li>
+<li><p>Funktion parametrina saaman <code>res</code>-olion <code>send</code>-metodilla voidaan lähettää vastaus</p>
+</li>
+</ul>
+<hr>
+<h2 id="reititys">Reititys</h2>
+<ul>
+<li>Express-sovellus tarjoaa metodeita HTTP-reittien määrittelemiseksi</li>
+</ul>
+<pre><code class="hljs javascript">app.METODI(POLKU, FUNKTIO);</code></pre>
+
+<ul>
+<li><p><code>METODI</code> = <code>get</code>, <code>post</code>, <code>put</code>, <code>delete</code>, ...</p>
+</li>
+<li><p><code>POLKU</code> = URL:n polku johon pyyntö kohdistuu</p>
+</li>
+<li><p><code>FUNKTIO</code> = funktio, joka saa parametrikseen:</p>
+<ul>
+<li>Pyyntöolion &quot;req&quot;, joka sisältää tietoja pyynnöstä</li>
+<li>Vastausolion &quot;res&quot;, jonka avulla lähetetään vastaus</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="express-esimerkki">Express-esimerkki</h2>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">var</span> app = express();
+
+app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  res.redirect(<span class="hljs-string">'/home'</span>);
+});
+
+app.get(<span class="hljs-string">'/home'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  res.send(<span class="hljs-string">"Moi!"</span>);
+});
+
+app.post(<span class="hljs-string">'/home'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  teeJotain(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    res.send(<span class="hljs-string">"Jotain tehtiin"</span>);
+  });
+});
+
+app.listen(<span class="hljs-number">8080</span>);</code></pre>
+
+<hr>
+<h2 id="middlewaret">Middlewaret</h2>
+<ul>
+<li><p>Express-sovellukseen voi liittää ns. <em>middleware</em>:ja</p>
+</li>
+<li><p>Middleware vastaanottaa pyynnön, tekee jotain ja välittää pyynnön
+eteenpäin käsiteltäväksi</p>
+</li>
+<li><p>Käytännössä middleware muokkaa <code>req</code>- ja <code>res</code> -olioita</p>
+<ul>
+<li>Muutokset näkyvät tämän jälkeen muillle pyyntöjä käsitteleville
+metodeille</li>
+</ul>
+</li>
+<li><p>Middlewareja voi tehdä itse sekä hakea <code>npm</code>:stä</p>
+</li>
+<li><p>Middlewaren voi ottaa käyttöön (mm.) Express-sovelluksen
+<code>use</code>-metodilla</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">app.use(MIDDLEWARE);</code></pre>
+
+<hr>
+<h2 id="body-parser">body-parser</h2>
+<ul>
+<li><p>Esimerkiksi <code>body-parser</code> -middleware helpottaa HTTP-pyynnössä olevien
+parametrien käsittelyä</p>
+</li>
+<li><p>Asennus:</p>
+</li>
+</ul>
+<pre><code class="hljs bash">npm install body-parser --save</code></pre>
+
+<ul>
+<li>Sitten:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>);
+
+app.use(bodyParser.urlencoded({extended: <span class="hljs-literal">true</span>}));
+
+app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-comment">// body-parser:n ansiosta HTTP-pyynnön parametrit</span>
+  <span class="hljs-comment">// ovat muuttujassa req.body</span>
+  <span class="hljs-keyword">var</span> nimi = req.body.nimi;
+  res.send(<span class="hljs-string">"Moi "</span> + nimi);
+});</code></pre>
+
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<ul>
+<li><p>Kaivetaan jälleen Plunkerissa oleva supersankarilomake esiin
+(jos se on hukkunut niin voi käyttää
+<a href="http://plnkr.co/edit/JxksgePGCjx1TkCGP79J">tätä</a>)</p>
+</li>
+<li><p>Nyt voimme toteuttaa Node.js:n + Expressin avulla
+palvelinpään toteutuksen, joka vastaanottaa lomakkeen tiedot</p>
+</li>
+<li><p>Eli avaa Cloud9-workspacesi, ja...</p>
+<ol>
+<li>Asenna <code>body-parser</code> middleware ja ota se käyttöön</li>
+<li>Toteuta <code>app.post(&#39;/supersankari&#39;, ...)</code> reitti, joka vastaa
+lomakkeen lähetykseen jotain<ul>
+<li>Lomakeen arvot pitäisi löytyä muuttujista <code>req.body.nimi</code> ja
+<code>req.body.supersankari</code></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Aseta Plunkerissa olevan supersankarilomakkeen
+<code>action=</code> -attribuutti osoittamaan Cloud9:ssä ajossa olevan
+sovelluksesi polkuun <code>/supersankari</code></p>
+</li>
+<li><p>Kokeile onnistuuko lomakkeen lähetys toivotusti</p>
+</li>
+</ul>
+<hr>
+<h2 id="express-vastaukset">Express-vastaukset</h2>
+<ul>
+<li>Express voi lähettää vastauksen muutenkin kuin <code>send</code>-metodilla</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Metodi</th>
+<th style="text-align:left">Selitys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>res.send(teksti)</code></td>
+<td style="text-align:left">Lähettää annetun merkkijonon HTTP-vastauksen runkona</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>res.json(olio)</code></td>
+<td style="text-align:left">Lähettää annetun JavaScript-olion JSON-muotoisena datana</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>res.render(sivupohja, muuttujat)</code></td>
+<td style="text-align:left">Lähettää sivupohjan</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="sivupohjat">Sivupohjat</h2>
+<ul>
+<li><p>Expressissä (kuten lähes kaikissa muissakin web-frameworkeissa)
+voidaan käyttää <em>sivupohjia</em> (<em>templates</em>)</p>
+</li>
+<li><p>Sivupohjat ovat HTML- tai muita dokumentteja, joiden &quot;puuttuvat osat&quot;
+täydennetään dynaamisesti</p>
+</li>
+<li><p>Esim. <a href="http://www.embeddedjs.com/">ejs</a>-sivupohja:</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Moi <span class="hljs-tag">&lt;<span class="hljs-title">%=</span> <span class="hljs-attribute">nimi</span> %&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<ul>
+<li>Renderöitäessä voidaan asettaa käytetyt muuttujat</li>
+</ul>
+<pre><code class="hljs javascript">res.render(<span class="hljs-string">'pohja'</span>, {nimi: <span class="hljs-string">"Anna"</span>});</code></pre>
+
+<hr>
+<h2 id="ejs">EJS</h2>
+<ul>
+<li><p>Esim. <a href="http://www.embeddedjs.com/">EJS</a> on yksinkertainen
+sivupohjakirjasto</p>
+</li>
+<li><p>See käsittelee HTML-dokumentteja, joissa voi olla kahdenlaisia
+erikoiselementtejä</p>
+</li>
+<li><p>Liitä JavaScript-muuttujan arvo dokumenttiin:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">%=</span> <span class="hljs-attribute">muuttuja</span> %&gt;</span></code></pre>
+</li>
+<li><p>Suorita JavaScript-koodi</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">%</span> <span class="hljs-attribute">if</span> (<span class="hljs-attribute">jotain</span>) { %&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">%</span> } %&gt;</span></code></pre>
+
+</li>
+</ul>
+<hr>
+<h2 id="ejs-expressiss-">EJS Expressissä</h2>
+<ul>
+<li>Käyttääkseen sivupohjakirjasto Expressissä on se ensin asennettava
+(esimerkeissä <code>ejs</code>-kirjasto)</li>
+</ul>
+<pre><code class="hljs bash">npm install ejs --save</code></pre>
+
+<ul>
+<li>ja otettava se käyttöön Express-sovelluksessa</li>
+</ul>
+<pre><code class="hljs javascript">app.set(<span class="hljs-string">'view engine'</span>, <span class="hljs-string">'ejs'</span>);</code></pre>
+
+<ul>
+<li>ja vielä määriteltävä missä sivupohjat ovat</li>
+</ul>
+<pre><code class="hljs javascript">app.set(<span class="hljs-string">'views'</span>, <span class="hljs-string">'./views'</span>);</code></pre>
+
+<ul>
+<li>Nyt komento
+<pre><code class="hljs javascript">res.render(<span class="hljs-string">&#39;sivu&#39;</span>, {nimi: <span class="hljs-string">&quot;Annna&quot;</span>});</code></pre>
+käyttää tiedostoa <code>./views/sivu.ejs</code>
+sivupohjana</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<p>Supersankari-backendimme ei ole vielä täydellinen.
+Nyt se vastaa pelkkänä tekstinä.
+Sivupohjan avulla voimme antaa vastauksen HTML-muodossa.</p>
+<ul>
+<li><p>Luo Cloud9:ssä uusi hakemisto nimeltä <code>views</code> ja sen sisälle tiedosto <code>index.ejs</code></p>
+<ul>
+<li>Kopioi tiedoston sisällöksi Plunkerissa luomasi supersankarilomake</li>
+</ul>
+</li>
+<li><p>Asenna ejs ja ota se käyttöön.</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">app.set(<span class="hljs-string">'views'</span>, <span class="hljs-string">'./views'</span>);
+app.set(<span class="hljs-string">'view engine'</span>, <span class="hljs-string">'ejs'</span>);
+
+app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  res.render(<span class="hljs-string">'index'</span>);
+});</code></pre>
+
+<p>Nyt juuriosoitteen <code>/</code> pitäisi palauttaa lomake, vaikka
+EJS:n ominaisuuksia ei vielä olekaan käytössä. --&gt;</p>
+<hr>
+<p>Voimme käyttää samaa pohjaa <code>index.ejs</code> myös vastauksen esittämiseen,
+kunhan lisäämme siihen vaikkapa tämänlaisen elementin:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">%</span> <span class="hljs-attribute">if</span>(<span class="hljs-attribute">locals.nimi</span>) { %&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Moi, <span class="hljs-tag">&lt;<span class="hljs-title">%=</span> <span class="hljs-attribute">nimi</span> %&gt;</span>! Suosikkisupersankarisi on siis
+     <span class="hljs-tag">&lt;<span class="hljs-title">%=</span> <span class="hljs-attribute">supersankari</span> %&gt;</span>. Selvä.<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">%</span> } %&gt;</span></code></pre>
+
+<p>Nyt voimme vaihtaa lomakkeenlähetyksen käsittelyfunktion käyttämään
+sivupohjaa pelkän tekstin lähettämisen sijaan:</p>
+<pre><code class="hljs javascript">app.post(<span class="hljs-string">'/supersankari'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-keyword">var</span> nimi = req.body.nimi;
+  <span class="hljs-keyword">var</span> supersankari = req.body.supersankari;
+  res.render(<span class="hljs-string">'index'</span>, {nimi: nimi, supersankari: supersankari});
+}</code></pre>
+
+<hr>
+<h2 id="staattiset-tiedostot">Staattiset tiedostot</h2>
+<ul>
+<li><p>Staattisia tiedostoja voi tarjoilla Expressin mukana tulevalla
+<code>express.static</code>-middlewarella</p>
+</li>
+<li><p>Esim.
+<pre><code class="hljs javascript">app.use(express.static(<span class="hljs-string">&#39;assets&#39;</span>));</code></pre>
+aiheuttaa sen, että hakemistossa <code>assets</code> oleva tiedosto <code>xxx.txt</code>
+on saatavilla URL-polussa <code>/xxx.txt</code></p>
+</li>
+<li><p>Voit vaikkapa luoda hakemiston <code>assets</code>
+ja sinne CSS-tiedoston <code>style.css</code>,
+minkä jälkeen
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;stylesheet&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;style.css&quot;</span>&gt;</span></code></pre>
+osoittaa jälleen olemassaolevaan tyylitiedostoon ja lomake saa tyylin</p>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

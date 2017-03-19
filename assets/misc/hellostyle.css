@@ -1,0 +1,13 @@
+/* Select by element name */
+p {
+  background-color: orange;
+}
+/* Select by class */
+.title {
+  color: red;
+}
+/* Select by id */
+#first {
+  border: 1px solid black;
+  padding: 10px;
+}

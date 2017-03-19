@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>css</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# CSS
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+
+## CSS
+
+* Cascading Style Sheets
+
+* Kieli web-sivun ulkoasun määrittämiseen
+
+* CSS:n avulla voidaan määritellä HTML-elementtien tyyli
+    * Väri
+    * Koko
+    * Sijainti
+    * Reunus
+    * Fontti
+    * Animaatio
+    * jne.
+    * jne.
+
+---
+
+## CSS:n versiot
+
+* CSS 1
+    * Vuodelta 1996
+
+* CSS 2
+    * Vuodelta 1998
+    * Lisäsi uusia ominaisuuksia CSS 1:een
+
+* CSS 2.1
+    * Korjauksia CSS 2.1:een
+    * Viilattiin useita vuosia
+        * W3C Proposed Recommendation vuonna 2011
+
+* CSS 3
+    * Taaksepäin yhteensopiva
+    * Ei enää yhtä isoa spesifikaatiota vaan useita moduuleja
+    * Eri moduulit eri kypsyystasoilla
+
+---
+
+## CSS-moduulit
+
+![](../img/css3.png)
+
+
+---
+
+## CSS:n syntaksi
+
+* CSS:ssä määritellään *valitsin* (*selector*)
+sekä tälle tyyliominaisuuksia
+
+```css
+VALITSIN {
+  OMINAISUUS1: ARVO1;
+  OMINAISUUS2: ARVO2;
+  ...
+}
+```
+
+* Valitsimella määrätään mihin HTML-elementteihin tyylittely kohdistuu
+
+* Ominaisuus-arvo-pareilla puolestaan se mitä tyylejä asetetaan
+
+* Esim. kaikki `h1`-otsikot oranssiksi
+
+```css
+h1 {
+  color: orange;
+}
+```
+
+---
+
+## HTML ja CSS
+
+* HTML-dokumenttiin voidaan liittää tyylejä eri tavoin
+
+* Elementin `style`-attribuutti:
+
+```html
+<div style="background: yellow;"></div>
+```
+
+* `style`-elementti:
+
+```html
+<style>
+  h1 {
+    color: #ABC;
+  }
+</style>
+```
+
+* Linkki erilliseen CSS-tiedostoon:
+
+```html
+<link rel="stylesheet" href="./tyyli.css">
+```
+
+Viimeksi mainittu tapa on yleensä suositelluin
+
+---
+
+## Valitsimia
+
+* Pelkkä HTML-elementin tyyppi kohdistaa tyylin kaikkiin kyseisen
+tyyppisiin elementteihin
+
+```css
+div {
+  background: yellow;
+}
+```
+
+* Risuaita-valitsimella `#` kohdistetaan elementtiin, jolla on
+määrätty `id`-attribuutti (esimerkissä `id="otsikko1"`)
+
+```css
+#otsikko1 {
+  font-size: 50px;
+}
+```
+
+* Piste-valitsimella tyyli puolestaan kohdistuu elementteihin, joilla on
+  kyseinen `class`-attribuutti (esimerkissä `class="iso"`)
+
+```css
+.iso {
+  height: 200px;
+}
+```
+
+---
+
+## Esimerkki
+
+.pull-left[
+
+* [style.css](../../assets/misc/style.css) 
+
+```css
+/* Valitsin: elementin tyyppi*/
+p {
+  background-color: orange;
+}
+
+/* Valitsin: luokka (class) */
+.moi {
+  color: red;
+}
+
+/* Valitsin: tunniste (id) */
+#eka {
+  border: 1px solid black;
+  padding: 10px;
+}
+```
+]
+
+.pull-right[
+
+* [moi.html](../../assets/misc/moi.html)
+
+```html
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <title>Hello World</title>
+    <link rel="stylesheet"
+          type="text/css"
+          href="style.css" />
+  </head>
+  <body>
+    <h1 class="moi">Moi</h1>
+    <p id="eka">Eka!</p>
+    <p>Toka!</p>
+  </body>
+</html>
+```
+
+]
+
+---
+
+## Valitsinten yhdistely
+
+* Valitsimia voidaan yhdistellä eri tavoin
+
+* Sama tyyli voidaan kohdistaa useampaan kohteeseen
+  erottelemalla ne pilkuin
+    * Esim. kaikki `h1`-, `h2`- ja `h3`-otsikot lihavoituna:
+
+```css
+h1, h2, h3 {
+  font-weight: bold;
+}
+```
+
+* Pisteellä yhdistelemällä voidaan puolestaan kohdistaa tyyli
+  elementteihin, joilla on kaikki mainitut `class`-attribuutit
+    * Esim. elementit joilla on sekä `class` nimeltä `iso` että `musta`
+
+
+```css
+.iso.musta {
+  color: black;
+  margin: 10px;
+}
+```
+
+---
+
+## Jälkeläinen
+
+* Valitsimia voi kohdistaa myös sen perusteella mikä niiden sijainti on
+  HTML-puussa
+
+* Välilyönnillä erottamalla kohdistetaan tyyli elementin *jälkeläisiin*
+  (*descendant*)
+    * Esim. kaikki laatikon sisällä olevat `a`-elementit:
+
+```css
+.laatikko a {
+  text-decoration: none;
+}
+```
+
+```html
+<div class="laatikko">
+  <a href=".">Valitsin osuu</a>
+  <p>
+    <a href=".">Osuu tähänkin</a>
+  </p>
+</div>
+<a href=".">Tähän ei osu</a>
+```
+
+---
+
+## Suora lapsi
+
+* Suurempi-kuin-merkillä `>` kohdistuu tyyli tietyn elementin suoriin
+  lapsiin (ei lapsenlapsiin)
+
+```css
+.laatikko > a {
+  color: orange;
+}
+```
+
+```html
+<div class="laatikko">
+  <a href=".">Valitsin osuu</a>
+  <p>
+    <a href=".">Mutta tähän ei</a>
+  </p>
+</div>
+<a href=".">Tähän ei osu edelleenkään</a>
+```
+
+
+
+---
+
+## Muita valitsimia
+
+* CSS-valtsimia on
+[paljon muitakin](http://www.w3schools.com/cssref/css_selectors.asp)
+
+* Palataan osaan niistä vielä myöhemmin
+
+---
+
+## CSS-tyyliominaisuudet
+
+* Erilaisia tyyliominaisuuksiakin on CSS:ssä
+[aika pitkä lista](http://www.w3schools.com/cssref/default.asp)
+
+* Käydään läpi joitakin ->
+
+---
+
+## color
+
+* Tekstin väri asetetaan `color`-ominaisuudella
+
+* Väri voi olla
+    * joku [nimetyistä väreistä](http://www.w3schools.com/html/html_colornames.asp), esim `red`
+    * heksa-arvo `#FF0000`
+    * rgb-arvo `rgb(255, 0, 0)`
+
+* Värin läpinäkyvyys asetetaan `opacity`-ominaisuudella [0-1]
+
+```css
+p {
+  color: MediumSpringGreen;
+  opacity: 0.5;
+}
+```
+
+* [W3Schools: CSS color Property](http://www.w3schools.com/cssref/pr_text_color.asp)
+
+---
+
+## background
+
+* Tausta asetetaan `background`-ominaisuudella
+
+```css
+body {
+  background: yellow;
+}
+
+.laatikko {
+  background: brown url("tausta.png") no-repeat fixed center;
+}
+```
+
+* Lisäksi erikseen `background-color`, `background-image` ym.
+
+* [W3Schools: CSS background Property](http://www.w3schools.com/cssref/css3_pr_background.asp)
+
+---
+
+## border
+
+* Reunus asetetaan `border`-ominaisuudella
+
+```css
+table {
+  border: 1px solid black;
+}
+```
+
+* Lisäksi erikseen `border-color`, `border-width`, ym.
+
+* [W3Schools: CSS border Property](http://www.w3schools.com/cssref/pr_border.asp)
+
+---
+
+## margin
+
+* Elementin marginaali (etäisyys naapurista) asetetaan `margin`
+  -attribuutilla
+
+```css
+div {
+  margin: 4px;
+}
+
+p {
+  margin: 0 0 5px 5px;
+}
+```
+
+* Järjestys: `top` `right` `bottom` `left`
+
+* Lisäksi erikseen `margin-left`, `margin-bottom`, ym.
+
+![](../img/marginpadding.png)
+
+---
+
+## padding
+
+* `padding` taas on elementin reunan ja sen lapsien välinen etäisyys
+
+```css
+div {
+  padding: 4px;
+}
+
+p {
+  padding: 0 0 5px 5px;
+}
+```
+
+* Järjestys: `top` `right` `bottom` `left`
+
+* Lisäksi erikseen `margin-left`, `margin-bottom`, ym.
+
+* W3Schools:
+[margin](http://www.w3schools.com/cssref/pr_margin.asp) ja
+[padding](http://www.w3schools.com/cssref/pr_padding.asp)
+
+---
+
+## font
+
+* Kirjasin asetetaan `font`-ominaisuudella
+
+```css
+p {
+  font: 15px arial, sans-serif;
+}
+```
+
+* Lisäksi erikseen `font-size`, `font-family`, ym.
+
+* [W3Schools: CSS font Property](http://www.w3schools.com/cssref/pr_font_font.asp)
+
+---
+
+## display
+
+* Ominaisuus `display` määrää miten elementti näytetään
+
+* Joitain mahdollisia `display`:n arvoja:
+
+| display  | Selitys |
+| :------------ | :----------- | :------------------- |
+| `none` | Elementtiä ei näy |
+| `inline` | Näytetään "inline" siinä kohdassa missä elementti on.  Oletuksena useimmat elementit tällaisia. |
+| `block` | Alkaa uudelta riviltä ja view kaiken tilan leveyssuunnassa. Mm. `div` ja `p` tällaisia oletuksena. |
+
+
+* [Muitakin](http://www.w3schools.com/cssref/pr_class_display.asp)
+
+---
+
+## position
+
+* Ominaisuus `position` määrää miten elementin sijainti asetetaan
+
+* Joitain mahdollisia `position`:in arvoja:
+
+| position  | Selitys |
+| :------------ | :----------- | :------------------- |
+| `static` | Oletus. Elementit piirretään siinä järjestyksessä kun ne ovat dokumentissa. |
+| `absolute` | Elementti sijoitetaan suhteessa ensimmäiseen *sijoitettuun* (*positioned*, *ei-static*) vanhempaansa. |
+| `relative` | Elementti sijoitetaan suhteessa oletussijaintiinsa. |
+| `fixed` | Elementti sijoitetaan suhteessa selainikkunaan. |
+
+
+* [Muitakin](http://www.w3schools.com/cssref/pr_class_display.asp)
+
+---
+
+## position-esimerkki
+
+* Sijoitetaan `.laatikko` ensimmäisen sijoitetun vanhempansa oikeaan
+  reunaan, 10 pikselin päähän sen yläreunasta
+
+```css
+.laatikko {
+  position: absolute;
+  top: 10px;
+  right: 0;
+}
+```
+
+* Sijoitetaan `.laatikko` 10 pikseliä oletussijainnistaan alas ja 10
+  pikseliä vasemmalle
+
+```css
+.laatikko {
+  position: relative;
+  bottom: 10px;
+  left: 10px;
+}
+```
+
+---
+
+## CSS-tyylittelyä
+
+![](../img/familyguy.gif)
+
+---
+
+<h2 class="harjoitus">Harjoitus</h2>
+
+* Liitä aiemmin luomaasi lomakkeeseen tyylitiedosto
+
+* Koristele lomakkeesi CSS-tyylein
+
+* Kaikki tyyliominaisuudet on listattu
+[täällä](http://www.w3schools.com/cssref/default.asp)
+
+---
+
+## Responsiivisuus
+
+* Nykypäivänä web-sivuja luetaan hyvin erilaisilla laitteilla
+
+* Selainikkunan leveys voi vaihdella muutamasta sentistä kymmeniin
+  sentteihin
+
+* Samanlainen layout ei sovi kaikille ruuduille
+
+* ... vaan layoutin on oltava *responsiivinen*
+
+---
+
+## float
+
+* Yksi CSS:n ominaisuus jota responsiivisten layoutien teossa voidaan
+  hyödyntää on `float`
+
+```css
+div.leijuva {
+  float: left;
+}
+```
+
+* `float`-ominaisuuden avulla elementtejä voidaan latoa vierekkäin
+  niin paljon kuin ruudulle mahtuu
+
+* Latominen voidaan aloittaa joko vasemmasta (`float: left`)
+tai oikeasta reunasta (`float: right`)
+
+* [W3Schools: CSS float Property](http://www.w3schools.com/cssref/pr_class_float.asp)
+
+---
+
+<h2 class="harjoitus">Harjoitus</h2>
+
+* Avaa tämä plunk: http://plnkr.co/edit/cvpHvwDM7PeoIu9YHN76
+
+Se sisältää `section` -elementtejä, joille asetetaan CSS-tiedostossa `float`-ominaisuus.
+
+* Avaa esikatselu. Muuttele selainikkunan kokoa ja katso mitä tapahtuu.
+
+* Kokeile vaihtaa `float`:n arvoksi `right`. Sekä `none`.
+
+* Aseta jo(i)llekin `section`-elementille tyyliominaisuus
+[clear](http://www.w3schools.com/cssref/pr_class_clear.asp).
+Mitä tapahtuu?
+
+```css
+section.pyyhkis {
+  clear: both;
+}
+```
+
+---
+
+## media-kyselyt
+
+* CSS3 toi responsiivisten layoutien tekoon uuden työkalun:
+  media-kyselyt (media queries)
+
+* Sen avulla voidaan asettaa eri tyylejä sen mukaan minkälaisella
+  laitteella web-sivu avataan
+
+* Esim. tyyli enintään 500 pikselin levyisille selainikkunoille
+  (viewport)
+
+```css
+@media only screen and (max-width: 500px) {
+  nav {
+    width: 100%;
+  }
+}
+```
+
+* [W3Schools: CSS3 @media Rule](http://www.w3schools.com/cssref/css3_pr_mediaquery.asp)
+
+---
+
+## media-attribuutti
+
+* Eri laitteilla voidaan käyttää myös kokonaan eri CSS-tiedostoja
+
+* Tämä onnistuu HTML:n `link`-elementin `media`-attribuutilla
+
+```html
+<link rel="stylesheet"
+      media="screen and (min-width: 800px)"
+      href="normaali.css" />
+
+<link rel="stylesheet"
+      media="screen and (max-width: 799px)"
+      href="mobiili.css" />
+
+<link rel="stylesheet"
+      media="print"
+      href="tulostin.css" />
+```
+
+---
+
+## bootstrap
+
+* Responsiivisten layouttien tekoa helpottamaan on erilaisia
+  frameworkeja
+
+* Suosituin näistä on [Bootstrap](http://getbootstrap.com/)
+
+* Bootstrap-esimerkki-plunk: http://plnkr.co/edit/EA0Ah9h6Q3QQni3f9Lsr
+
+
+---
+
+## Vielä valitsimista
+
+* Elementtejä voidaan tyylitellä myös niiden attribuuttien mukaan
+
+* Esim. `input`-elementit joiden `type` = `text`
+
+```css
+input[type=text] {
+  border: 1px solid black;
+}
+```
+
+* [W3Schools: CSS Attribute Selectors](http://www.w3schools.com/css/css_attribute_selectors.asp)
+
+---
+
+## Pseudo-luokat
+
+* CSS-tyylin voi asettaa myös elementin *tilan* perusteella
+
+* Elementeillä on automaattisesti erilaisia *pseudo-luokkia* (*pseudo
+  classes*), joita voidaan tyylitellä kuten tavallisiakin luokkia
+
+* Syntaksi: `VALITSIN:PSEUDO-LUOKKA`
+
+* Esim. `a`-elementin pseudo-luokat `visited` ja `hover`:
+
+```css
+a:visited {
+  color: #FFFF00;
+}
+
+a:hover {
+  color: white;
+}
+```
+
+* [W3Schools: CSS Pseudo-classes](http://www.w3schools.com/css/css_pseudo_classes.asp)
+
+---
+
+## Joitain pseudo-luokkia
+
+```css
+p:first-child {
+  margin-left: 10px;
+}
+
+p:last-child {
+  margin-right: 10px;
+}
+
+p:nth-child(3) {
+  color: red;
+}
+
+a:before {
+  content: " (" attr(href) ")";
+}
+
+a:after {
+  content: "!";
+}
+
+section:empty {
+  background: red;
+}
+```
+
+
+---
+
+## CSS-valitsinten järjestys
+
+* Useampi CSS-sääntö voi osua saman elementin samaan attribuuttiin, esim:
+
+```html
+<p id="iidee" class="luokka">Moi</p>
+```
+
+```css
+      p { color: red; }
+.luokka { color: green; }
+ #iidee { color: blue; }
+```
+
+* CSS [määrittelee sääntöjen tärkeysjärjestyksen](http://www.w3.org/TR/CSS2/cascade.html#cascade)
+    * "Tarkin sääntö voittaa"
+    * Tasapelin sattuessa viimeiseksi määritelty voittaa
+
+* Tärkeysjärjestys voidaan kumota `!important` määreellä
+
+```css
+  p { color: red !important; }
+```
+
+---
+
+## Linkkejä
+
+* [CSS:n spesifikaatio](http://www.w3.org/TR/CSS/)
+
+* W3Schools
+[CSS Reference](http://www.w3schools.com/cssref/default.asp) ja
+[CSS Selector Reference](http://www.w3schools.com/cssref/css_selectors.asp)
+
+* [CSS Mozilla Developer Networkissa](https://developer.mozilla.org/en-US/docs/Web/CSS)
+
+---
+
+<h2 class="harjoitus">Harjoitus</h2>
+
+Avaa Plunker-projekti
+http://plnkr.co/edit/w2zAFt6gLzIqDpLpL0vE
+
+Sen `index.html` sisältää kymmenen 3x5 kokoista taulukkoa (`table`).
+Tyylit määritellään tiedostossa `numerot.css`.
+
+* Muokkaa tyylitiedostoa `numerot.css` siten, että taulukoihin muodostuu numerot
+1, 2, 3, 4, 5, ...
+Valmiina on kaksi ensimmäistä numeroa, joista voi ottaa mallia.
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

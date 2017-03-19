@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>auth</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="autentikointi">Autentikointi</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="autentikointi">Autentikointi</h2>
+<ul>
+<li><p>Autentikointi tarkoittaa käyttäjän tunnistamista</p>
+<ul>
+<li>käytetään myös suomenkielistä termiä <em>todennus</em></li>
+</ul>
+</li>
+<li><p>Web-sovelluksessa autentikointiin voidaan käyttää useita eri menetelmiä</p>
+</li>
+<li><p>Tänään käydään läpi:</p>
+<ul>
+<li>HTTP Basic ja Digest</li>
+<li>Lomakekirjautuminen (ja HTTP Basic) Node.js:ssä</li>
+<li>OAuth</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="autentikointi-vs-autorisointi">Autentikointi vs autorisointi</h2>
+<ul>
+<li><p>Autentikointi (todennus, authentication)</p>
+<ul>
+<li>onko käyttäjä se kuka väittää olevansa?</li>
+</ul>
+</li>
+<li><p>Autorisointi (valtuutus, authorization)</p>
+<ul>
+<li>onko käyttäjällä oikeus tiettyyn toimintoon?</li>
+</ul>
+</li>
+<li><p>HTTP:n <code>Authorization</code>-otsikkokenttä on huonohkosti nimetty</p>
+<ul>
+<li>yleensä kyse on autentikoinnista</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="http-basic">HTTP Basic</h2>
+<ul>
+<li><p>HTTP määrittelee <a href="http://en.wikipedia.org/wiki/Basic_access_authentication"><em>Basic</em></a>
+-autentikointitavan</p>
+</li>
+<li><p>Pyyntö Basic -autentikointitavalla suojattuun resurssiin
+palauttaa</p>
+</li>
+</ul>
+<pre><code class="hljs http">HTTP/1.1 401 Unauthorized
+...
+WWW-Authenticate: Basic realm="salapaikka"
+...</code></pre>
+
+<ul>
+<li>Saatuaan 401-vastauksen, asiakkaan on lähetettävä uusi pyyntö, jossa
+<code>Authorization</code>-otsikkokentässä annetaan käyttäjätunnus ja salasana
+<em>base64</em>-enkoodattuna</li>
+</ul>
+<pre><code class="hljs http">GET /tiedostoja HTTP/1.1
+Host: example.com
+Authorization: Basic YWh0bzoxMjM0
+...</code></pre>
+
+<hr>
+<h2 id="authorization-basic">Authorization: Basic</h2>
+<ul>
+<li>Basic-autentikointitavassa <code>Authorization</code>-otsikkokenttä muodostetaan
+seuraavasti<ol>
+<li>Otetaan käyttäjätunnus ja salasana</li>
+<li>Laitetaan näiden väliin kaksoispiste <code>:</code></li>
+<li>Suoritetaan edelliselle base64-enkoodaus</li>
+<li>Lisätään tulos <code>Basic</code> -merkkijonon perään</li>
+</ol>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.</td>
+<td>Käyttäjätunnus: <code>ahto</code>, salasana: <code>1234</code></td>
+</tr>
+<tr>
+<td>2.</td>
+<td><code>ahto:1234</code></td>
+</tr>
+<tr>
+<td>3.</td>
+<td><code>YWh0bzoxMjM0</code></td>
+</tr>
+<tr>
+<td>4.</td>
+<td><code>Basic YWh0bzoxMjM0</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="hljs http"><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Basic YWh0bzoxMjM0</span></code></pre>
+
+
+<hr>
+<h2 id="base64">Base64</h2>
+<ul>
+<li>Base64-enkoodaus ja -dekoodaus on helppo tehdä esimerkiksi selaimen JavaScriptissä</li>
+</ul>
+<pre><code class="hljs javascript">&gt; btoa(<span class="hljs-string">'ahto:1234'</span>)
+<span class="hljs-string">"YWh0bzoxMjM0"</span></code></pre>
+
+<pre><code class="hljs javascript">&gt; atob(<span class="hljs-string">'YWh0bzoxMjM0'</span>)
+<span class="hljs-string">"ahto:1234"</span></code></pre>
+
+<ul>
+<li>Kyseessä ei siis ole salaus<ul>
+<li>kuka tahansa HTTP-viestin näkevä saa helposti selville käyttäjätunnuksen ja
+salasanan</li>
+<li>Basic-autentikoinnin tietoturvallinen käyttö vaatii HTTPS:n</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="node-js-ja-http-basic">Node.js ja HTTP Basic</h2>
+<ul>
+<li>Basic-autentikointiin voi Node.js-palvelimella käyttää vaikkapa
+<code>basic-auth</code>-pakettia</li>
+</ul>
+<pre><code class="hljs sh">npm install basic-auth --save</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> basicAuth = <span class="hljs-built_in">require</span>(<span class="hljs-string">'basic-auth'</span>);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">authMiddleware</span>(<span class="hljs-params">req, res, next</span>) </span>{
+  <span class="hljs-keyword">var</span> user = basicAuth(req);
+  <span class="hljs-keyword">if</span> (user &amp;&amp; user.name === <span class="hljs-string">'ahto'</span> &amp;&amp; user.pass === <span class="hljs-string">'1234'</span>) {
+    next();
+  }
+  <span class="hljs-keyword">else</span> {
+    res.status(<span class="hljs-number">401</span>).header(<span class="hljs-string">'WWW-Authenticate'</span>, <span class="hljs-string">'Basic realm="sala"'</span>)
+      .send();
+  }
+}</code></pre>
+
+<ul>
+<li>Myös Passport-middleware voi <a href="#12">käyttää</a> Basic-autentikointiin</li>
+</ul>
+<hr>
+<h2 id="http-digest">HTTP Digest</h2>
+<ul>
+<li><p><a href="http://en.wikipedia.org/wiki/Digest_access_authentication"><em>Digest</em></a>
+on toinen HTTP:ssä määritelty autentikointitapa</p>
+</li>
+<li><p>Digest-tavassa ei lähetetä selkokielistä käyttäjätunnusta ja
+salasanaa vaan <em>tiiviste</em> (hash)</p>
+</li>
+<li><p>Tiiviste lasketaan
+<a href="http://en.wikipedia.org/wiki/MD5">MD5</a>-algoritmilla, jonka syötteeksi
+annetaan salasana, palvelimen palauttama kertakäyttöluku (<em>nonce</em>) ja
+muita tietoja</p>
+</li>
+</ul>
+<pre><code class="hljs">HA1 = MD5<span class="hljs-list">(<span class="hljs-keyword">username</span><span class="hljs-keyword">:realm</span><span class="hljs-keyword">:password</span>)</span>
+HA2 = MD5<span class="hljs-list">(<span class="hljs-keyword">method</span><span class="hljs-keyword">:digestURI</span>)</span>
+response = MD5<span class="hljs-list">(<span class="hljs-keyword">HA1</span><span class="hljs-keyword">:nonce</span><span class="hljs-keyword">:HA2</span>)</span></code></pre>
+
+<ul>
+<li>MD5 on <em>yksisuuntainen</em> algoritmi, joten lähtötietoja ei voi (ainakaan
+helposti) saada selville tiivisteestä</li>
+</ul>
+<hr>
+<h2 id="http-autentikointi">HTTP-autentikointi</h2>
+<ul>
+<li><p>Basic:</p>
+<ul>
+<li>Yksinkertainen</li>
+<li>Sellaisenaan täysin turvaton<ul>
+<li>vaatii HTTPS:n jotta käyttö turvallista</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Digest</p>
+<ul>
+<li>Salasana ei ole helposti selvitettävissä vaikka näkisi
+HTTP-viestin</li>
+<li>Vaatii aina kaksi HTTP-pyyntöä<ul>
+<li>ensimmäisellä haetaan <em>nonce</em></li>
+</ul>
+</li>
+<li>Altis <em>man-in-the-middle</em>-hyökkäyksille<ul>
+<li>Vapaaehtoisia turvaominaisuuksia tätä estämään</li>
+</ul>
+</li>
+<li>MD5 ei ole maailman turvallisin salausalgoritmi</li>
+<li>Palvelimen pitää tietää <code>HA1</code> joten se ei voi käyttää parempia
+salausalgoritmeja salasanan tallentamiseen<ul>
+<li><code>HA1 = MD5(username:realm:password)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="lomakekirjautuminen">Lomakekirjautuminen</h2>
+<ul>
+<li><p>HTTP Basic (tai Digest) ei ole kovin hyvä ratkaisu kun asiakkaana on
+web-selain</p>
+<ul>
+<li>Käyttöliittymä selaimen määrittämä kirjautumisikkuna</li>
+<li>Web-sovellus ei voi määrätä uloskirjautumista</li>
+</ul>
+</li>
+<li><p>Yleensä web-sovelluksen autentikointi toteutetaankin lomakkeella</p>
+<ul>
+<li>palvelin esittää kirjautumislomakkeen, jossa kysytään
+käyttäjätunnus ja salasana,</li>
+<li>palvelin käsittelee lomakkeen</li>
+<li>ja säilyttää sisäänkirjautumistietoa istuntodatan yhteydessä</li>
+</ul>
+</li>
+<li><p>Lomakelähetyksen sijasta voidaan kirjautuminen tehdä myös
+Ajax-kutsulla</p>
+</li>
+<li><p>Tässäkin salasana siirty selkokielisenä ellei käytetä HTTPS:ää</p>
+</li>
+</ul>
+<hr>
+<h2 id="passport">Passport</h2>
+<ul>
+<li>Node.js Express-sovelluksessa lomakekirjautuminen voidaan toteuttaa
+vaikkapa <a href="http://passportjs.org/">Passport</a>-kirjaston avulla</li>
+</ul>
+<pre><code class="hljs sh">npm install passport --save</code></pre>
+
+<ul>
+<li><p>Passport tukee erilaisia autentikointitapoja</p>
+<ul>
+<li>Basic ja Digest</li>
+<li>Lomakekirjautuminen</li>
+<li>OAuth</li>
+<li>...</li>
+</ul>
+</li>
+<li><p>Eri autentikointitavat (&quot;strategiat&quot;) ovat omina paketteinaan</p>
+<ul>
+<li>Esim. lomakekirjautuminen:</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs sh">npm install passport-local --save</code></pre>
+
+<hr>
+<h2 id="passport-esimerkki-basic">Passport-esimerkki: Basic</h2>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> passport = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport'</span>);
+<span class="hljs-keyword">var</span> BasicStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport-http'</span>).BasicStrategy;</code></pre>
+
+<pre><code class="hljs javascript">passport.use(<span class="hljs-keyword">new</span> BasicStrategy(
+  <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">username, password, done</span>) </span>{
+    User.findOne({username: username}).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">u</span>) </span>{
+      <span class="hljs-keyword">if</span> (u &amp;&amp; u.password === password) {
+        done(<span class="hljs-literal">null</span>, u);
+      }
+      <span class="hljs-keyword">else</span> {
+        done(<span class="hljs-literal">null</span>, <span class="hljs-literal">false</span>);
+      }
+    });
+  }));</code></pre>
+
+<pre><code class="hljs javascript">app.use(passport.initialize());
+
+app.get(<span class="hljs-string">'/salainen'</span>,
+        passport.authenticate(<span class="hljs-string">'basic'</span>, {session: <span class="hljs-literal">false</span>}),
+        <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+          <span class="hljs-comment">// ...</span>
+        }</code></pre>
+
+<hr>
+<h2 id="passport-session">Passport: session</h2>
+<ul>
+<li><p>Edellä olleessa Basic-esimerkissä salasana tarkistetaan joka kutsulla</p>
+</li>
+<li><p>Parempi tapa on tallentaa tieto kirjautuneesta käyttäjästä
+istuntodataksi</p>
+<ul>
+<li>Tällöin istuntotunniste toimii &quot;salasanana&quot;</li>
+<li>Passport tukee tätäkin tapaa</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">app.use(passport.initialize());
+app.use(passport.session());</code></pre>
+
+<ul>
+<li>Käyttäjän (de)serialisointi istuntodatasta/-ksi:</li>
+</ul>
+<pre><code class="hljs javascript">passport.serializeUser(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user, done</span>) </span>{
+  done(<span class="hljs-literal">null</span>, user.id);
+});</code></pre>
+
+<pre><code class="hljs javascript">passport.deserializeUser(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id, done</span>) </span>{
+  User.findById(id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, user</span>) </span>{ done(err, user); });
+});</code></pre>
+
+<hr>
+<h2 id="passport-esimerkki-local">Passport-esimerkki: local</h2>
+<ul>
+<li>Apuna voidaan käyttää <a href="https://github.com/jaredhanson/connect-ensure-login"><code>connect-ensure-login</code></a> -middlewarea</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> ensureLoggedIn = <span class="hljs-built_in">require</span>(<span class="hljs-string">'connect-ensure-login'</span>).ensureLoggedIn;</code></pre>
+
+<ul>
+<li>Näin käyttäjä ohjataan onnistuneen lomakekirjautumisen jälkeen sinne
+minne oli menossa</li>
+</ul>
+<pre><code class="hljs javascript">passport.use(<span class="hljs-keyword">new</span> LocalStrategy( <span class="hljs-comment">/* ... */</span> );
+
+app.post(<span class="hljs-string">'/login'</span>, passport.authenticate(<span class="hljs-string">'local'</span>,
+         {successReturnToOrRedirect: <span class="hljs-string">'/'</span>,
+          failureRedirect: <span class="hljs-string">'/login'</span>}));
+
+app.get(<span class="hljs-string">'/login'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req,res</span>) </span>{
+  res.render(<span class="hljs-string">'kirjautumissivu'</span>);
+});
+
+app.get(<span class="hljs-string">'/salainen'</span>, ensureLoggedIn(<span class="hljs-string">'/login'</span>), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  res.render(<span class="hljs-string">'salainen'</span>);
+});</code></pre>
+
+<hr>
+<h2 id="kolmannen-osapuolen-valtuutus">Kolmannen osapuolen valtuutus</h2>
+<ul>
+<li><p>Joskus on kiva jos web-sovellus A voi olla yhteydessä toiseen
+web-sovellukseen B käyttäjän puolesta</p>
+<ul>
+<li>Esim. A haluaa lukea käyttäjän B:hen tallentamia lomakuvia</li>
+<li>Esim. A haluaa julkaista viestejä B:ssä käyttäjän nimissä</li>
+</ul>
+</li>
+<li><p>Tätä varten käyttäjän täytyy valtuuttaa A käyttämään B:tä hänen
+puolestaan</p>
+<ul>
+<li>&quot;Three-legged authorization&quot;</li>
+</ul>
+</li>
+<li><p>Yksinkertaisin ratkaisu: käyttäjä antaa B:n käyttäjätunnuksensa ja
+salasanansa A:lle</p>
+<ul>
+<li>A voi nyt tehdä kaikkea mahdollista käyttäjänä (eikä ole
+rajoitettu esim. lomakuvien lukemiseen)</li>
+<li>jos A vuotaa salasanan, voi kuka tahansa tehdä mitä tahansa</li>
+<li>valtuutuksen peruminen on vaivalloista</li>
+<li>parempiakin ratkaisuja on, OAuth -&gt;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="oauth">OAuth</h2>
+<ul>
+<li><p>OAuth on standardi, jonka avulla <em>resurssinhaltija</em> (käyttäjä)
+voi valtuuttaa <em>asiakassovelluksen</em> käyttämään hänen <em>resurssipalvelimella</em>
+sijaitsevia resursseja</p>
+</li>
+<li><p>Asiakassovelluksen ei tarvitse tietää resurssinhaltijan
+käyttäjätunnusta eikä salasanaa</p>
+</li>
+<li><p>Valtuutusta voidaan rajata mielivaltaisesti</p>
+<ul>
+<li>esim. pelkkä lukuoikeus lomakuviin</li>
+</ul>
+</li>
+<li><p>Valtuutus voidaan perua helposti</p>
+<ul>
+<li>salasanaa ei tarvitse vaihtaa</li>
+<li>yhden asiakassovelluksen valtuutuksen peruminen ei vaikuta muihin</li>
+</ul>
+</li>
+<li><p>Tässä käsitellään OAuth:n versiota <a href="https://tools.ietf.org/html/rfc6749">2.0</a></p>
+<ul>
+<li>Versiota 1.0a käytetään myös. Eroaa varsin paljon 2.0:sta.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="oauth-2-0-n-roolit">OAuth 2.0:n roolit</h2>
+<p>OAuth 2.0 määrittelee neljä
+<a href="https://tools.ietf.org/html/rfc6749#section-1.1">roolia</a></p>
+<ol>
+<li><p>Resurssinhaltija (resource owner)</p>
+<ul>
+<li>usein ihminen eli loppukäyttäjä</li>
+</ul>
+</li>
+<li><p>Resurssipalvelin (resource server)</p>
+<ul>
+<li>palvelin, jossa haltijan omistama resurssi on</li>
+</ul>
+</li>
+<li><p>Asiakassovellus (client)</p>
+<ul>
+<li>resurssinhaltijan valtuuttama sovellus</li>
+</ul>
+</li>
+<li><p>Valtuutuspalvelin (authorization server)</p>
+<ul>
+<li>hoitaa valtuutuksen</li>
+<li>usein sama kuin resurssipalvelin</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="oauth-2-0-n-valtuutustavat">OAuth 2.0:n valtuutustavat</h2>
+<p>OAuth 2.0 määrittelee neljä erilaista
+<a href="https://tools.ietf.org/html/rfc6749#section-4">valtuutustapaa</a></p>
+<ol>
+<li><p>Authorization Code Grant</p>
+<ul>
+<li>Yleisin web-sovelluksissa käytetty tapa</li>
+</ul>
+</li>
+<li><p>Implicit Grant</p>
+<ul>
+<li>Edellisen yksinkertaistettu versio</li>
+<li>Käytettävissä web-sovelluksissa, joissa kaikki toiminnallisuus on
+selainpäässä</li>
+</ul>
+</li>
+<li><p>Resource Owner Password Credentials Grant</p>
+<ul>
+<li>Asiakassovellus säilyttää resurssinhaltijan salasanaa</li>
+</ul>
+</li>
+<li><p>Client Credentials Grant</p>
+<ul>
+<li>Kun resurssinhaltija = asiakassovellus</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="oauth-2-0-implicit-grant">OAuth 2.0: implicit grant</h2>
+<p><img src="../img/oauth2-2.png" alt=""></p>
+<hr>
+<h2 id="oauth-2-0-authorization-code-grant">OAuth 2.0: authorization code grant</h2>
+<p><img src="../img/oauth2-1.png" alt=""></p>
+<hr>
+<h2 id="access-token">Access token</h2>
+<ul>
+<li><p>OAuth 2.0:ssa voidaan käyttää eri tyyppisiä access tokeneita</p>
+</li>
+<li><p>Samalla kun valtuutuspalvelin palauttaa access tokenin,
+palauttaa se myös sen tyypin</p>
+</li>
+<li><p>Yksinkertaisin tyyppi on ns. <em>bearer</em>, jossa access token välitetään
+sellaisenaan <code>Authorization</code>-otsikkokentässä</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Bearer jfHIUA82jfi9d29d</span></code></pre>
+
+
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

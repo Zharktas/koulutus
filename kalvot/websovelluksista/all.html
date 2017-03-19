@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>websovelluksista</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+			<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="web-sovelluksista">Web-sovelluksista</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="erilaisia-web-sovelluksia">Erilaisia web-sovelluksia</h2>
+<ul>
+<li><p>Perinteisesti web-selain on toiminut vain renderöintialustana palvelimen tuottamille HTML-dokumenteille</p>
+<ul>
+<li>Dokumenteissa on linkkejä, joita seuraamalla ladataan seuraava HTML-dokumentti</li>
+</ul>
+</li>
+<li><p>JavaScript-kielen ja selaimen tarjoamien rajapintojen myötä entistä enemmän toiminnallisuutta voidaan siirtää selaimen suoritettavaksi</p>
+</li>
+<li><p>Web-sovellusta suunniteltaessa yksi olennainen kysymys on kuinka
+paljon toiminnallisuutta toteutetaan selainpäähän vs palvelinpäähän</p>
+</li>
+</ul>
+<!--
+
+* Rikkaat internet-sovellukset (Rich Internet Applications, RIA)
+    * kattokäsite "työpöytäsovellusmaisille" web-sovelluksille
+    * ["The term RIA refers to a heterogeneous family of solutions, characterized by a common goal of adding new capabilities to the conventional hypertext-based Web."](http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=5481362)
+
+-->
+<hr>
+<h2 id="kerrosarkkitehtuuri">Kerrosarkkitehtuuri</h2>
+<ul>
+<li>Web-sovelluksen ohjelmakoodi voidaan jakaa loogisiin kerroksiin, joilla kullakin on oma roolinsa<ul>
+<li>ns. kerrosarkkitehtuuri</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/layers.png" alt=""></p>
+<ul>
+<li>Usein käytetty jaottelu on kolme kerrosta:<ol>
+<li>Esityskerros (Presentation Layer)<ul>
+<li>Näkymän manipulointi</li>
+</ul>
+</li>
+<li>Logiikkakerros (Business Logic Layer)<ul>
+<li>Sovelluksen toimintalogiikka</li>
+</ul>
+</li>
+<li>Datakerros (Data Layer)<ul>
+<li>Datan lukeminen ja kirjoittaminen</li>
+<li>Yhteys tietokantaan</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="monitasoarkkitehtuuri">Monitasoarkkitehtuuri</h2>
+<ul>
+<li><p>Loogisen jaottelun lisäksi täytyy huomioida se miten koko sovellus on <em>fyysisesti</em> jaoteltu</p>
+<ul>
+<li>Esim. mikä osa palvelimella ja mikä selaimessa</li>
+</ul>
+</li>
+<li><p>Fyysisen jaottelun yhteydessä puhutaan <em>monitasoarkkitehtuureista</em> (n-tier architecture)</p>
+<ul>
+<li>Tasot (tiers): fyysinen jaottelu</li>
+<li>Kerrokset (layers): looginen jaottelu</li>
+</ul>
+</li>
+<li><p><a href="http://stackoverflow.com/a/120487">What&#39;s the difference between &quot;Layers&quot; and
+&quot;Tiers&quot;?</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="kolmitasoarkkitehtuuri">Kolmitasoarkkitehtuuri</h2>
+<ul>
+<li>Usein pienessä/keskisuuressa web-sovelluksessa on kolme tasoa (3-tier
+architecture).red[&#42;]<ol>
+<li>Web-selain (asiakastaso, client tier)</li>
+<li>Web-palvelin (sovellustaso, wep application tier)</li>
+<li>Tietokantapalvelin (tietokantataso, database tier)</li>
+</ol>
+</li>
+</ul>
+<p><img src="../img/tiers0.png" alt=""></p>
+<p>&#42;] n-tier architecture on yleisesti käytetty käsite,
+mutta eri tasojen nimet eivät ole vakiintuneita.
+Näissä kalvoissa käytetään samoja käsitteitä kuin mm.
+<a href="http://msdn.microsoft.com/en-us/library/ee658120.aspx">tässä artikkelissa</a>,
+jossa on muutenkin hyvää lisätietoa aiheeseen liittyen.]</p>
+<hr>
+<h2 id="tasot-kerrokset">Tasot &amp; kerrokset</h2>
+<ul>
+<li><p>Web-sovelluksen arkkitehtuuria suunnitellessa täytyy päättää mitä
+kerroksia sijoitetaan millekin tasolle</p>
+</li>
+<li><p>Kerrokset</p>
+</li>
+</ul>
+<p><img src="../img/layers.png" alt=""></p>
+<ul>
+<li>Tasot</li>
+</ul>
+<p><img src="../img/tiers0.png" alt=""></p>
+<ul>
+<li>Käydään läpi muutama eri vaihtoehto --&gt;</li>
+</ul>
+<hr>
+<h2 id="kevyt-asiakas">Kevyt asiakas</h2>
+<ul>
+<li>Perinteinen tapa on sijoittaa kaikki kerrokset web-palvelimelle</li>
+</ul>
+<p><img src="../img/tiers1.png" alt=""></p>
+<ul>
+<li><p>Näkymät generoiva esityskerroskin on palvelimella</p>
+<ul>
+<li>Selain toimii vain yksinkertaisena HTML-renderöijänä</li>
+</ul>
+</li>
+<li><p>Tällaisesta ratkaisusta käytetään nimitystä <em>kevyt asiakas</em></p>
+<ul>
+<li><em>thin client</em></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="kevyt-asiakas-esimerkki">Kevyt asiakas -esimerkki</h2>
+<p><img src="../img/webapp-kevyt.png" alt=""></p>
+<hr>
+<h2 id="raskas-asiakas">Raskas asiakas</h2>
+<ul>
+<li>Kevyen asiakkaan vastakohta on <em>raskas asiakas</em><ul>
+<li><em>fat/thick/heavy/rich client</em></li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/tiers3.png" alt=""></p>
+<ul>
+<li>Sekä sovelluslogiikka että näkymän päivitys suoritetaan selaimessa<ul>
+<li>Palvelimelle jää vain datarajapinta</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="raskas-asiakas-esimerkki">Raskas asiakas -esimerkki</h2>
+<p><img src="../img/webapp-raskas.png" alt=""></p>
+<hr>
+<h2 id="kevyt-vs-raskas-asiakas">Kevyt vs raskas asiakas</h2>
+<ul>
+<li><p>Kevyt asiakas</p>
+<ul>
+<li>Ei juurikaan toimintalogiikkaa selaimessa</li>
+<li>Kun selain pyytää sivua, palvelin koostaa sen kokonaisuudessaan ja
+palauttaa selaimelle</li>
+</ul>
+</li>
+<li><p>Raskas asiakas</p>
+<ul>
+<li>Hyödyntää runsaasti JavaScriptiä, mm.<ul>
+<li>näkymän manipulointiin</li>
+<li>datan hakemiseen palvelimelta Ajax-kutsuilla</li>
+<li>ym.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Myös saman web-sovelluksen/-sivuston jotkut osat voidaan toteuttaa kevyenä
+asiakkaana, jotkut raskaana</p>
+</li>
+</ul>
+<hr>
+<h2 id="raskaan-asiakkaan-hy-tyj-">Raskaan asiakkaan hyötyjä</h2>
+<ul>
+<li><p>Ei sivunlatauksia</p>
+<ul>
+<li>parempi käyttökokemus</li>
+</ul>
+</li>
+<li><p>Vähemmän ladattavaa</p>
+<ul>
+<li>ei koko sivua, vain tarvittava data</li>
+</ul>
+</li>
+<li><p>Yksinkertaisempi palvelin</p>
+<ul>
+<li>skaalautuu</li>
+<li>palvelinresursseja ei tarvita niin paljoa, sillä suuri osa työstä tehdään käyttäjien selaimissa</li>
+</ul>
+</li>
+<li><p>HTML-, CSS- ja JavaScript-tiedostot ovat staattisia</p>
+<ul>
+<li>cacheutuvat hyvin</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="raskaan-asiakkaan-ongelmia">Raskaan asiakkaan ongelmia</h2>
+<ul>
+<li><p>Ensimmäinen sivunlataus voi olla hidas</p>
+</li>
+<li><p>Vaatii suorituskykyä selainpäässä</p>
+<ul>
+<li>voi olla ongelma mobiililaitteille</li>
+</ul>
+</li>
+<li><p>Selaimen takaisin-painike ja muu navigointi?</p>
+</li>
+<li><p>Hankala hakukoneroboteille</p>
+<ul>
+<li>ja kaikille muille jotka eivät suorita JavaScriptiä</li>
+</ul>
+</li>
+<li><p>Toteutuskielenä oltava JavaScript</p>
+<ul>
+<li>tai joku selain-plugin</li>
+<li>tai joku kieli, josta generoidaan julkaisuvaiheessa JavaScriptiä</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="yhden-sivun-sovellus">Yhden sivun sovellus</h2>
+<ul>
+<li><p>Sellaista web-sovellusta, jossa HTML-dokumentti ladataan vain kerran, kutsutaan <em>yhden sivun sovellukseksi</em></p>
+<ul>
+<li><em>Single Page Application</em> (<em>SPA</em>)</li>
+<li>Esityskerros selainpäässä</li>
+</ul>
+</li>
+<li><p>Ensimmäisen latauksen jälkeen kaikki palvelin-kommunikaatio tapahtuu Ajax-kutsuin</p>
+</li>
+<li><p>SPA voi silti käyttäjän näkökulmasta koostua useammasta &quot;sivusta&quot;</p>
+</li>
+<li><p>SPA on yleensä raskas asiakas</p>
+<ul>
+<li>Esim. edellisen kalvon sähköpostiohjelma</li>
+<li>On kuitenkin myös kevyempiä SPA:eja<ul>
+<li>kuten seuraavalla kalvolla --&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="kevyehk-asiakas-red-42-">Kevyehkö asiakas.red[&#42;]</h2>
+<ul>
+<li>Esityskerros selaimella, muut palvelimella<ul>
+<li>Selaimelta lähetetään palvelimelle &quot;käyttöliittymätapahtumia&quot;</li>
+<li>Palvelin lähettää näkymään tehtävät muutokset selaimelle</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/tiers2.png" alt=""></p>
+<p>&#42;] Ei oikea termi]</p>
+<hr>
+<h2 id="kevyehk-asiakas-esimerkki">Kevyehkö asiakas -esimerkki</h2>
+<p><img src="../img/webapp-kevyehko.png" alt=""></p>
+<!--
+
+## Vielä yksi
+
+* Kerrokset eivät ole aina selkeästi yhdellä tasolla
+    * Esim. toimintalogiikkaa voi olla sekä selaimessa että palvelimella
+
+
+![](../img/mvcmvc.png)
+
+-->
+<hr>
+<h2 id="lamp-mean">LAMP, MEAN</h2>
+<ul>
+<li><p><a href="https://en.wikipedia.org/wiki/LAMP_(software_bundle%29">LAMP</a></p>
+<ul>
+<li>Linux + Apache + MySQL + PHP</li>
+<li>Tyypillinen teknologiastäkki web-sovellusten tekoon</li>
+<li>Yleensä kevyen asiakkaan sovelluksia</li>
+</ul>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/MEAN_(software_bundle%29">MEAN</a></p>
+<ul>
+<li>MongoDB + Express + Angular + Node.js</li>
+<li>Tyypillinen, uudempi teknologiastäkki web-sovellusten tekoon</li>
+<li>Yleensä raskaan asiakkaan sovelluksia</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>webprogramming</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="web-programming">Web Programming</h1>
+<h3 id="antti-nieminen">Antti Nieminen</h3>
+<p>TIE-02206 Basic Course of Programming</p>
+<hr>
+<h1 id="agenda">Agenda</h1>
+<ul>
+<li><p>Web Applications</p>
+</li>
+<li><p>JavaScript</p>
+</li>
+<li><p>A little demo</p>
+</li>
+</ul>
+<hr>
+<h1 id="web-applications">Web Applications</h1>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/World_Wide_Web">The Web (World Wide Web, www)</a><blockquote>
+<p>is an information system of interlinked
+hypertext documents accessed via the Internet, using <em>web browser</em></p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Web_application">A web application</a><blockquote>
+<p>is any software that runs in a web browser</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h1 id="history-of-web-applications">History of Web Applications</h1>
+<ul>
+<li><p>1990&#39;s</p>
+<ul>
+<li>Mostly static HTML pages</li>
+<li>Eg. <a href="http://www.cs.tut.fi/~prog2/">http://www.cs.tut.fi/~prog2/</a></li>
+<li>&quot;Web 1.0&quot;</li>
+</ul>
+</li>
+<li><p>2000&#39;s</p>
+<ul>
+<li>Dynamic web applications</li>
+<li>User-generated content</li>
+<li>Eg. <a href="http://www.wikipedia.org">http://www.wikipedia.org</a></li>
+<li>&quot;Web 2.0&quot;</li>
+</ul>
+</li>
+<li><p>2010&#39;s</p>
+<ul>
+<li>HTML5, user experience comparable to desktop applications</li>
+<li>Eg. <a href="http://play.spotify.com">http://play.spotify.com</a></li>
+<li>&quot;Web 3.0&quot;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="why-web-applications-">Why Web Applications?</h1>
+<ul>
+<li><p>Pros</p>
+<ul>
+<li>Available everywhere<ul>
+<li>Platform-independent</li>
+<li>The only requirement is a modern web browser</li>
+</ul>
+</li>
+<li>No installation</li>
+<li>Automatic updates</li>
+<li>Safer to run than native application (browser sandbox)</li>
+</ul>
+</li>
+<li><p>Cons</p>
+<ul>
+<li>Requires an internet connection</li>
+<li>Own kind of security concerns<ul>
+<li>The application is reachable by the whole world</li>
+</ul>
+</li>
+<li>Web technology limitations<ul>
+<li>Not that big issue nowadays</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="web-application-architecture">Web Application Architecture</h1>
+<ul>
+<li><p>Web application consist of</p>
+<ol>
+<li><strong>front end</strong> (run on a web browser)</li>
+<li><strong>back end</strong> (run on a web server)</li>
+</ol>
+</li>
+<li><p>The communication between the two is done using
+<a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">Hypertext Transfer Protocol (HTTP)</a></p>
+</li>
+<li><p>An architecture of a typical web application:</p>
+</li>
+</ul>
+<p><img src="../img/webapp-eng.png" alt=""></p>
+<hr>
+<h1 id="back-end">Back end</h1>
+<ul>
+<li><p>The back end of a web application can be implemented using various
+technologies, programming languages, and frameworks</p>
+</li>
+<li><p>The only requirement for a back end is that it can communicate using
+HTTP</p>
+</li>
+<li><p>Some popular frameworks / programming languages:</p>
+<ul>
+<li><a href="https://www.djangoproject.com/">Django</a> (Python)</li>
+<li><a href="http://en.wikipedia.org/wiki/Java_servlet">Java Servlets</a></li>
+<li><a href="http://nodejs.org/">Node.js</a> (JavaScript)</li>
+<li><a href="http://php.net/">PHP</a></li>
+<li><a href="http://rubyonrails.org/">Ruby on Rails</a></li>
+<li>...</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="front-end-technologies">Front-end technologies</h1>
+<ul>
+<li><p>HTML</p>
+<ul>
+<li>Describes the content and structure of a web page</li>
+</ul>
+</li>
+<li><p>CSS</p>
+<ul>
+<li>Describes the appearance of a web page</li>
+</ul>
+</li>
+<li><p>JavaScript</p>
+<ul>
+<li>The programming language of a web browser</li>
+<li>Implements the functionality on the web page</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="html">HTML</h1>
+<ul>
+<li><p>HyperText Markup Language</p>
+</li>
+<li><p>Describes the structure of a web page</p>
+<ul>
+<li>A tree of HTML elements</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"en"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"title"</span>&gt;</span>Hello<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"first"</span>&gt;</span>First!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Second!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+<hr>
+<h1 id="css">CSS</h1>
+<ul>
+<li><p>Cascading Style Sheets</p>
+</li>
+<li><p>Describes the appearance of a web page</p>
+</li>
+<li><p><em>Selectors</em> with attribute-value pairs</p>
+</li>
+</ul>
+<ul>
+<li><a href="../../assets/misc/hellostyle.css">hellostyle.css</a> </li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-comment">/* Select by element name */</span>
+<span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> orange</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Select by class */</span>
+<span class="hljs-class">.title</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Select by id */</span>
+<span class="hljs-id">#first</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1px</span> solid black</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span></code></pre>
+
+
+
+
+<ul>
+<li><a href="../../assets/misc/hello.html">hello.html</a></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"en"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"hellostyle.css"</span>
+          <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"title"</span>&gt;</span>Hello<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"first"</span>&gt;</span>First!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Second!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+
+<hr>
+<h1 id="javascript">JavaScript</h1>
+<ul>
+<li><p>The programming language of a web browser</p>
+</li>
+<li><p>Dynamically typed</p>
+</li>
+<li><p>First-class functions</p>
+</li>
+<li><p>Prototype-oriented</p>
+</li>
+<li><p>Can be attached on a HTML page using the <code>&lt;script&gt;</code> tag</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="actionscript">
+  alert(<span class="hljs-string">"Hello"</span>);
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+or
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"file.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+
+</li>
+</ul>
+<hr>
+<h1 id="javascript-syntax">JavaScript Syntax</h1>
+<ul>
+<li>JavaScript syntax is somewhat similar to C++</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> x = <span class="hljs-number">100</span>;
+<span class="hljs-keyword">var</span> y = <span class="hljs-string">"Hello"</span>;
+<span class="hljs-keyword">var</span> li = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">100</span>; i++) {
+  <span class="hljs-comment">// ...</span>
+}</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">while</span> (something()) {
+  ...
+}</code></pre>
+
+
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">plus</span>(<span class="hljs-params">a, b</span>) </span>{
+  <span class="hljs-keyword">return</span> a + b;
+}</code></pre>
+
+<hr>
+<h1 id="dynamic-typing">Dynamic typing</h1>
+<ul>
+<li><p>JavaScript is a dynamically typed language</p>
+</li>
+<li><p>Variables have no type, values do</p>
+<ul>
+<li>Everything is a <code>var</code></li>
+</ul>
+</li>
+<li><p>Same variable can contain numbers, strings, objects, lists, functions,
+booleans, ...</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> x = <span class="hljs-string">"Hello"</span>;
+x = <span class="hljs-number">100</span>;
+x = <span class="hljs-literal">true</span>;
+x = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">"Three"</span>];</code></pre>
+
+<hr>
+<h1 id="javascript-objects">JavaScript Objects</h1>
+<ul>
+<li>JavaScript has objects, but no classes</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> obj1 = {
+  name: <span class="hljs-string">"Jack"</span>,
+  age: <span class="hljs-number">20</span>
+};</code></pre>
+
+<ul>
+<li>JavaScript is very flexible<ul>
+<li>Objects can be arbitrarily modified during their lifetime</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">obj1.name = <span class="hljs-string">"Jill"</span>;
+obj1.height = <span class="hljs-number">160</span>;
+<span class="hljs-keyword">delete</span> obj1.age;</code></pre>
+
+<ul>
+<li>Instead of classes, JavaScript has a concept called
+<em>prototypes</em></li>
+</ul>
+<hr>
+<h1 id="first-class-functions">First-class Functions</h1>
+<ul>
+<li><p>JavaScript has <em>first-class functions</em></p>
+</li>
+<li><p>Functions are like any other values</p>
+<ul>
+<li>they can be assigned to variables, passed as parameters,
+returned from functions, ...</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">twice</span>(<span class="hljs-params">func</span>)  </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    func();
+    func();
+  }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayHi</span>(<span class="hljs-params"></span>) </span>{
+  alert(<span class="hljs-string">"Hi!"</span>);
+}
+
+<span class="hljs-keyword">var</span> sayHiTwice = twice(sayHi);
+
+sayHiTwice();</code></pre>
+
+<hr>
+<h1 id="dom">DOM</h1>
+<ul>
+<li>A web page can be manipulated programmatically via the
+<a href="http://www.w3.org/DOM/">Document Object Model (DOM)</a> interface</li>
+</ul>
+<ul>
+<li><a href="../../assets/misc/hello.html">hello.html</a></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"en"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"hellostyle.css"</span>
+          <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"title"</span>&gt;</span>Hello<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"first"</span>&gt;</span>First!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Second!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+
+
+
+<ul>
+<li><a href="../../assets/misc/script.js">script.js</a></li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-pi">"use strict"</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pClicked</span>(<span class="hljs-params">event</span>) </span>{
+  event.srcElement.style.
+    backgroundColor = <span class="hljs-string">'red'</span>;
+}
+
+<span class="hljs-keyword">var</span> ps = <span class="hljs-built_in">document</span>.
+  getElementsByTagName(<span class="hljs-string">'p'</span>);
+
+<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;ps.length; ++i){
+  <span class="hljs-keyword">var</span> p = ps[i];
+  p.onclick = pClicked;
+}</code></pre>
+
+
+<hr>
+<h1 id="ajax">Ajax</h1>
+<ul>
+<li><p><a href="http://en.wikipedia.org/wiki/Ajax_%28programming%29">Ajax</a>
+is a set of technologies that allows a web page to communicate with a
+server without reloading the whole page</p>
+</li>
+<li><p>&quot;Asynchronous JavaScript And XML&quot;</p>
+</li>
+<li><p>Web browser provides the <code>XMLHttpRequest</code> object</p>
+<ul>
+<li>Allows making arbitrary HTTP requests</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+  xhr.open(<span class="hljs-string">'GET'</span>, <span class="hljs-string">'/url/to/backend'</span>);
+  xhr.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
+    alert(<span class="hljs-keyword">this</span>.response);
+  }
+  xhr.send();</code></pre>
+
+<hr>
+<h1 id="demo">Demo</h1>
+<ul>
+<li><a href="http://easi-vm-4.rd.tut.fi:8080/live/">http://easi-vm-4.rd.tut.fi:8080/live/</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

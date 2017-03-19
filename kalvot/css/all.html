@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>css</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="css">CSS</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="css">CSS</h2>
+<ul>
+<li><p>Cascading Style Sheets</p>
+</li>
+<li><p>Kieli web-sivun ulkoasun määrittämiseen</p>
+</li>
+<li><p>CSS:n avulla voidaan määritellä HTML-elementtien tyyli</p>
+<ul>
+<li>Väri</li>
+<li>Koko</li>
+<li>Sijainti</li>
+<li>Reunus</li>
+<li>Fontti</li>
+<li>Animaatio</li>
+<li>jne.</li>
+<li>jne.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="css-n-versiot">CSS:n versiot</h2>
+<ul>
+<li><p>CSS 1</p>
+<ul>
+<li>Vuodelta 1996</li>
+</ul>
+</li>
+<li><p>CSS 2</p>
+<ul>
+<li>Vuodelta 1998</li>
+<li>Lisäsi uusia ominaisuuksia CSS 1:een</li>
+</ul>
+</li>
+<li><p>CSS 2.1</p>
+<ul>
+<li>Korjauksia CSS 2.1:een</li>
+<li>Viilattiin useita vuosia<ul>
+<li>W3C Proposed Recommendation vuonna 2011</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>CSS 3</p>
+<ul>
+<li>Taaksepäin yhteensopiva</li>
+<li>Ei enää yhtä isoa spesifikaatiota vaan useita moduuleja</li>
+<li>Eri moduulit eri kypsyystasoilla</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="css-moduulit">CSS-moduulit</h2>
+<p><img src="../img/css3.png" alt=""></p>
+<hr>
+<h2 id="css-n-syntaksi">CSS:n syntaksi</h2>
+<ul>
+<li>CSS:ssä määritellään <em>valitsin</em> (<em>selector</em>)
+sekä tälle tyyliominaisuuksia</li>
+</ul>
+<pre><code class="hljs css">VALITSIN {
+  OMINAISUUS1: ARVO1;
+  OMINAISUUS2: ARVO2;
+  ...
+}</code></pre>
+
+<ul>
+<li><p>Valitsimella määrätään mihin HTML-elementteihin tyylittely kohdistuu</p>
+</li>
+<li><p>Ominaisuus-arvo-pareilla puolestaan se mitä tyylejä asetetaan</p>
+</li>
+<li><p>Esim. kaikki <code>h1</code>-otsikot oranssiksi</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">h1</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> orange</span></span>;
+}</span></code></pre>
+
+<hr>
+<h2 id="html-ja-css">HTML ja CSS</h2>
+<ul>
+<li><p>HTML-dokumenttiin voidaan liittää tyylejä eri tavoin</p>
+</li>
+<li><p>Elementin <code>style</code>-attribuutti:</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background: yellow;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<ul>
+<li><code>style</code>-elementti:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+  <span class="hljs-tag">h1</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#ABC</span></span></span>;
+  }</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span></code></pre>
+
+<ul>
+<li>Linkki erilliseen CSS-tiedostoon:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"./tyyli.css"</span>&gt;</span></code></pre>
+
+<p>Viimeksi mainittu tapa on yleensä suositelluin</p>
+<hr>
+<h2 id="valitsimia">Valitsimia</h2>
+<ul>
+<li>Pelkkä HTML-elementin tyyppi kohdistaa tyylin kaikkiin kyseisen
+tyyppisiin elementteihin</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> yellow</span></span>;
+}</span></code></pre>
+
+<ul>
+<li>Risuaita-valitsimella <code>#</code> kohdistetaan elementtiin, jolla on
+määrätty <code>id</code>-attribuutti (esimerkissä <code>id=&quot;otsikko1&quot;</code>)</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-id">#otsikko1</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>;
+}</span></code></pre>
+
+<ul>
+<li>Piste-valitsimella tyyli puolestaan kohdistuu elementteihin, joilla on
+kyseinen <code>class</code>-attribuutti (esimerkissä <code>class=&quot;iso&quot;</code>)</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-class">.iso</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">200px</span></span></span>;
+}</span></code></pre>
+
+<hr>
+<h2 id="esimerkki">Esimerkki</h2>
+<ul>
+<li><a href="../../assets/misc/style.css">style.css</a> </li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-comment">/* Valitsin: elementin tyyppi*/</span>
+<span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> orange</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Valitsin: luokka (class) */</span>
+<span class="hljs-class">.moi</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Valitsin: tunniste (id) */</span>
+<span class="hljs-id">#eka</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1px</span> solid black</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span></code></pre>
+
+
+
+
+<ul>
+<li><a href="../../assets/misc/moi.html">moi.html</a></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"fi"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>
+          <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/css"</span>
+          <span class="hljs-attribute">href</span>=<span class="hljs-value">"style.css"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"moi"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"eka"</span>&gt;</span>Eka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Toka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+
+
+<hr>
+<h2 id="valitsinten-yhdistely">Valitsinten yhdistely</h2>
+<ul>
+<li><p>Valitsimia voidaan yhdistellä eri tavoin</p>
+</li>
+<li><p>Sama tyyli voidaan kohdistaa useampaan kohteeseen
+erottelemalla ne pilkuin</p>
+<ul>
+<li>Esim. kaikki <code>h1</code>-, <code>h2</code>- ja <code>h3</code>-otsikot lihavoituna:</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">h1</span>, <span class="hljs-tag">h2</span>, <span class="hljs-tag">h3</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bold</span></span>;
+}</span></code></pre>
+
+<ul>
+<li>Pisteellä yhdistelemällä voidaan puolestaan kohdistaa tyyli
+elementteihin, joilla on kaikki mainitut <code>class</code>-attribuutit<ul>
+<li>Esim. elementit joilla on sekä <code>class</code> nimeltä <code>iso</code> että <code>musta</code></li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-class">.iso</span><span class="hljs-class">.musta</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> black</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span></code></pre>
+
+<hr>
+<h2 id="j-lkel-inen">Jälkeläinen</h2>
+<ul>
+<li><p>Valitsimia voi kohdistaa myös sen perusteella mikä niiden sijainti on
+HTML-puussa</p>
+</li>
+<li><p>Välilyönnillä erottamalla kohdistetaan tyyli elementin <em>jälkeläisiin</em>
+(<em>descendant</em>)</p>
+<ul>
+<li>Esim. kaikki laatikon sisällä olevat <code>a</code>-elementit:</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-class">.laatikko</span> <span class="hljs-tag">a</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">text-decoration</span>:<span class="hljs-value"> none</span></span>;
+}</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"laatikko"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"."</span>&gt;</span>Valitsin osuu<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"."</span>&gt;</span>Osuu tähänkin<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"."</span>&gt;</span>Tähän ei osu<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre>
+
+<hr>
+<h2 id="suora-lapsi">Suora lapsi</h2>
+<ul>
+<li>Suurempi-kuin-merkillä <code>&gt;</code> kohdistuu tyyli tietyn elementin suoriin
+lapsiin (ei lapsenlapsiin)</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-class">.laatikko</span> &gt; <span class="hljs-tag">a</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> orange</span></span>;
+}</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"laatikko"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"."</span>&gt;</span>Valitsin osuu<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"."</span>&gt;</span>Mutta tähän ei<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"."</span>&gt;</span>Tähän ei osu edelleenkään<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre>
+
+
+
+<hr>
+<h2 id="muita-valitsimia">Muita valitsimia</h2>
+<ul>
+<li><p>CSS-valtsimia on
+<a href="http://www.w3schools.com/cssref/css_selectors.asp">paljon muitakin</a></p>
+</li>
+<li><p>Palataan osaan niistä vielä myöhemmin</p>
+</li>
+</ul>
+<hr>
+<h2 id="css-tyyliominaisuudet">CSS-tyyliominaisuudet</h2>
+<ul>
+<li><p>Erilaisia tyyliominaisuuksiakin on CSS:ssä
+<a href="http://www.w3schools.com/cssref/default.asp">aika pitkä lista</a></p>
+</li>
+<li><p>Käydään läpi joitakin -&gt;</p>
+</li>
+</ul>
+<hr>
+<h2 id="color">color</h2>
+<ul>
+<li><p>Tekstin väri asetetaan <code>color</code>-ominaisuudella</p>
+</li>
+<li><p>Väri voi olla</p>
+<ul>
+<li>joku <a href="http://www.w3schools.com/html/html_colornames.asp">nimetyistä väreistä</a>, esim <code>red</code></li>
+<li>heksa-arvo <code>#FF0000</code></li>
+<li>rgb-arvo <code>rgb(255, 0, 0)</code></li>
+</ul>
+</li>
+<li><p>Värin läpinäkyvyys asetetaan <code>opacity</code>-ominaisuudella [0-1]</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> MediumSpringGreen</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">opacity</span>:<span class="hljs-value"> <span class="hljs-number">0.5</span></span></span>;
+}</span></code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/cssref/pr_text_color.asp">W3Schools: CSS color Property</a></li>
+</ul>
+<hr>
+<h2 id="background">background</h2>
+<ul>
+<li>Tausta asetetaan <code>background</code>-ominaisuudella</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">body</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> yellow</span></span>;
+}</span>
+
+<span class="hljs-class">.laatikko</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> brown <span class="hljs-function">url</span>(<span class="hljs-string">"tausta.png"</span>) no-repeat fixed center</span></span>;
+}</span></code></pre>
+
+<ul>
+<li><p>Lisäksi erikseen <code>background-color</code>, <code>background-image</code> ym.</p>
+</li>
+<li><p><a href="http://www.w3schools.com/cssref/css3_pr_background.asp">W3Schools: CSS background Property</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="border">border</h2>
+<ul>
+<li>Reunus asetetaan <code>border</code>-ominaisuudella</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">table</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1px</span> solid black</span></span>;
+}</span></code></pre>
+
+<ul>
+<li><p>Lisäksi erikseen <code>border-color</code>, <code>border-width</code>, ym.</p>
+</li>
+<li><p><a href="http://www.w3schools.com/cssref/pr_border.asp">W3Schools: CSS border Property</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="margin">margin</h2>
+<ul>
+<li>Elementin marginaali (etäisyys naapurista) asetetaan <code>margin</code>
+-attribuutilla</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">4px</span></span></span>;
+}</span>
+
+<span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">5px</span> <span class="hljs-number">5px</span></span></span>;
+}</span></code></pre>
+
+<ul>
+<li><p>Järjestys: <code>top</code> <code>right</code> <code>bottom</code> <code>left</code></p>
+</li>
+<li><p>Lisäksi erikseen <code>margin-left</code>, <code>margin-bottom</code>, ym.</p>
+</li>
+</ul>
+<p><img src="../img/marginpadding.png" alt=""></p>
+<hr>
+<h2 id="padding">padding</h2>
+<ul>
+<li><code>padding</code> taas on elementin reunan ja sen lapsien välinen etäisyys</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">4px</span></span></span>;
+}</span>
+
+<span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">5px</span> <span class="hljs-number">5px</span></span></span>;
+}</span></code></pre>
+
+<ul>
+<li><p>Järjestys: <code>top</code> <code>right</code> <code>bottom</code> <code>left</code></p>
+</li>
+<li><p>Lisäksi erikseen <code>margin-left</code>, <code>margin-bottom</code>, ym.</p>
+</li>
+<li><p>W3Schools:
+<a href="http://www.w3schools.com/cssref/pr_margin.asp">margin</a> ja
+<a href="http://www.w3schools.com/cssref/pr_padding.asp">padding</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="font">font</h2>
+<ul>
+<li>Kirjasin asetetaan <code>font</code>-ominaisuudella</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font</span>:<span class="hljs-value"> <span class="hljs-number">15px</span> arial, sans-serif</span></span>;
+}</span></code></pre>
+
+<ul>
+<li><p>Lisäksi erikseen <code>font-size</code>, <code>font-family</code>, ym.</p>
+</li>
+<li><p><a href="http://www.w3schools.com/cssref/pr_font_font.asp">W3Schools: CSS font Property</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="display">display</h2>
+<ul>
+<li><p>Ominaisuus <code>display</code> määrää miten elementti näytetään</p>
+</li>
+<li><p>Joitain mahdollisia <code>display</code>:n arvoja:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">display</th>
+<th style="text-align:left">Selitys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>none</code></td>
+<td style="text-align:left">Elementtiä ei näy</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>inline</code></td>
+<td style="text-align:left">Näytetään &quot;inline&quot; siinä kohdassa missä elementti on.  Oletuksena useimmat elementit tällaisia.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>block</code></td>
+<td style="text-align:left">Alkaa uudelta riviltä ja view kaiken tilan leveyssuunnassa. Mm. <code>div</code> ja <code>p</code> tällaisia oletuksena.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><a href="http://www.w3schools.com/cssref/pr_class_display.asp">Muitakin</a></li>
+</ul>
+<hr>
+<h2 id="position">position</h2>
+<ul>
+<li><p>Ominaisuus <code>position</code> määrää miten elementin sijainti asetetaan</p>
+</li>
+<li><p>Joitain mahdollisia <code>position</code>:in arvoja:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">position</th>
+<th style="text-align:left">Selitys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>static</code></td>
+<td style="text-align:left">Oletus. Elementit piirretään siinä järjestyksessä kun ne ovat dokumentissa.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>absolute</code></td>
+<td style="text-align:left">Elementti sijoitetaan suhteessa ensimmäiseen <em>sijoitettuun</em> (<em>positioned</em>, <em>ei-static</em>) vanhempaansa.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>relative</code></td>
+<td style="text-align:left">Elementti sijoitetaan suhteessa oletussijaintiinsa.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>fixed</code></td>
+<td style="text-align:left">Elementti sijoitetaan suhteessa selainikkunaan.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><a href="http://www.w3schools.com/cssref/pr_class_display.asp">Muitakin</a></li>
+</ul>
+<hr>
+<h2 id="position-esimerkki">position-esimerkki</h2>
+<ul>
+<li>Sijoitetaan <code>.laatikko</code> ensimmäisen sijoitetun vanhempansa oikeaan
+reunaan, 10 pikselin päähän sen yläreunasta</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-class">.laatikko</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> absolute</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">right</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+}</span></code></pre>
+
+<ul>
+<li>Sijoitetaan <code>.laatikko</code> 10 pikseliä oletussijainnistaan alas ja 10
+pikseliä vasemmalle</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-class">.laatikko</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">bottom</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span></code></pre>
+
+<hr>
+<h2 id="css-tyylittely-">CSS-tyylittelyä</h2>
+<p><img src="../img/familyguy.gif" alt=""></p>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<ul>
+<li><p>Liitä aiemmin luomaasi lomakkeeseen tyylitiedosto</p>
+</li>
+<li><p>Koristele lomakkeesi CSS-tyylein</p>
+</li>
+<li><p>Kaikki tyyliominaisuudet on listattu
+<a href="http://www.w3schools.com/cssref/default.asp">täällä</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="responsiivisuus">Responsiivisuus</h2>
+<ul>
+<li><p>Nykypäivänä web-sivuja luetaan hyvin erilaisilla laitteilla</p>
+</li>
+<li><p>Selainikkunan leveys voi vaihdella muutamasta sentistä kymmeniin
+sentteihin</p>
+</li>
+<li><p>Samanlainen layout ei sovi kaikille ruuduille</p>
+</li>
+<li><p>... vaan layoutin on oltava <em>responsiivinen</em></p>
+</li>
+</ul>
+<hr>
+<h2 id="float">float</h2>
+<ul>
+<li>Yksi CSS:n ominaisuus jota responsiivisten layoutien teossa voidaan
+hyödyntää on <code>float</code></li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">div</span><span class="hljs-class">.leijuva</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
+}</span></code></pre>
+
+<ul>
+<li><p><code>float</code>-ominaisuuden avulla elementtejä voidaan latoa vierekkäin
+niin paljon kuin ruudulle mahtuu</p>
+</li>
+<li><p>Latominen voidaan aloittaa joko vasemmasta (<code>float: left</code>)
+tai oikeasta reunasta (<code>float: right</code>)</p>
+</li>
+<li><p><a href="http://www.w3schools.com/cssref/pr_class_float.asp">W3Schools: CSS float Property</a></p>
+</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<ul>
+<li>Avaa tämä plunk: <a href="http://plnkr.co/edit/cvpHvwDM7PeoIu9YHN76">http://plnkr.co/edit/cvpHvwDM7PeoIu9YHN76</a></li>
+</ul>
+<p>Se sisältää <code>section</code> -elementtejä, joille asetetaan CSS-tiedostossa <code>float</code>-ominaisuus.</p>
+<ul>
+<li><p>Avaa esikatselu. Muuttele selainikkunan kokoa ja katso mitä tapahtuu.</p>
+</li>
+<li><p>Kokeile vaihtaa <code>float</code>:n arvoksi <code>right</code>. Sekä <code>none</code>.</p>
+</li>
+<li><p>Aseta jo(i)llekin <code>section</code>-elementille tyyliominaisuus
+<a href="http://www.w3schools.com/cssref/pr_class_clear.asp">clear</a>.
+Mitä tapahtuu?</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">section</span><span class="hljs-class">.pyyhkis</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">clear</span>:<span class="hljs-value"> both</span></span>;
+}</span></code></pre>
+
+<hr>
+<h2 id="media-kyselyt">media-kyselyt</h2>
+<ul>
+<li><p>CSS3 toi responsiivisten layoutien tekoon uuden työkalun:
+media-kyselyt (media queries)</p>
+</li>
+<li><p>Sen avulla voidaan asettaa eri tyylejä sen mukaan minkälaisella
+laitteella web-sivu avataan</p>
+</li>
+<li><p>Esim. tyyli enintään 500 pikselin levyisille selainikkunoille
+(viewport)</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-at_rule">@<span class="hljs-keyword">media</span> only screen and (max-width: <span class="hljs-number">500px</span>) </span>{
+  <span class="hljs-tag">nav</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+  }</span>
+}</code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/cssref/css3_pr_mediaquery.asp">W3Schools: CSS3 @media Rule</a></li>
+</ul>
+<hr>
+<h2 id="media-attribuutti">media-attribuutti</h2>
+<ul>
+<li><p>Eri laitteilla voidaan käyttää myös kokonaan eri CSS-tiedostoja</p>
+</li>
+<li><p>Tämä onnistuu HTML:n <code>link</code>-elementin <code>media</code>-attribuutilla</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>
+      <span class="hljs-attribute">media</span>=<span class="hljs-value">"screen and (min-width: 800px)"</span>
+      <span class="hljs-attribute">href</span>=<span class="hljs-value">"normaali.css"</span> /&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>
+      <span class="hljs-attribute">media</span>=<span class="hljs-value">"screen and (max-width: 799px)"</span>
+      <span class="hljs-attribute">href</span>=<span class="hljs-value">"mobiili.css"</span> /&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>
+      <span class="hljs-attribute">media</span>=<span class="hljs-value">"print"</span>
+      <span class="hljs-attribute">href</span>=<span class="hljs-value">"tulostin.css"</span> /&gt;</span></code></pre>
+
+<hr>
+<h2 id="bootstrap">bootstrap</h2>
+<ul>
+<li><p>Responsiivisten layouttien tekoa helpottamaan on erilaisia
+frameworkeja</p>
+</li>
+<li><p>Suosituin näistä on <a href="http://getbootstrap.com/">Bootstrap</a></p>
+</li>
+<li><p>Bootstrap-esimerkki-plunk: <a href="http://plnkr.co/edit/EA0Ah9h6Q3QQni3f9Lsr">http://plnkr.co/edit/EA0Ah9h6Q3QQni3f9Lsr</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="viel-valitsimista">Vielä valitsimista</h2>
+<ul>
+<li><p>Elementtejä voidaan tyylitellä myös niiden attribuuttien mukaan</p>
+</li>
+<li><p>Esim. <code>input</code>-elementit joiden <code>type</code> = <code>text</code></p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">input</span><span class="hljs-attr_selector">[type=text]</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1px</span> solid black</span></span>;
+}</span></code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/css/css_attribute_selectors.asp">W3Schools: CSS Attribute Selectors</a></li>
+</ul>
+<hr>
+<h2 id="pseudo-luokat">Pseudo-luokat</h2>
+<ul>
+<li><p>CSS-tyylin voi asettaa myös elementin <em>tilan</em> perusteella</p>
+</li>
+<li><p>Elementeillä on automaattisesti erilaisia <em>pseudo-luokkia</em> (<em>pseudo
+classes</em>), joita voidaan tyylitellä kuten tavallisiakin luokkia</p>
+</li>
+<li><p>Syntaksi: <code>VALITSIN:PSEUDO-LUOKKA</code></p>
+</li>
+<li><p>Esim. <code>a</code>-elementin pseudo-luokat <code>visited</code> ja <code>hover</code>:</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">a</span><span class="hljs-pseudo">:visited</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#FFFF00</span></span></span>;
+}</span>
+
+<span class="hljs-tag">a</span><span class="hljs-pseudo">:hover</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> white</span></span>;
+}</span></code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/css/css_pseudo_classes.asp">W3Schools: CSS Pseudo-classes</a></li>
+</ul>
+<hr>
+<h2 id="joitain-pseudo-luokkia">Joitain pseudo-luokkia</h2>
+<pre><code class="hljs css"><span class="hljs-tag">p</span><span class="hljs-pseudo">:first-child</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin-left</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span>
+
+<span class="hljs-tag">p</span><span class="hljs-pseudo">:last-child</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin-right</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span>
+
+<span class="hljs-tag">p</span><span class="hljs-pseudo">:nth-child(3)</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+}</span>
+
+<span class="hljs-tag">a</span><span class="hljs-pseudo">:before</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">content</span>:<span class="hljs-value"> <span class="hljs-string">" ("</span> <span class="hljs-function">attr</span>(href) <span class="hljs-string">")"</span></span></span>;
+}</span>
+
+<span class="hljs-tag">a</span><span class="hljs-pseudo">:after</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">content</span>:<span class="hljs-value"> <span class="hljs-string">"!"</span></span></span>;
+}</span>
+
+<span class="hljs-tag">section</span><span class="hljs-pseudo">:empty</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> red</span></span>;
+}</span></code></pre>
+
+
+<hr>
+<h2 id="css-valitsinten-j-rjestys">CSS-valitsinten järjestys</h2>
+<ul>
+<li>Useampi CSS-sääntö voi osua saman elementin samaan attribuuttiin, esim:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"iidee"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"luokka"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span></code></pre>
+
+<pre><code class="hljs css"><span class="hljs-tag">p</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>; }</span>
+<span class="hljs-class">.luokka</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> green</span></span>; }</span>
+ <span class="hljs-id">#iidee</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> blue</span></span>; }</span></code></pre>
+
+<ul>
+<li><p>CSS <a href="http://www.w3.org/TR/CSS2/cascade.html#cascade">määrittelee sääntöjen tärkeysjärjestyksen</a></p>
+<ul>
+<li>&quot;Tarkin sääntö voittaa&quot;</li>
+<li>Tasapelin sattuessa viimeiseksi määritelty voittaa</li>
+</ul>
+</li>
+<li><p>Tärkeysjärjestys voidaan kumota <code>!important</code> määreellä</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">p</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red <span class="hljs-important">!important</span></span></span>; }</span></code></pre>
+
+<hr>
+<h2 id="linkkej-">Linkkejä</h2>
+<ul>
+<li><p><a href="http://www.w3.org/TR/CSS/">CSS:n spesifikaatio</a></p>
+</li>
+<li><p>W3Schools
+<a href="http://www.w3schools.com/cssref/default.asp">CSS Reference</a> ja
+<a href="http://www.w3schools.com/cssref/css_selectors.asp">CSS Selector Reference</a></p>
+</li>
+<li><p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS">CSS Mozilla Developer Networkissa</a></p>
+</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<p>Avaa Plunker-projekti
+<a href="http://plnkr.co/edit/w2zAFt6gLzIqDpLpL0vE">http://plnkr.co/edit/w2zAFt6gLzIqDpLpL0vE</a></p>
+<p>Sen <code>index.html</code> sisältää kymmenen 3x5 kokoista taulukkoa (<code>table</code>).
+Tyylit määritellään tiedostossa <code>numerot.css</code>.</p>
+<ul>
+<li>Muokkaa tyylitiedostoa <code>numerot.css</code> siten, että taulukoihin muodostuu numerot
+1, 2, 3, 4, 5, ...
+Valmiina on kaksi ensimmäistä numeroa, joista voi ottaa mallia.</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

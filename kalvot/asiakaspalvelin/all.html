@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>asiakaspalvelin</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="selain-palvelin">Selain &amp; Palvelin</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="aiheita-t-n-n">Aiheita tänään</h2>
+<ul>
+<li><p>Datan lähetys selaimelta palvelimelle</p>
+<ul>
+<li>Lomakkeet</li>
+<li>Ajax</li>
+</ul>
+</li>
+<li><p>Muuta aiheeseen liittyvää</p>
+<ul>
+<li>Evästeet</li>
+<li>Same-origin policy</li>
+<li>Cross-origin resource sharing</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="selain-palvelin-kommunikaatio">Selain-palvelin-kommunikaatio</h2>
+<p>Kaksi päätapaa lähettää dataa web-selaimelta palvelimelle</p>
+<ol>
+<li><p>Lomakkeet</p>
+<ul>
+<li>Skriptitön vaihtoehto</li>
+<li>Kömpelöhkö</li>
+</ul>
+</li>
+<li><p>Ajax</p>
+<ul>
+<li>Mahdollisuus lähettää mitä tahansa dataa milloin tahansa</li>
+</ul>
+</li>
+<li><p>Myös sivun lataus esim. linkin klikkauksen myötä voidaan kai laskea
+datan lähetykseksi...</p>
+</li>
+<li><p>Lisäksi on WebSocketit</p>
+<ul>
+<li>Tilanteisiin joihin HTTP on liian hidas</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="lomakkeet">Lomakkeet</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/minne"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"GET"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">"nimi-input"</span> &gt;</span>Nimi:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"nimi-input"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>
+         <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">"Kirjoita jotain"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Lähetä"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<p><img src="../img/form.png" alt=""></p>
+<p>Erilaisia <a href="http://www.w3schools.com/tags/att_input_type.asp">input typejä</a>
+on HTML5:n myötä aika paljon:</p>
+<ul>
+<li><code>button</code>,
+<code>checkbox</code>,
+<code>color</code>,
+<code>date</code>,
+<code>datetime</code>,
+<code>datetime-local</code>,
+<code>email</code>,
+<code>file</code>,
+<code>hidden</code>,
+<code>image</code>,
+<code>month</code>,
+<code>number</code>,
+<code>password</code>,
+<code>radio</code>,
+<code>range</code>,
+<code>reset</code>,
+<code>search</code>,
+<code>submit</code>,
+<code>tel</code>,
+<code>text</code>,
+<code>time</code>,
+<code>url</code>,
+<code>week</code></li>
+<li><a href="http://caniuse.com/#feat=forms">Selaintuki vaihtelee</a></li>
+</ul>
+<hr>
+<h2 id="lomakkeen-metodi">Lomakkeen metodi</h2>
+<ul>
+<li><p>Lomakkeiden <code>method</code>-attribuutiksi voidaan määritellä joko <code>GET</code> tai <code>POST</code></p>
+<ul>
+<li>Lomakkeen lähettämiseen käytetään vastaavaa HTTP-metodia</li>
+<li><code>GET</code>: datan hakeminen (turvallinen metodi)</li>
+<li><code>POST</code>: kaikki muu</li>
+</ul>
+</li>
+<li><p>Miksei <code>PUT</code> tai <code>DELETE</code>?</p>
+<ul>
+<li>Ei mitään erityisen hyvää syytä muiden HTTP-metodien puuttumiseen (?)</li>
+<li>Joka tapauksessa ne puuttuvat HTML-lomakkeiden spesifikaatiosta
+eikä niitä ole toteutettu selaimissa</li>
+<li>Joudutaan tarvittaessa emuloimaan käyttämällä <code>POST</code>:ia ja kertomalla
+jotenkin (esim. <em>hidden</em>-<em>input</em>-elementillä)
+että oikeasti kyseessä onkin <code>PUT</code>/<code>DELETE</code>.</li>
+<li><a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=10671">Keskustelua aiheesta</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="get-lomake">GET-lomake</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/minne"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"GET"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"piilo"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"piilodata"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Lähetä"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<p>tuottaa HTTP-pyynnön</p>
+<pre><code class="hljs http">GET /minne?nimi=jotain&amp;piilo=piilodata HTTP/1.1
+Host: example.com
+...
+(loput otsikkotiedot)
+(ei runko-osaa)</code></pre>
+
+<p>Käytännössä sama kuin avata URL-osoite</p>
+<pre><code class="hljs http">http://example.com/minne?nimi=jotain&amp;piilo=piilodata</code></pre>
+
+<ul>
+<li><code>GET</code>-pyynnön koko on rajoitettu<ul>
+<li>Yleensä muutama kilotavu</li>
+<li>Raja riippuu selaimesta ja palvelimesta</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="post-lomake">POST-lomake</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/minne"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"POST"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"nimi"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"piilo"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"piilodata"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Lähetä"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<p>tuottaa HTTP-pyynnön</p>
+<pre><code class="hljs http">POST /minne HTTP/1.1
+Host: example.com
+Content-Length: 27
+Content-Type: application/x-www-form-urlencoded
+...
+(loput otsikkotiedot)
+
+nimi=jotain&amp;piilo=piilodata</code></pre>
+
+
+<hr>
+<h2 id="ajax">Ajax</h2>
+<ul>
+<li><p>Termillä <a href="https://developer.mozilla.org/en-US/docs/AJAX">Ajax</a>
+tarkoitetaan joukkoa teknologioita,
+joiden avulla voidaan ladata uutta sisältöä web-sivulle
+lataamatta koko sivua uudelleen</p>
+<ul>
+<li>Keskiössä <code>XMLHttpRequest</code>-olio</li>
+</ul>
+</li>
+<li><p><code>XMLHttpRequest</code>-olion avulla voidaan web-selaimelta tehdä ~mielivaltaisia HTTP-pyyntöjä palvelimelle</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+  xhr.open(<span class="hljs-string">'put'</span>, <span class="hljs-string">'/resurssi/palvelimella'</span>);
+  xhr.setRequestHeader(<span class="hljs-string">'Content-type'</span>, <span class="hljs-string">'plain/text'</span>);
+  xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span>(xhr.readyState === <span class="hljs-number">4</span> &amp;&amp; xhr.status === <span class="hljs-number">200</span>) {
+      alert(xhr.responseText);
+    }
+  }
+  xhr.send(<span class="hljs-string">'moikkamoi'</span>);</code></pre>
+
+<hr>
+<h2 id="xmlhttprequest">XMLHttpRequest</h2>
+<ul>
+<li><p>Ajax-pyynnöissä voidaan käyttää kaikkia HTTP-metodeja</p>
+<ul>
+<li><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>, ...</li>
+</ul>
+</li>
+<li><p>Ja asettaa otsikkotietoja</p>
+<ul>
+<li><a href="http://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader%28%29-method">Tietyt otsikkotiedot</a>
+tosin on rajoitettu ainoastaan selaimen kirjoitettavaksi,
+eikä niitä voi asettaa <code>XMLHttpRequest</code>-olion kautta<ul>
+<li>Esim. <code>Host</code>, <code>Referer</code>, <code>User-Agent</code>, <code>Cookie</code>, ...</li>
+<li><code>Sec-</code> -alkuiset</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">xhr.setRequestHeader(<span class="hljs-string">'user-agent'</span>, <span class="hljs-string">'salainen agentti'</span>);</code></pre>
+<pre><code class="hljs">&gt; Refused <span class="hljs-keyword">to</span> <span class="hljs-built_in">set</span> unsafe <span class="hljs-keyword">header</span> <span class="hljs-string">"user-agent"</span></code></pre>
+
+<hr>
+<h2 id="ajax-kirjastot">Ajax-kirjastot</h2>
+<ul>
+<li><p>Ajax-kutsujen tekoa helpottamaan on olemassa erilaisia
+JavaScript-kirjastoja</p>
+</li>
+<li><p>Esim. <a href="http://api.jquery.com/jquery.ajax/">jQuery</a></p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$.ajax(<span class="hljs-string">'/jotain'</span>, {
+  type: <span class="hljs-string">'GET'</span>
+}).done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+  alert(data);
+});</code></pre>
+
+
+<hr>
+<h2 id="ev-steet">Evästeet</h2>
+<ul>
+<li><p>Eväste (cookie) on tapa, jolla HTTP:ssa voidaan säilöä
+pyynnöstä toiseen säilyvää tietoa</p>
+</li>
+<li><p>Eväste muodostuu nimi-arvo-pareista</p>
+</li>
+<li><p>Palvelin asettaa evästeen vastauksessaan</p>
+<ul>
+<li><code>Set-Cookie</code> -otsikko</li>
+</ul>
+</li>
+<li><p>Asiakas lähettää evästeen tulevissa pyynnöissään</p>
+<ul>
+<li><code>Cookie</code> -otsikko</li>
+</ul>
+</li>
+<li><p>Tyypillinen käyttötapa on asettaa ns. <em>istuntotunniste</em> (session
+token)</p>
+<ul>
+<li>istuntotunniste luodaan käyttäjän kirjautuessa</li>
+<li>sen avulla palvelin tietää kuka HTTP-pyynnön teki</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="set-cookie-ja-cookie">Set-Cookie ja Cookie</h2>
+<ul>
+<li>Osoitteesta <code>http://www.example.com</code> tuleva vastaus</li>
+</ul>
+<pre><code class="hljs http">HTTP/1.1 200 OK
+...
+Set-Cookie: n=5
+Set-Cookie: foo=bar
+...</code></pre>
+
+<ul>
+<li>Asiakas liittää jatkossa evästeet ko. osoitteeseen lähettämiinsä pyyntöihin</li>
+</ul>
+<pre><code class="hljs http">GET /kuva.png HTTP/1.1
+...
+Cookie: n=5; foo=bar
+...</code></pre>
+
+<hr>
+<h2 id="ev-steen-k-ytt-ytyminen">Evästeen käyttäytyminen</h2>
+<ul>
+<li><p>Oletusarvoisesti</p>
+<ul>
+<li>eväste säilötään istunnon päättymiseen (= selaimen sulkemiseen) asti</li>
+<li>eväste liitetään pyyntöihin, jotka tehdään osoitteeseen, jossa<ul>
+<li>domain on sama kuin alkuperäisessä pyynnössä, ja</li>
+<li>polku (path) on sama kuin alkuperäisessä pyynnössä tai sen alipolku</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Käyttäytymistä voidaan muokata evästeen attribuuteilla</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Set-Cookie</span>: <span class="hljs-string">NIMI=ARVO; attr1; attr2; ...</span></code></pre>
+
+<hr>
+<h2 id="ev-steen-attribuutit">Evästeen attribuutit</h2>
+<ul>
+<li><p><code>Expires=&lt;päiväys&gt;</code></p>
+<ul>
+<li>säilytä evästettä tähän asti</li>
+</ul>
+</li>
+<li><p><code>Max-Age=&lt;sekunnit&gt;</code></p>
+<ul>
+<li>säilytä evästettä vain tämä aika, kumoaa Expires-attribuutin</li>
+</ul>
+</li>
+<li><p><code>Domain=&lt;domain1,domain2,...&gt;</code> </p>
+<ul>
+<li>lähetä eväste näihin domaineihin tehtäviin pyyntöihin</li>
+</ul>
+</li>
+<li><p><code>Path=&lt;polku&gt;</code></p>
+<ul>
+<li>lähetä eväste vain tähän polkuun ja sen alipolkuihin</li>
+</ul>
+</li>
+<li><p><code>HttpOnly</code></p>
+<ul>
+<li>vain HTTP-viesteihin, ei näy mm. selaimen JavaScript-koodissa</li>
+</ul>
+</li>
+<li><p><code>Secure</code></p>
+<ul>
+<li>lähetetään vain &quot;turvallisen&quot; yhteyden yli, käytännössä HTTPS</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="ev-steet-ja-javascript">Evästeet ja JavaScript</h2>
+<ul>
+<li><p>Web-selain lähettää evästeet automaattisesti</p>
+<ul>
+<li>Web-sovellus ei voi asettaa <code>Cookie</code> otsikkotietoa</li>
+</ul>
+</li>
+<li><p>Jos evästeessä ei ole <code>HttpOnly</code>-attribuuttia, niitä voidaan kuitenkin lukea ja
+kirjoittaa JavaScriptillä</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> vanha = <span class="hljs-built_in">document</span>.cookie;</code></pre>
+<pre><code class="hljs javascript"><span class="hljs-built_in">document</span>.cookie=<span class="hljs-string">"uusi=evaste"</span>;</code></pre>
+
+<ul>
+<li>harvoin tälle kuitenkaan on tarvetta...</li>
+</ul>
+<hr>
+<h2 id="esimerkki">Esimerkki</h2>
+<ul>
+<li><p>Olen kirjautunut sivulle <code>webbimaili.fi</code>, joka on</p>
+<pre><code>lisännyt autentikointitiedot sisältävän evästeen
+</code></pre></li>
+<li><p>Käyn samalla selaimella osoitteessa <code>pahis.org</code>, jossa on seuraava skripti</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$.get(<span class="hljs-string">'https://webbimaili.fi/kaikki.html'</span>).done(handleResponse);</code></pre>
+
+<ul>
+<li><p>HTTP-viestin mukana kulkevat evästeet voisivat huijata
+<code>webbimaili.fi</code>:n luulemaan, että HTTP-pyyntö tulee minulta,
+ja näyttää pahikselle kaikki sähköpostini</p>
+</li>
+<li><p><strong>Mutta</strong>: pahiksen suunnitelma ei kuitenkaan onnistu näin helposti, sillä
+web-selain rajoittaa eri <em>originien</em> välisiä HTTP-pyyntöjä</p>
+<ul>
+<li>Rajoituksesta käytetään nimitystä <em>same-origin policy</em></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="same-origin-policy">Same-origin policy</h2>
+<ul>
+<li><p><em>Same-origin policy</em> on web-selaimen tietoturvamekanismi, joka rajoittaa
+eri <em>originien</em> välistä kommunikaatiota</p>
+</li>
+<li><p>Origin = protokolla + host + portti</p>
+</li>
+<li><p>Esim. verrataan URI:a <code>http://www.tut.fi/fi</code></p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">URL</th>
+<th style="text-align:left">Same origin?</th>
+<th style="text-align:left">Syy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>http:/www.tut.fi/en/?x=1</code></td>
+<td style="text-align:left">Kyllä</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>https:/www.tut.fi</code></td>
+<td style="text-align:left">Ei</td>
+<td style="text-align:left">Eri protokolla</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>http:/www.tut.fi:8000</code></td>
+<td style="text-align:left">Ei</td>
+<td style="text-align:left">Eri portti</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>http:/wiki.tut.fi</code></td>
+<td style="text-align:left">Ei</td>
+<td style="text-align:left">Eri host</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="same-origin-policy">Same-origin policy</h2>
+<ul>
+<li><p>Same-origin policy koskee</p>
+<ul>
+<li>DOM:n käsittelyä</li>
+<li>XMLHttpRequest-pyyntöjä</li>
+</ul>
+</li>
+<li><p>Same-origin policy <em>ei</em> koske</p>
+<ul>
+<li>Lomakkeita (form)</li>
+<li>Sivulle liitettyjä elementtejä, jotka lataavat sisältöään muualta<ul>
+<li>Esim:</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://eriorigin1.com/skript.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"http://eriorigin2.com/style.css"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"http://eriorigin3.com/kuva.png"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+
+
+<hr>
+<h2 id="same-origin-policy-ja-dom">Same-origin policy ja DOM</h2>
+<ul>
+<li><p>Web-sivun JavaScript-koodi saa käsitellä vain samasta originista ladattujen sivujen DOM:ia</p>
+</li>
+<li><p>Esim. sivulla <code>https://www.tut.fi/fi</code> oleva seuraavanlainen uuden
+selainikkunan avaava ja sitä muokkaava JavaScript-koodi onnistuu:</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> w = open(<span class="hljs-string">"http://www.tut.fi"</span>);
+<span class="hljs-comment">// Kun sivu on latautunut...</span>
+w.document.body.innerHTML = <span class="hljs-string">"&lt;h1&gt;Moi&lt;/h1&gt;"</span>;</code></pre>
+
+<ul>
+<li>Mutta seuraava ei:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> w = open(<span class="hljs-string">"http://www.google.fi"</span>);
+<span class="hljs-comment">// Kun sivu on latautunut...</span>
+w.document.body.innerHTML = <span class="hljs-string">"&lt;h1&gt;Moi&lt;/h1&gt;"</span>;</code></pre>
+
+<pre><code class="hljs">&gt; SecurityError: Blocked <span class="hljs-operator">a</span> frame <span class="hljs-operator">with</span> origin <span class="hljs-string">"http://www.tut.fi"</span>
+  <span class="hljs-built_in">from</span> accessing <span class="hljs-operator">a</span> cross-origin frame.</code></pre>
+
+<hr>
+<h2 id="same-origin-policy-ja-xmlhttprequest">Same-origin policy ja XMLHttpRequest</h2>
+<ul>
+<li><p>Oletuksena Ajax-kutsuja voi tehdä vain samaan originiin</p>
+</li>
+<li><p>Esim. originissa <code>http://www.tut.fi</code> suoritettava seuraava Ajax-pyyntö
+ei onnistu</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$.get(<span class="hljs-string">'http://google.com/'</span>);</code></pre>
+
+<pre><code class="hljs">&gt; XMLHttpRequest cannot <span class="hljs-built_in">load</span> <span class="hljs-keyword">http</span>://google.com/.
+No <span class="hljs-string">'Access-Control-Allow-Origin'</span> header is present <span class="hljs-command"><span class="hljs-keyword">on</span> <span class="hljs-title">the</span> <span class="hljs-title">requested</span></span>
+resource. Origin <span class="hljs-string">'http://www.tut.fi'</span> is therefore <span class="hljs-operator">not</span> allowed access.</code></pre>
+
+<ul>
+<li><p>HUOM: tämä pyyntö kävi kuitenkin google.com:n palvelimella asti</p>
+</li>
+<li><p>Same-origin policy ei estä viestin lähetystä, vain vastauksen
+lukemisen</p>
+</li>
+</ul>
+<hr>
+<h2 id="same-origin-policyn-kiert-minen">Same-origin policyn kiertäminen</h2>
+<ul>
+<li><p>Usein on kuitenkin tarvetta tehdä HTTP-pyyntöjä selaimesta muihin origineihin</p>
+</li>
+<li><p>Tähän on useita tapoja. Esim:</p>
+<ol>
+<li>Pyynnön kierrättäminen oman palvelimen kautta</li>
+<li>JSONP (JSON with Padding)</li>
+<li>CORS (Cross-Origin Resource Sharing)</li>
+</ol>
+</li>
+<li><p>Kaksi jälkimmäistä vaatii yhteistyötä siltä palvelimelta, josta
+resurssi haetaan</p>
+</li>
+</ul>
+<hr>
+<h2 id="ajax-pyynn-n-kierr-tt-minen">Ajax-pyynnön kierrättäminen</h2>
+<ul>
+<li>Same-origin policy on vain <em>selaimen</em> ominaisuus<ul>
+<li>Web-palvelimet voivat tehdä mitä pyyntöjä haluavat</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/viapalvelin.png" alt=""></p>
+<hr>
+<h2 id="jsonp">JSONP</h2>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/JSONP">JSON with Padding (JSONP)</a>
+on kikka, jolla voidaan lukea dataa toisesta originista</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">jokuFunktio</span>(<span class="hljs-params">data</span>) </span>{
+  <span class="hljs-comment">// Dataa vastaanotettu...</span>
+}
+
+$(<span class="hljs-built_in">document</span>.body).append(<span class="hljs-string">'&lt;script src='</span> +
+               <span class="hljs-string">'"http://eriorigin.fi/dataa.js'</span> +
+               <span class="hljs-string">'?callback=jokuFunktio"&gt;&lt;/script&gt;'</span>);</code></pre>
+
+<ul>
+<li><code>http://eriorigin.fi/dataa.js?callback=jokuFunktio</code> vastaa
+lähettämällä JavaScript-tiedoston joka kutsuu <code>callback</code>-parametrina annettua
+funktiota<ul>
+<li>funktion parametrina varsinainen data</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">jokuFunktio({jotain: <span class="hljs-string">"dataa"</span>});</code></pre>
+
+<ul>
+<li>JSONP ei ole enää kovin tarpeellinen CORS:in yleistymisen myötä -&gt;</li>
+</ul>
+<hr>
+<h2 id="cors">CORS</h2>
+<ul>
+<li><p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">Cross-Origin Resource Sharing (CORS)</a>
+on tapa, jolla HTTP-palvelin voi
+eksplisiittisesti sallia toisesta originista tulevia pyyntöjä</p>
+<ul>
+<li><a href="http://www.w3.org/TR/cors/">W3C recommendation</a></li>
+</ul>
+</li>
+<li><p>Esim. Ajax-pyyntö</p>
+<ul>
+<li>originista <code>http://www.tut.fi</code></li>
+<li>originiin <code>http://eri.com</code></li>
+</ul>
+</li>
+<li><p>Pyynnössä otsikko</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Origin</span>: <span class="hljs-string">http://www.tut.fi</span></code></pre>
+
+<ul>
+<li>ja <code>http://eri.com</code>:n vastauksessa</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Access-Control-Allow-Origin</span>: <span class="hljs-string">http://www.tut.fi</span></code></pre>
+
+<ul>
+<li>Tällöin selain sallii <code>http://www.tut.fi</code> -sivun lukea vastauksen data</li>
+</ul>
+<hr>
+<h2 id="cors-simple-preflighted-requests">CORS: Simple &amp; Preflighted Requests</h2>
+<ul>
+<li><p>CORS:n näkökulmasta on kahdenlaisia HTTP-pyyntöjä</p>
+<ol>
+<li>Yksinkertaiset (simple)</li>
+<li>Ei-yksinkertaiset (preflighted)</li>
+</ol>
+</li>
+<li><p>Yksinkertaiset pyynnöt</p>
+<ul>
+<li>Metodi joko <code>GET</code>, <code>HEAD</code> tai <code>POST</code></li>
+<li>Lisäksi <a href="http://www.w3.org/TR/cors/#simple-header">rajoituksia otsikkotietoihin</a></li>
+<li>Tällaisia pyyntöjä voi web-sovellus muutenkin lähettää esimerkiksi
+lomakkeilla</li>
+</ul>
+</li>
+<li><p>Palvelin voi hyväksyä yksinkertaisen pyynnön palauttamalla
+vastauksen jossa on otsikkotieto</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Access-Control-Allow-Origin</span>: <span class="hljs-string">&lt;pyynnön Origin&gt;</span></code></pre>
+
+<p>tai</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Access-Control-Allow-Origin</span>: <span class="hljs-string">*</span></code></pre>
+
+<hr>
+<h2 id="cors-preflighted-request">CORS: Preflighted Request</h2>
+<ul>
+<li><p>CORS:n ei-yksinkertaisille pyynnöille pitää tehdä <em>preflight</em>-vaihe</p>
+</li>
+<li><p>Siinä lähetetään ensin <code>OPTIONS</code>-pyyntö, jossa kysytään lupaa ei-yksinkertaisen
+pyynnön suoritukseen</p>
+</li>
+</ul>
+<pre><code class="hljs http">OPTIONS /resurssi HTTP/1.1
+Host: eriorigin.com
+...
+Origin: http://www.tut.fi
+Access-Control-Request-Methods: PUT, DELETE
+Access-Control-Request-Headers: Content-Type, X-Foo, X-Bar</code></pre>
+
+<ul>
+<li>johon palvelin vastaa</li>
+</ul>
+<pre><code class="hljs http">HTTP/1.1 200 OK
+...
+Access-Control-Allow-Origin: http://www.tut.fi
+Access-Control-Allow-Methods: PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, X-Foo, X-Bar</code></pre>
+
+<ul>
+<li>Tämän jälkeen selain voi lähettää varsinaisen HTTP-pyynnön</li>
+</ul>
+<hr>
+<h2 id="palvelimelta-selaimelle">Palvelimelta selaimelle</h2>
+<ul>
+<li><p>HTTP:ssä kommunikoinnin aloittaa aina asiakas</p>
+</li>
+<li><p>Joskus on kuitenkin tarvetta mallille, jossa palvelin voi lähettää
+dataa web-selaimelle silloin kun palvelin haluaa</p>
+<ul>
+<li>Esim. pikaviestisovellus</li>
+</ul>
+</li>
+<li><p>Yksinkertaisin tapa on, että asiakas tekee pyyntöjä tietyin väliajoin,
+eli ns. <em>pollaa</em></p>
+</li>
+</ul>
+<pre><code class="hljs javascript">setInterval(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  $.get(<span class="hljs-string">'/oliskoJotainKiinnostavaa.json'</span>, lueVastaus);
+}, <span class="hljs-number">1000</span>);</code></pre>
+
+<ul>
+<li>Mutta parempiakin tapoja on -&gt;<ul>
+<li>Long-polling</li>
+<li>Streaming</li>
+<li>WebSocket (ei HTTP)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="long-polling">Long-polling</h2>
+<ul>
+<li><p><a href="https://tools.ietf.org/html/rfc6202#section-2">HTTP Long-polling</a>
+on nimitys kikalle, jolla voidaan <em>ikään kuin</em> aloittaa
+HTTP-pyyntö palvelimelta päin</p>
+<ul>
+<li>Asiakas tekee HTTP-pyynnön jolla se ilmoittautuu kuuntelemaan
+palvelinta</li>
+</ul>
+</li>
+<li><p>Toiminta:</p>
+<ol>
+<li>Asiakas tekee HTTP-pyynnön</li>
+<li>Palvelin ei vastaakaan heti vaan jättää pyynnön &quot;roikkumaan&quot;</li>
+<li>Vasta kun palvelimella on jotain dataa lähetettävänä, vastaa se
+roikkumassa olevaan pyyntöön</li>
+<li>Siirry kohtaan 1.</li>
+</ol>
+</li>
+<li><p><a href="https://tools.ietf.org/html/rfc6202#section-3">HTTP Streaming</a>
+on samantapainen tekniikka, mutta siinä HTTP-vastausta ei
+katkaista kohdassa 3 vaan saman vastauksen sisällä voidaan lähettää
+useampia viestejä</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Transfer-Encoding</span>: <span class="hljs-string">chunked</span></code></pre>
+
+</li>
+</ul>
+<hr>
+<h2 id="ongelmia">Ongelmia</h2>
+<ul>
+<li><p>Ongelmana mainituissa tekniikoissa (Long-polling ja Streaming) on että
+ne rakentuvat HTTP:n päälle</p>
+</li>
+<li><p>HTTP:tä ei ole tarkoitettu tällaiseen</p>
+<ul>
+<li>Se on asiakas-palvelin pyyntö-vastaus -protokolla</li>
+</ul>
+</li>
+<li><p>HTTP-viestit voivat kulkea usean välikäden kautta (välimuistit,
+proxyt, palomuurit, ...) jotka voivat aiheuttaa ongelmia</p>
+</li>
+<li><p>Välikädet eivät voi tietää että kyseessä on long-polling eikä liian kauan kestävä HTTP-pyyntö</p>
+</li>
+<li><p>HTTP:ssä ei ole &quot;flush&quot;-mekanismia, joten mikään ei takaa että
+Streamingin lähettämä osittainen viesti päätyisi perille eikä jää
+jonkun välikäden puskuriin</p>
+</li>
+<li><p>WebSocket-protokollassa ei ole näitä ongelmia -&gt;</p>
+</li>
+</ul>
+<hr>
+<h2 id="websocket">WebSocket</h2>
+<ul>
+<li><p><a href="https://tools.ietf.org/html/rfc6455">WebSocket</a>
+on protokolla web-selaimen ja palvelimen väliseen
+tehokkaaseen kommunikointiin</p>
+</li>
+<li><p>Käyttökelpoinen erityisesti erilaisissa reaaliaikasovelluksissa</p>
+<ul>
+<li>Esim. chatit, moninpelit</li>
+</ul>
+</li>
+<li><p>Kaksisuuntainen</p>
+<ul>
+<li>Sekä selain että palvelin voi lähettää dataa milloin haluaa</li>
+</ul>
+</li>
+<li><p>Same-origin policy -rajoitus ei koske WebSocket-protokollaa</p>
+</li>
+<li><p>Ei muuta tekemistä HTTP:n kanssa kuin että &quot;kättely&quot;
+(handshake) tehdään
+HTTP:n avulla</p>
+</li>
+</ul>
+<hr>
+<h2 id="websocket-handshake">WebSocket handshake</h2>
+<ul>
+<li>Pyyntö</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-request">GET <span class="hljs-string">/chat</span> HTTP/1.1</span>
+<span class="hljs-attribute">Host</span>: <span class="hljs-string">server.example.com</span>
+<span class="hljs-attribute">Upgrade</span>: <span class="hljs-string">websocket</span>
+<span class="hljs-attribute">Connection</span>: <span class="hljs-string">Upgrade</span>
+<span class="hljs-attribute">Sec-WebSocket-Key</span>: <span class="hljs-string">x3JJHMbDL1EzLkh9GBhXDw==</span>
+<span class="hljs-attribute">Sec-WebSocket-Protocol</span>: <span class="hljs-string">chat, superchat</span>
+<span class="hljs-attribute">Sec-WebSocket-Version</span>: <span class="hljs-string">13</span>
+<span class="hljs-attribute">Origin</span>: <span class="hljs-string">http://example.com</span></code></pre>
+
+<ul>
+<li>Vastaus</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-status">HTTP/1.1 <span class="hljs-number">101</span> Switching Protocols</span>
+<span class="hljs-attribute">Upgrade</span>: <span class="hljs-string">websocket</span>
+<span class="hljs-attribute">Connection</span>: <span class="hljs-string">Upgrade</span>
+<span class="hljs-attribute">Sec-WebSocket-Accept</span>: <span class="hljs-string">HSmrc0sMlYUkAGmm5OPpG2HaGWk=</span>
+<span class="hljs-attribute">Sec-WebSocket-Protocol</span>: <span class="hljs-string">chat</span></code></pre>
+
+<ul>
+<li>Selain hoitaa tämän automaattisesti käytettäessä
+<code>WebSocket</code> -rajapintaa</li>
+</ul>
+<hr>
+<h2 id="websocket-javascript-rajapinta">WebSocket JavaScript-rajapinta</h2>
+<ul>
+<li>WebSocketia tukevat selaimet
+(<a href="http://caniuse.com/#feat=websockets">kaikki uusimmat</a>)
+tarjoavat olion <code>WebSocket</code>, jolla voidaan luoda WebSocket-yhteyksiä</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> socket = <span class="hljs-keyword">new</span> WebSocket(<span class="hljs-string">'ws://example.com/foo'</span>, <span class="hljs-string">'chat'</span>);
+
+socket.onopen = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+  setInterval(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span> (socket.bufferedAmount == <span class="hljs-number">0</span>)
+      socket.send(getUpdateData());
+  }, <span class="hljs-number">50</span>);
+};
+
+socket.onmessage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{
+  dataaTuli(event.data);
+};</code></pre>
+
+<ul>
+<li>Varsinainen protokolla (esimerkissä <code>chat</code>) jää sovelluksen
+määriteltäväksi</li>
+</ul>
+<hr>
+<h2 id="loppuhuomio">Loppuhuomio</h2>
+<ul>
+<li><p>Kaikki läpi käydyt kommunikointitavat (pl. WebSocket) lähettävät ja vastaanottavat
+HTTP-viestejä</p>
+</li>
+<li><p>Palvelin ei edes välttämättä voi mitenkään tietää onko sen vastaanottama HTTP-pyyntö peräisin</p>
+<ul>
+<li>lomakkeen lähetyksestä</li>
+<li>Ajax-kutsusta</li>
+<li>HTML:n <code>&lt;img src=&quot;...&quot;&gt;&lt;/img&gt;</code> tms. elementin latauksesta</li>
+<li>linkin klikkauksesta</li>
+<li>URL:n syöttämisestä selaimen URL-kenttään</li>
+<li>vai jostain muualta kuin web-selaimesta...</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

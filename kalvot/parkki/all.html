@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>parkki</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="parkkikartta">Parkkikartta</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="parkkikartta">Parkkikartta</h2>
+<ul>
+<li><p>Yksi ehdotus harjoitustyöksi on sovellus,
+joka näyttää kartalla Tampereen parkkipaikat
+tilatietoineen</p>
+<ul>
+<li>Eli jotain <a href="http://jejeje.herokuapp.com/map">tämän näköistä</a></li>
+</ul>
+</li>
+<li><p>Kartan voi näyttää <a href="https://angular-ui.github.io/angular-google-maps/">angular-google-maps</a>-moduulin avulla</p>
+</li>
+<li><p>Parkkipaikkatiedot saa
+<a href="http://parkingdata.finnpark.fi:8080/Datex2/OpenData">Finnparkin rajapinnasta</a></p>
+<ul>
+<li>Datan hakemiseen voi käyttää <a href="https://github.com/request/request">request</a>-moduulia</li>
+<li>Saadun XML-datan voi muuttaa JavaScript-olioksi
+<a href="https://github.com/Leonidas-from-XIV/node-xml2js">xml2js</a>-moduulin avulla</li>
+</ul>
+</li>
+<li><p>Lisäominaisuutena käyttäjät voivat arvostella parkkipaikkoja
+(jotta tulee tietokannallekin jotain käyttöä)</p>
+</li>
+<li><p>Aivan aluksi täytyy luoda uusi Cloud9-workspace
+käyttäen harjoitustyöpohjaa
+<a href="../htpohja/#7">näiden ohjeiden mukaan</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="uusi-n-kym-">Uusi näkymä</h2>
+<ul>
+<li><p>Kun harjoitustyöpohja on avattu, voidaan aloittaa vaikka siitä,
+että luodaan uusi näkymä karttaa varten</p>
+</li>
+<li><p>Yeomanin <a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>-generaattorin avulla voimme luoda näkymän automaattisesti</p>
+</li>
+<li><p>Yeoman ja generaattori täytyy olla asennettuna</p>
+<pre><code class="hljs bash">npm install -g yo generator-angular-fullstack</code></pre>
+</li>
+<li><p>Sitten, kuten <a href="https://github.com/DaftMonk/generator-angular-fullstack">dokumentaatiossa</a> todetaan, voi uuden <code>map</code>-nimisen näkymän voi luoda komennolla</p>
+<pre><code class="hljs bash">yo angular-fullstack:route map</code></pre>
+</li>
+<li><p>Kysymyksiin voi vastata oletusarvoilla, jolloin luodaan tiedostoja
+hakemistoon <code>client/app/map/</code></p>
+</li>
+</ul>
+<hr>
+<h2 id="karttan-kym-">Karttanäkymä</h2>
+<ul>
+<li>Yeoman loi seuraavat tiedostot hakemistoon
+<code>client/app/map</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tiedosto</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>map.controller.js</code></td>
+<td style="text-align:left">Angularin <em>controller</em></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>map.controller.spec.js</code></td>
+<td style="text-align:left">Testit controllerille</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>map.css</code></td>
+<td style="text-align:left">Tyylitiedosto</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>map.html</code></td>
+<td style="text-align:left">Näkymä</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>main.js</code></td>
+<td style="text-align:left">Konfiguraatio</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="navbar">Navbar</h2>
+<ul>
+<li><p>Ennen karttanäkymän muokkaamista luodaan siihen osoittava linkki navigointipalkkiin</p>
+</li>
+<li><p>Tiedostossa <code>client/components/navbar/navbar.controller.js</code> on
+navigointipalkin <em>controller</em></p>
+<ul>
+<li>Lisätään uusi näkymä <code>$scope.menu</code>-muuttujaan</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">$scope.menu = [{
+  <span class="hljs-string">'title'</span>: <span class="hljs-string">'Home'</span>,
+  <span class="hljs-string">'link'</span>: <span class="hljs-string">'/'</span>
+},
+{
+  <span class="hljs-string">'title'</span>: <span class="hljs-string">'Map'</span>,
+  <span class="hljs-string">'link'</span>: <span class="hljs-string">'/map'</span>
+}];</code></pre>
+
+<ul>
+<li><code>$scope</code>:n <code>menu</code>-muuttujaa käytetään tiedostossa <code>navbar.html</code>,
+joten nyt navigointipalkkiin pitäisi ilmestyä uusi linkki</li>
+</ul>
+<hr>
+<h2 id="n-kym-n-layout">Näkymän layout</h2>
+<ul>
+<li>Navigointipalkin (tai minkä tahansa komponentin)
+ voi liittää näkymään käyttäen <code>ng-include</code>-attribuuttia</li>
+</ul>
+<ul>
+<li>Muokkaa tiedosto <code>client/app/map/map.html</code>:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">ng-include</span>=<span class="hljs-value">"'components/navbar/navbar.html'"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"container"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"row"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"col-md-8"</span>&gt;</span>Kahdeksan<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"col-md-4"</span>&gt;</span>Neljä<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<ul>
+<li>Bootstrapin responsiivinen layout vaatii juurekseen
+elementin, jossa on <code>container</code>-luokka<ul>
+<li>Containerissa puolestaan on rivejä (<code>class=&quot;row&quot;</code>)</li>
+<li>Ja rivissä on soluja (<code>class=&quot;col-md-5&quot;</code> ym.)</li>
+<li>Riville mahtuu enintään 12 &quot;saraketta&quot;</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a href="http://getbootstrap.com/css/#grid">Lisätietoa Bootstrapin grid-layoutista</a></li>
+</ul>
+<hr>
+<h2 id="angular-google-maps">Angular-google-maps</h2>
+<ul>
+<li>Seuraavaksi voimme lisätä kartan <a href="https://angular-ui.github.io/angular-google-maps/">angular-google-maps</a>-moduulin avulla</li>
+</ul>
+<pre><code class="hljs bash">bower install angular-google-maps --save</code></pre>
+
+<ul>
+<li>Kartan saa näkyviin soveltamalla
+<a href="https://angular-ui.github.io/angular-google-maps/#!/use">näitä ohjeita</a><ul>
+<li>Kohdan 2 voi ohittaa, koska bower tekee tämän automaattisesti</li>
+<li>Kohta 3: kts. seuraava kalvo -&gt;</li>
+<li>Kohta 4: muokkaa tiedostoa <code>client/app.js</code></li>
+<li>Kohta 5: tiedostoon <code>client/app/map/map.controller.js</code></li>
+<li>Kohta 6: tiedostoon <code>client/app/map/map.html</code></li>
+<li>Kohta 7: tiedostoon <code>client/app/map/map.css</code></li>
+</ul>
+</li>
+</ul>
+<p>--&gt;</p>
+<hr>
+<h2 id="map-controller-js">map.controller.js</h2>
+<ul>
+<li><code>map.controller.js</code> kun
+<a href="https://angular-ui.github.io/angular-google-maps/#!/use">ohjeen</a>
+kohta 3 tehdään
+<a href="https://angular-ui.github.io/angular-google-maps/#!/api/GoogleMapApi">ensinmainitulla tavalla</a>:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-comment">/* globals angular */</span>
+<span class="hljs-pi">'use strict'</span>;
+
+angular.module(<span class="hljs-string">'workspaceApp'</span>)
+.controller(<span class="hljs-string">'MapCtrl'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$scope, $log, uiGmapGoogleMapApi</span>) </span>{
+
+  <span class="hljs-comment">// Kohdistetaan kartta Hervantaan</span>
+  $scope.map = { center: {
+                   latitude: <span class="hljs-number">61.450524290834196</span>,
+                   longitude: <span class="hljs-number">23.85979997253412</span> },
+                 zoom: <span class="hljs-number">12</span> };
+
+  uiGmapGoogleMapApi.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">maps</span>) </span>{
+    $log.log(<span class="hljs-string">"Kartta on valmis käyttöön"</span>, maps);
+  });
+});</code></pre>
+
+<ul>
+<li><code>angular-google-maps</code>:n
+<a href="https://angular-ui.github.io/angular-google-maps/#!/api/GoogleMapApi">dokumentaatiosta</a> saa tarvittaessa lisätietoa</li>
+</ul>
+<hr>
+<h2 id="markers-esimerkki">markers-esimerkki</h2>
+<ul>
+<li>Tiedostoon <code>map.controller.js</code>:</li>
+</ul>
+<pre><code class="hljs javascript">$scope.markers = [{
+  id: <span class="hljs-number">0</span>,
+  coords: {
+    latitude: <span class="hljs-number">61.450524290834196</span>,
+    longitude: <span class="hljs-number">23.85979997253412</span>
+  }
+}];</code></pre>
+
+<ul>
+<li>Tiedostoon <code>map.html</code></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">ui-gmap-google-map</span> <span class="hljs-attribute">center</span>=<span class="hljs-value">"map.center"</span> <span class="hljs-attribute">zoom</span>=<span class="hljs-value">"map.zoom"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ui-gmap-markers</span>
+      <span class="hljs-attribute">models</span> = "<span class="hljs-attribute">markers</span>"
+      <span class="hljs-attribute">coords</span> = "'<span class="hljs-attribute">coords</span>'"
+      <span class="hljs-attribute">options</span> = "'<span class="hljs-attribute">options</span>'"&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">ui-gmap-markers</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ui-gmap-google-map</span>&gt;</span></code></pre>
+
+<ul>
+<li>Dokumentaatio: <a href="https://angular-ui.github.io/angular-google-maps/#!/api/marker">Marker</a>
+ja <a href="https://angular-ui.github.io/angular-google-maps/#!/api/marker">Markers</a></li>
+</ul>
+<hr>
+<h2 id="parkkipaikkadata">Parkkipaikkadata</h2>
+<ul>
+<li><p>Siirrytään välillä palvelimelle</p>
+</li>
+<li><p>Toteutetaan palvelimelle reitti <code>/api/parking</code>, joka palauttaa
+parkkipaikkojen tiedot</p>
+</li>
+<li><p>Palvelin puolestaan hakee tiedot
+<a href="http://parkingdata.finnpark.fi:8080/Datex2/OpenData">Finnparkin rajapinnasta</a></p>
+</li>
+</ul>
+<p><img src="../img/finnpark1.jpg" alt=""></p>
+<hr>
+<h2 id="miksei-client-finnpark-fi-">Miksei client-&gt;finnpark.fi?</h2>
+<p><img src="../img/finnpark2.jpg" alt=""></p>
+<ul>
+<li>Selaimissa on &quot;ikävä&quot; tietoturvamekanismi nimeltä
+<a href="http://localhost:8000/build/kalvot/sop/">same-origin policy</a>
+joka estää toisiin <em>originiin</em> (palvelimiin) tehtävät Ajax-pyynnöt
+oletuksena<ul>
+<li>Jos finnpark.fi toteuttaisi ominaisuuden nimeltä
+<a href="http://localhost:8000/build/kalvot/sop/#9">CORS</a>,
+voisi tehdä pyyntöjä suoraan selaimesta</li>
+<li>Se ei kuitenkaan toteuta, joten kierretään palvelimen kautta
+(mikä voisi tosin muutenkin olla järkevää)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-api-parkingspace">/api/parkingspace</h2>
+<ul>
+<li>Luodaan Yeomanilla
+<a href="https://github.com/DaftMonk/generator-angular-fullstack#endpoint">endpoint</a>
+nimeltä <code>parkingspace</code></li>
+</ul>
+<pre><code class="hljs bash">yo angular-fullstack:endpoint parkingspace</code></pre>
+
+<ul>
+<li>Oletusasetuksilla Yeoman luo seuraavat tiedostot
+hakemistoon <code>server/api/parkingspace</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tiedosto</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">index.js</td>
+<td style="text-align:left">Reittien määrittely</td>
+</tr>
+<tr>
+<td style="text-align:left">parkingspace.controller.js</td>
+<td style="text-align:left">Reittien toteutus</td>
+</tr>
+<tr>
+<td style="text-align:left">parkingspace.spec.js</td>
+<td style="text-align:left">Testit</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="routes-js">routes.js</h2>
+<ul>
+<li><del>Luotu reitti pitää vielä ottaa käyttöön tiedostossa <code>server/routes.js</code></del><ul>
+<li>Ei tarvikaan, sellainen on siellä jo:</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">app.use(<span class="hljs-string">'/api/parkingspaces'</span>, <span class="hljs-built_in">require</span>(<span class="hljs-string">'./api/parkingspace'</span>));</code></pre>
+
+<hr>
+<h2 id="datan-hakeminen">Datan hakeminen</h2>
+<ul>
+<li>Data voidaan hakea vaikka <code>request</code>-moduulilla</li>
+</ul>
+<pre><code class="hljs bash">npm install request --save</code></pre>
+
+<ul>
+<li>Esim.</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> request = <span class="hljs-built_in">require</span>(<span class="hljs-string">'request'</span>);
+
+request.get(FINNPARK_URL, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">error, response, body</span>) </span>{
+  <span class="hljs-comment">// ...</span>
+});</code></pre>
+
+<hr>
+<h2 id="xml2js">xml2js</h2>
+<ul>
+<li><p><a href="http://parkingdata.finnpark.fi:8080/Datex2/OpenData">Finnparkin rajapinta</a>
+tarjoaa datan XML-muodossa</p>
+</li>
+<li><p>Data pitää muuntaa JSON-muotoon, mikä onnistuu <code>xml2js</code>-moduulilla</p>
+</li>
+</ul>
+<pre><code class="hljs bash">npm install xml2js --save</code></pre>
+
+<ul>
+<li>Esim.</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> xml2js = <span class="hljs-built_in">require</span>(<span class="hljs-string">'xml2js'</span>);
+
+xml2js.parseString(data, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, result</span>) </span>{
+  <span class="hljs-comment">// ...</span>
+});</code></pre>
+
+<ul>
+<li>Muuntaminen Google Mapsille soveltuvaan muotoon vaatii vielä
+jokusen rivin koodia<ul>
+<li>Annetaan toteutus valmiina -&gt;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="parkingspace-controller-js">parkingspace.controller.js</h2>
+<ul>
+<li><p>Valmis toteutus:
+<a href="../../assets/misc/parkingspace.controller.js">parkingspace.controller.js</a></p>
+</li>
+<li><p>Se muuntaa XML:n taulukoksi, jonka alkiot ovat tämän näköisiä</p>
+</li>
+</ul>
+<pre><code class="hljs json">{
+  "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"FNPK.13"</span></span>,
+  "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"P-Duo"</span></span>,
+  "<span class="hljs-attribute">coords</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">61.4509</span></span>,
+    "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">23.8517</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">status</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">spacesAvailable</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+    "<span class="hljs-attribute">open</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
+  </span>}
+</span>}</code></pre>
+
+<ul>
+<li>Voit kokeilla että parkkipaikkojen lukeminen ja jäsentäminen onnistuu
+katsomalla palauttaako <code>http://***.c9users.io/api/parkingspaces</code>
+jotain järkevää</li>
+</ul>
+<hr>
+<h2 id="parkkipaikat-kartalle">Parkkipaikat kartalle</h2>
+<ul>
+<li><p>Jos palvelinpään rajapinta <code>/api/parkingspaces</code> toimii,
+voidaan siirtyä jälleen selainpäähän</p>
+</li>
+<li><p>Haetaan parkkipaikat tiedostossa <code>map.controller.js</code></p>
+</li>
+<li><p>Käytetään Angularin <code>$resource</code>-oliota</p>
+<ul>
+<li>Se täytyy ottaa käyttöön lisäämällä se controller-funktion parametriksi:</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$scope, $log, $resource, uiGmapGoogleMapApi</span>) </span>{</code></pre>
+
+<ul>
+<li>Yksinkertainen käyttö on yksinkertaista:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> ParkingSpace = $resource(<span class="hljs-string">'/api/parkingspaces'</span>);
+$scope.markers = ParkingSpace.query();</code></pre>
+
+
+<p><a href="https://docs.angularjs.org/api/ngResource/service/$resource">Documentation: <code>$resource</code></a></p>
+<hr>
+<h2 id="parkkipaikka-markkerit">Parkkipaikka-markkerit</h2>
+<p><img src="../img/markers.png" alt=""></p>
+<hr>
+<h2 id="transformresponse">transformresponse</h2>
+<ul>
+<li><p>Jos haluamme esimerkiksi asettaa klikkaustenkuuntelijoita markkereille,
+emme voi suoraan antaa palvelimelta tullutta <code>/api/parkingspaces</code>-resurssia
+kartalle, kuten edellä</p>
+</li>
+<li><p>Vaan täytyy muuttaa saamaamme vastausoliota</p>
+<ul>
+<li>Tämä onnistuu määrittelemällä <code>$resource</code>:lle oma metodi ja
+tälle <code>transformResponse</code>-attribuutti</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> ParkingSpace = $resource(<span class="hljs-string">'/api/parkingspaces/'</span>, <span class="hljs-literal">null</span>,
+  {
+    query: {
+      isArray: <span class="hljs-literal">true</span>,
+      transformResponse: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+        <span class="hljs-keyword">var</span> markers = angular.fromJson(data);
+        angular.forEach(markers, transformMarker);
+        <span class="hljs-keyword">return</span> markers;
+      }
+    }
+  });</code></pre>
+
+<ul>
+<li><code>transformMarker</code>-funktio --&gt;</li>
+</ul>
+<hr>
+<h2 id="transformmarker">transformMarker</h2>
+<ul>
+<li>Asetetaan kaikille markkereille <em>label</em> ja klikkaustenkuuntelija</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transformMarker</span>(<span class="hljs-params">m</span>) </span>{
+  m.options = {
+    labelContent: <span class="hljs-string">'&lt;div class="markerlabel"&gt;'</span> + m.name + <span class="hljs-string">'&lt;/div&gt;'</span>
+  };
+  m.events = {
+    click: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      $scope.selectedParkingspace = m;
+    }
+  };
+}</code></pre>
+
+<ul>
+<li><p>Nyt viimeisimmäksi klikattu markkeri on <code>$scope</code>:ssa muuttujassa
+<code>selectedParkingspace</code></p>
+</li>
+<li><p>Voimme vaikka näyttää sen näkymässä --&gt;</p>
+</li>
+</ul>
+<hr>
+<h2 id="reviewcol">reviewcol</h2>
+<ul>
+<li><p>Jaetaan <code>map.html</code>:ssä oleva <code>row</code> kahteen sarakkeeseen</p>
+</li>
+<li><p>Kartan leveydeksi 9 yksikköä ja <code>reviewcol</code>-elementti 3 yksikköä</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"container"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"row"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"col-md-9"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">ui-gmap-google-map</span> <span class="hljs-attribute">center</span>=<span class="hljs-value">'map.center'</span> <span class="hljs-attribute">zoom</span>=<span class="hljs-value">'map.zoom'</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- ... --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"col-md-3 reviewcol"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">h3</span>&gt;</span>{{selectedParkingspace.name}}<span class="hljs-tag">&lt;/<span class="hljs-title">h3</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<ul>
+<li><code>h3</code>-otsikon sisällöksi controllerissa asetetun
+<code>selectedParkingspace</code>-muuttujan <code>name</code>-attribuutti</li>
+</ul>
+<hr>
+<p><img src="../img/markers2.png" alt=""></p>
+<hr>
+<h2 id="markkerin-ikoni">Markkerin ikoni</h2>
+<ul>
+<li><p>Attribuutilla <code>options.icon</code> voi asettaa URL:n josta markkerin iconi
+ladataan</p>
+</li>
+<li><p>Asetetaan markkerit erilaisiksi parkkipaikan tilan perusteella</p>
+</li>
+<li><p>Jos et halua luoda ikoneita itse, voit käyttää vaikka Googlen
+tarjoamaa <a href="http://chart.apis.google.com/chart?chst=d_map_pin_letter&amp;chld=X|FFFF00">urlia</a>,
+joka palauttaa kuvan attribuuttien perusteella</p>
+</li>
+<li><p>Funktiossa <code>transformMarker</code> esim.</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> color;
+<span class="hljs-keyword">if</span> (<span class="hljs-string">'spacesAvailable'</span> <span class="hljs-keyword">in</span> m.status) {
+  color = <span class="hljs-string">'00FF00'</span>;
+}
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'open'</span> <span class="hljs-keyword">in</span> m.status) {
+  color = <span class="hljs-string">'0000FF'</span>;
+}
+<span class="hljs-keyword">else</span> {
+  color = <span class="hljs-string">'FF0000'</span>;
+}
+m.options.icon = <span class="hljs-string">'http://chart.apis.google.com/chart?chst=d_map_pin_letter&amp;chld=P|'</span> + color;</code></pre>
+
+<hr>
+<p><img src="../img/markers3.png" alt=""></p>
+<hr>
+<h2 id="parkkipaikka-arvostelut">Parkkipaikka-arvostelut</h2>
+<ul>
+<li><p>Käyttäjillä täytyy luonnollisesti olla mahdollisuus arvostella
+parkkipaikkoja</p>
+</li>
+<li><p>Versiossa 1.0 arvostelu on pelkkä teksti</p>
+</li>
+<li><p>Luodaan arvostelua varten <code>Review</code>-tietokantamalli tiedostoon
+<code>server/models/review.js</code></p>
+</li>
+<li><p>--&gt;</p>
+</li>
+</ul>
+<hr>
+<h2 id="server-models-review-js">server/models/review.js</h2>
+<pre><code class="hljs javascript"><span class="hljs-pi">"use strict"</span>;
+
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">sequelize, DataTypes</span>) </span>{
+  <span class="hljs-keyword">var</span> Review = sequelize.define(<span class="hljs-string">"Review"</span>, {
+    parkingspaceId: DataTypes.STRING,
+    text: DataTypes.STRING
+  },
+  {
+    classMethods: {
+      associate: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">models</span>) </span>{
+        Review.belongsTo(models.User, {<span class="hljs-keyword">as</span>: <span class="hljs-string">'reviewer'</span>});
+      }
+    },
+    indexes: [{
+      fields: [<span class="hljs-string">'parkingspaceId'</span>]
+    }]
+  });
+
+  <span class="hljs-keyword">return</span> Review;
+};</code></pre>
+
+<hr>
+<h2 id="reviews-api">reviews-API</h2>
+<ul>
+<li><p>Sitten täytyy luoda rajapinta, jonka kautta arvosteluja voi lukea ja
+kirjoittaa</p>
+</li>
+<li><p>Voisimme luoda Yeomanilla uuden endpointin tai laajentaa
+olemassaolevaa <code>/api/parkingspaces</code>-reittiä</p>
+<ul>
+<li>tehdään tässä jälkimmäisellä tavalla</li>
+</ul>
+</li>
+<li><p>Luodaan käsittelijä osoitteelle
+<code>/api/parkingspaces/:parkingspaceId/reviews</code></p>
+</li>
+<li><p><code>:parkingspaceId</code> tarkoittaa että sen tilalle tulee sen parkkipaikan
+id, jonka arvosteluja luetaan/kirjoitetaan</p>
+</li>
+</ul>
+<hr>
+<h2 id="reviews">reviews</h2>
+<ul>
+<li>Tiedostossa <code>server/api/parkingspace/index.js</code></li>
+</ul>
+<pre><code class="hljs javascript">router.get(<span class="hljs-string">'/:parkingspaceId/reviews'</span>, controller.reviewsIndex);
+router.post(<span class="hljs-string">'/:parkingspaceId/reviews'</span>, controller.reviewsCreate);</code></pre>
+
+<ul>
+<li>ja sitten varsinaiset toteutukset tiedostoon
+<code>server/api/parkingspace/parkingspace.controller.js</code></li>
+</ul>
+<pre><code class="hljs javascript">exports.reviewsIndex = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> haku tietokannasta</span>
+  send.json([]);
+};
+
+exports.reviewsCreate = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> lisäys tietokantaan</span>
+  send.json({});
+};</code></pre>
+
+<hr>
+<h2 id="reviewsindex">reviewsIndex</h2>
+<pre><code class="hljs javascript">exports.reviewsIndex = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  models.Review.findAll({
+    where: {
+      parkingspaceId: req.params.parkingspaceId
+    },
+    include: [{model: models.User, <span class="hljs-keyword">as</span>: <span class="hljs-string">'reviewer'</span>}]
+  }).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">reviews</span>) </span>{
+    res.json(reviews);
+  },
+  <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(err);
+    res.status(<span class="hljs-number">500</span>).send();
+  });
+};</code></pre>
+
+<hr>
+<h2 id="reviewscreate">reviewsCreate</h2>
+<pre><code class="hljs javascript">exports.reviewsCreate = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-keyword">var</span> user = req.user;
+  <span class="hljs-keyword">var</span> text = req.body.text;
+  <span class="hljs-keyword">var</span> pid = req.params.parkingspaceId;
+
+  <span class="hljs-keyword">if</span> (!text) {
+    <span class="hljs-keyword">return</span> res.send(<span class="hljs-number">400</span>);
+  }
+
+  <span class="hljs-keyword">var</span> review = models.Review.build({
+    parkingspaceId: pid,
+    text: text
+  });
+  review.setReviewer(user);
+  review.save().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">review</span>) </span>{
+    res.json(review);
+  });
+
+};</code></pre>
+
+<hr>
+<p>Jatkuu <a href="../parkki2/">osassa 2</a></p>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

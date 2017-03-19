@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <title>Raskas Tervehtijä</title>
+  </head>
+  <body onload="init()">
+    <form>
+        Syötä nimesi: <input id="nimi" name="nimi" type="text">
+        <input type="submit">
+    </form>
+    <p class="tervehdys"></p>
+
+    <script src="tervelogiikka.js"></script>
+    <script>
+      function init() {
+        var form = document.getElementsByTagName('form')[0];
+        form.addEventListener('submit', submitForm, false);
+      }
+
+      function submitForm(e) {
+          e.preventDefault();
+          e.returnValue = false;
+          var nimi = document.getElementById('nimi').value;
+          var tervehdys = tervelogiikka.tervehdys(nimi);
+          var out = document.getElementsByClassName('tervehdys')[0];
+          out.innerHTML = tervehdys;
+      }
+    </script>
+  </body>
+</html>

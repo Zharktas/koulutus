@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>evaste</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="ev-steet">Evästeet</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="ev-steet">Evästeet</h2>
+<ul>
+<li><p>Eväste (cookie) on tapa, jolla HTTP:ssa voidaan säilöä
+pyynnöstä toiseen säilyvää tietoa</p>
+</li>
+<li><p>Eväste muodostuu nimi-arvo-pareista</p>
+</li>
+<li><p>Palvelin asettaa evästeen vastauksessaan</p>
+<ul>
+<li><code>Set-Cookie</code> -otsikko</li>
+</ul>
+</li>
+<li><p>Asiakas lähettää evästeen tulevissa pyynnöissään</p>
+<ul>
+<li><code>Cookie</code> -otsikko</li>
+</ul>
+</li>
+<li><p>Tyypillinen käyttötapa on asettaa ns. <em>istuntotunniste</em> (session
+token)</p>
+<ul>
+<li>istuntotunniste luodaan käyttäjän kirjautuessa</li>
+<li>sen avulla palvelin tietää kuka HTTP-pyynnön teki</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="set-cookie-ja-cookie">Set-Cookie ja Cookie</h2>
+<ul>
+<li>Osoitteesta <code>http://www.example.com</code> tuleva vastaus</li>
+</ul>
+<pre><code class="hljs http">HTTP/1.1 200 OK
+...
+Set-Cookie: n=5
+Set-Cookie: foo=bar
+...</code></pre>
+
+<ul>
+<li>Asiakas liittää jatkossa evästeet ko. osoitteeseen lähettämiinsä pyyntöihin</li>
+</ul>
+<pre><code class="hljs http">GET /kuva.png HTTP/1.1
+...
+Cookie: n=5; foo=bar
+...</code></pre>
+
+<hr>
+<h2 id="ev-steen-k-ytt-ytyminen">Evästeen käyttäytyminen</h2>
+<ul>
+<li><p>Oletusarvoisesti</p>
+<ul>
+<li>eväste säilötään istunnon päättymiseen (= selaimen sulkemiseen) asti</li>
+<li>eväste liitetään pyyntöihin, jotka tehdään osoitteeseen, jossa<ul>
+<li>domain on sama kuin alkuperäisessä pyynnössä, ja</li>
+<li>polku (path) on sama kuin alkuperäisessä pyynnössä tai sen alipolku</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Käyttäytymistä voidaan muokata evästeen attribuuteilla</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Set-Cookie</span>: <span class="hljs-string">NIMI=ARVO; attr1; attr2; ...</span></code></pre>
+
+<hr>
+<h2 id="ev-steen-attribuutit">Evästeen attribuutit</h2>
+<ul>
+<li><p><code>Expires=&lt;päiväys&gt;</code></p>
+<ul>
+<li>säilytä evästettä tähän asti</li>
+</ul>
+</li>
+<li><p><code>Max-Age=&lt;sekunnit&gt;</code></p>
+<ul>
+<li>säilytä evästettä vain tämä aika, kumoaa Expires-attribuutin</li>
+</ul>
+</li>
+<li><p><code>Domain=&lt;domain1,domain2,...&gt;</code> </p>
+<ul>
+<li>lähetä eväste näihin domaineihin tehtäviin pyyntöihin</li>
+</ul>
+</li>
+<li><p><code>Path=&lt;polku&gt;</code></p>
+<ul>
+<li>lähetä eväste vain tähän polkuun ja sen alipolkuihin</li>
+</ul>
+</li>
+<li><p><code>HttpOnly</code></p>
+<ul>
+<li>vain HTTP-viesteihin, ei näy mm. selaimen JavaScript-koodissa</li>
+</ul>
+</li>
+<li><p><code>Secure</code></p>
+<ul>
+<li>lähetetään vain &quot;turvallisen&quot; yhteyden yli, käytännössä HTTPS</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="ev-steet-ja-javascript">Evästeet ja JavaScript</h2>
+<ul>
+<li><p>Web-selain lähettää evästeet automaattisesti</p>
+<ul>
+<li>Web-sovellus ei voi asettaa <code>Cookie</code> otsikkotietoa</li>
+</ul>
+</li>
+<li><p>Jos evästeessä ei ole <code>HttpOnly</code>-attribuuttia, niitä voidaan kuitenkin lukea ja
+kirjoittaa JavaScriptillä</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> vanha = <span class="hljs-built_in">document</span>.cookie;</code></pre>
+<pre><code class="hljs javascript"><span class="hljs-built_in">document</span>.cookie=<span class="hljs-string">"uusi=evaste"</span>;</code></pre>
+
+<ul>
+<li>harvoin tälle kuitenkaan on tarvetta...</li>
+</ul>
+<hr>
+<h2 id="esimerkki">Esimerkki</h2>
+<ul>
+<li><p>Olen kirjautunut sivulle <code>webbimaili.fi</code>, joka on</p>
+<pre><code>lisännyt autentikointitiedot sisältävän evästeen
+</code></pre></li>
+<li><p>Käyn samalla selaimella osoitteessa <code>pahis.org</code>, jossa on seuraava skripti</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$.get(<span class="hljs-string">'https://webbimaili.fi/kaikki.html'</span>).done(handleResponse);</code></pre>
+
+<ul>
+<li><p>HTTP-viestin mukana kulkevat evästeet voisivat huijata
+<code>webbimaili.fi</code>:n luulemaan, että HTTP-pyyntö tulee minulta,
+ja näyttää pahikselle kaikki sähköpostini</p>
+</li>
+<li><p><strong>Mutta</strong>: pahiksen suunnitelma ei kuitenkaan onnistu näin helposti, sillä
+web-selain rajoittaa eri <em>originien</em> välisiä HTTP-pyyntöjä</p>
+<ul>
+<li>Rajoituksesta käytetään nimitystä <em>same-origin policy</em></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

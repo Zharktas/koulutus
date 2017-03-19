@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>middleware</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="middleware">Middleware</h1>
+<h3 id="tie-23500-web-ohjelmointi">TIE-23500 Web-ohjelmointi</h3>
+<hr>
+<h1 id="middleware">Middleware</h1>
+<blockquote>
+<p><a href="http://searchsoa.techtarget.com/definition/middleware">[M]iddleware</a>
+is a general term for any programming that serves to &quot;glue together&quot;
+or mediate between two separate and often already existing programs.</p>
+</blockquote>
+<ul>
+<li><p>Web-sovellusten tapauksessa middlewarella tarkoitetaan usein
+komponenttia, joka välittää HTTP-pyyntöjä ja/tai -vastauksia</p>
+</li>
+<li><p>Middlewaren avulla voi kätevästi tehdä asioita,
+jotka toistuvat useassa eri pyynnössä.</p>
+</li>
+<li><p>Tällaisia ovat mm.</p>
+<ul>
+<li>evästeiden käsittely</li>
+<li>viestin datan jäsentäminen</li>
+<li>käyttäjän tunnistus ja autorisointi</li>
+<li>loggaus</li>
+<li>jne.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="express-middleware">Express-middleware</h1>
+<ul>
+<li><p><a href="http://expressjs.com">Express</a>-sovelluksessa erilaisille pyynnöille
+voidaan määritellä erilaisia middleware-ketjuja, joiden läpi pyynnöt
+kulkevat</p>
+</li>
+<li><p>Expressin tapauksessa
+<a href="http://expressjs.com/guide/using-middleware.html">middleware</a>
+on seuraavanlainen funktio</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> mm = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+  <span class="hljs-comment">// req: pyyntö</span>
+  <span class="hljs-comment">// res: vastaus</span>
+  <span class="hljs-comment">// next: seuraava middleware</span>
+};</code></pre>
+
+<ul>
+<li><p>Olioita <code>req</code> ja <code>res</code> voidaan muokata: muokkaukset näkyvät seuraaville
+middlewareille</p>
+</li>
+<li><p>Middlewaren täytyy joko</p>
+<ol>
+<li>kutsua funktiota <code>next</code>, jolloin siirrytään ketjussa seuraavaan middlewareen</li>
+<li>tai lähettää vastaus metodilla <code>res.send</code> (tai <code>res.json</code> tms.)<ul>
+<li>Tällöin seuraavat middlewaret jätetään huomiotta</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h1 id="express-middlewaren-k-ytt-notto">Express-middlewaren käyttöönotto</h1>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> app = express();</code></pre>
+
+<p>Middlewaren voi ottaa käyttöön seuraavasti</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">// Kaikille pyynnöille</span>
+app.use(mm);</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-comment">// Määrättyyn polkuun kohdistuville GET-pyynnöille</span>
+app.get(<span class="hljs-string">'/plaa'</span>, mm)</code></pre>
+
+<p>Useampi middleware:</p>
+<pre><code class="hljs javascript">app.get(<span class="hljs-string">'/plaa'</span>, mm1, mm2, mm3);</code></pre>
+
+<p>on sama kuin</p>
+<pre><code class="hljs javascript">app.get(<span class="hljs-string">'/plaa'</span>, mm1);
+app.get(<span class="hljs-string">'/plaa'</span>, mm2);
+app.get(<span class="hljs-string">'/plaa'</span>, mm3);</code></pre>
+
+<hr>
+<h1 id="esimerkki-cookie-parser">Esimerkki: cookie-parser</h1>
+<ul>
+<li>Esimerkiksi <code>cookie-parser</code> -middleware<ul>
+<li>lukee HTTP-pyynnön <code>Cookie</code>-otsikkotiedot</li>
+<li>luo <code>req.cookies</code> -olion, joka sisältää evästeet
+avain-arvo-pareina</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs sh">npm install cookie-parser --save</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">var</span> cookieParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'cookie-parser'</span>);
+
+<span class="hljs-keyword">var</span> app = express();
+app.use(cookieParser());</code></pre>
+
+<hr>
+<h1 id="esimerkki-k-ytt-j-n-tunnistus">Esimerkki: käyttäjän tunnistus</h1>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">auth</span>(<span class="hljs-params">req, res, next</span>) </span>{
+  authenticateUserFromCookies(req.cookies, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user</span>) </span>{
+    <span class="hljs-keyword">if</span> (!user) {
+      res.status(<span class="hljs-number">401</span>).send();
+    }
+    <span class="hljs-keyword">else</span> {
+      req.user = user;
+      next();
+    }
+  }
+}</code></pre>
+
+<pre><code class="hljs javascript">app.post(<span class="hljs-string">'/api/blog'</span>, auth, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-keyword">var</span> u = req.user;
+  <span class="hljs-comment">// ...</span>
+});</code></pre>
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

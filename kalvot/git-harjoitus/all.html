@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>git-harjoitus</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="git-harjoitus">Git-harjoitus</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="git-harjoitus">Git-harjoitus</h2>
+<p>Tutustutaan Git-versionhallinnan perusteisiin. Tässä oletetaan että olet kloonannut repositorion itsellesi GitHubista. Voit tehdä sen seuraavalla komennolla:</p>
+<pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> &lt;repositorion osoite&gt;</code></pre>
+
+
+<p><a href="https://git-scm.com/">Git</a> on <em>hajautettu</em> versionhallintajärjestelmä, mikä tarkoittaa että koko versiohistoria on tallessa useassa paikassa. Toiminta poikkeaa siis keskitetyistä järjestelmistä (esim. <a href="https://fi.wikipedia.org/wiki/Subversion">SVN</a>), joissa on tarkalleen yksi &quot;keskusvarasto&quot;.</p>
+<hr>
+<h2 id="git-komennot">Git-komennot</h2>
+<p>Voit syöttää Git-komentoja joko käyttöjärjestelmän komentorivillä tai käyttää
+<a href="https://gitlab.rd.tut.fi/repolainen/docs/student_manual/git_clients.html">jotain graafista Git-työkalua</a>.
+Tässä käsitellään komentorivikäyttöä.</p>
+<p>Git-komennot ovat muotoa</p>
+<pre><code class="hljs bash">git &lt;komento&gt; [komentokohtaiset parametrit]</code></pre>
+
+<p>Apua eri komentojen käyttöön saa googlaamalla tai kirjoittamalla</p>
+<pre><code class="hljs bash">git <span class="hljs-built_in">help</span> &lt;komento&gt;</code></pre>
+
+<hr>
+<p>Ensiksi kannattaa asettaa oma nimi ja sähköpostiosoite</p>
+<pre><code class="hljs bash">git config --global user.name <span class="hljs-string">"Simo Siili"</span>
+git config --global user.email <span class="hljs-string">"simo@siil.it"</span></code></pre>
+
+<p>Reposiorion tämänhetkisen tilan näkee suorittamalla Git-repositorion hakemistossa</p>
+<pre><code class="hljs bash">git status</code></pre>
+
+<p>Vastakloonatussa repositoriossa ei ole vielä muutoksia, joten vastauksena on</p>
+<pre><code class="hljs bash"><span class="hljs-comment"># On branch master</span>
+nothing to commit, working directory clean</code></pre>
+
+<hr>
+<h2 id="commitointi">Commitointi</h2>
+<p>Gitin versiohistoria koostuu <em>commiteista</em> (engl. commit, jolle en tiedä suomennosta). Commit-historian näet komennolla</p>
+<pre><code class="hljs bash">git <span class="hljs-built_in">log</span></code></pre>
+
+<p>Tehkäämme harjoituksen vuoksi yksi committi.</p>
+<ul>
+<li>Tee projektiisi pieni muutos, esimerkiksi muokkaa tiedostoa <code>README.md</code>.</li>
+</ul>
+<p>Nyt komento <code>git status</code> kertoo, että yhtä tiedostoa on muutettu:</p>
+<pre><code class="hljs bash"><span class="hljs-comment"># On branch master # Changes not staged for commit:</span>
+<span class="hljs-comment">#   (use "git add &lt;file&gt;..." to update what will be committed)</span>
+<span class="hljs-comment">#   (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment">#       modified:   README.md</span>
+<span class="hljs-comment">#</span>
+no changes added to commit (use <span class="hljs-string">"git add"</span> and/or <span class="hljs-string">"git commit -a)"</span></code></pre>
+
+<hr>
+<p>Yksinkertaisimmillaan commitointi tapahtuu komennolla</p>
+<pre><code class="hljs bash">git commit <span class="hljs-operator">-a</span> -m <span class="hljs-string">"README:a muokattu"</span></code></pre>
+
+<p>Parametri <code>-a</code> kertoo, että commitoidaan kaikkien versionhallinnassa olevien tiedostojen muutokset. Parametrilla <code>-m</code> määritellään commit-viesti, joka näkyy muunmuassa versiohallinnan historiaa tarkastellessa.</p>
+<p>Ylläolevan commit-komennon jälkeen <code>git log</code> tulostaa suunnilleen seuraavaa:</p>
+<pre><code class="hljs bash">commit e055a1eb869f5f9a325c94d75a2fd86a6052c2fd
+Author: Simo Siili &lt;simo@siil.it&gt;
+Date:   Tue Jan <span class="hljs-number">14</span> <span class="hljs-number">03</span>:<span class="hljs-number">06</span>:<span class="hljs-number">08</span> <span class="hljs-number">2014</span> -<span class="hljs-number">0500</span>
+
+    README:a muokattu
+...</code></pre>
+
+<p>Ensimmäisen rivin 40-merkkinen merkkijono on commitin SHA-1-tunniste, jota joissain Git-komennoissa voi käyttää viittaamaan tiettyyn commitiin.</p>
+<hr>
+<h2 id="push">Push</h2>
+<p>Toisin kuin vaikkapa SVN:ssä, <strong>Gitin commit-komento muuttaa ainoastaan paikallista repositoriota</strong>. Yllä tehdyn commitin jälkeen on GitHubissa oleva repositorio edelleen ennallaan, eikä tekemäämme muutosta näy vielä siellä.</p>
+<p>Jotta commitit saadaan myös GitHubiin, on meidän &quot;työnnettävä&quot; tekemämme commitit sinne komennolla</p>
+<pre><code class="hljs bash">git push</code></pre>
+
+<p>Onnistuneen push-komennon jälkeen näkyy commit myös GitHubissa.</p>
+<p>Push-komennon mahdollisesti antamasta varoitustekstistä (riippuu Gitin versiosta) pääsee eroon määrittelemällä oletuspushaustavan, esimerkiksi</p>
+<pre><code class="hljs bash">git config --global push.default simple</code></pre>
+
+<hr>
+<h2 id="pull">Pull</h2>
+<p>Pushin vastakohta on pull. Jos haluamme saada GitHubissa olevat (jonkun muun tekemät) commitit itsellemme, onnistuu se komennolla</p>
+<pre><code class="hljs bash">git pull</code></pre>
+
+<p><strong>Gitissä on siis ensin commitoitava, ja tämän jälkeen pullattava/pushattava.</strong> Tämä poikkeaa mm. SVN:stä, jossa kaikki tämä hoituu (jos hoituu) yhdellä commit-komennolla.</p>
+<hr>
+<h2 id="tiedostojen-lis-minen">Tiedostojen lisääminen</h2>
+<p>Kun luot projektiisi uuden tiedoston, on se erikseen lisättävä versionhallintaan komennolla</p>
+<pre><code class="hljs bash">git add tiedosto.txt</code></pre>
+
+<p>Vasta lisäämisen tiedosto tulee mukaan committeihin.</p>
+<p>Ylempänä käytetty <code>commit</code>-komennon <code>-a</code> -parametri commitoi kaikki versionhallinnassa olevat tiedostot. Jos <code>commit</code>-komentoa käyttää ilman <code>-a</code> -parametria, commitoidaan vain erikseen <code>add</code>-komennolla lisätyt muutokset.</p>
+<p>Työhakemistossa tehdyt muutokset voivat siis Gitin näkökulmasta olla kolmessa eri tilassa, joista käytettäköön nimiä <em>staged</em>, <em>unstaged</em> ja <em>untracked</em>. Alla oleva <code>git status</code> -komennon tuloste näyttää yhden esimerkin kustakin. </p>
+<hr>
+<pre><code class="hljs bash"><span class="hljs-comment"># On branch master</span>
+<span class="hljs-comment"># Changes to be committed:</span>
+<span class="hljs-comment">#   (use "git reset HEAD &lt;file&gt;..." to unstage)</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment">#       modified:   STAGED.txt</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># Changes not staged for commit:</span>
+<span class="hljs-comment">#   (use "git add &lt;file&gt;..." to update what will be committed)</span>
+<span class="hljs-comment">#   (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment">#       modified:   UNSTAGED.txt</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># Untracked files:</span>
+<span class="hljs-comment">#   (use "git add &lt;file&gt;..." to include in what will be committed)</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment">#       UNTRACKED.txt</span></code></pre>
+
+<p>Ylläolevassa tapauksessa <code>git commit</code> lisäisi vain <code>STAGED.txt</code>:n muutokset. Komento <code>git commit -a</code> taas <code>STAGED.txt</code>:n ja <code>UNSTAGED.txt</code>:n. Molemmissa tapauksissa <code>UNTRACKED.txt</code> jäisi huomiotta koska sitä ei ole lisätty versionhallintaan.</p>
+<hr>
+<h2 id="haarat">Haarat</h2>
+<p>Gitillä uusien haarojen (branch) käyttäminen on helppoa, hauskaa ja hyödyllistä. (Aivan välttämätöntä uusien haarojen luominen esim. harjoitustyön tapauksessa kuitenkaan ole.) Gitin oletushaara on nimeltään <code>master</code>. Uusia haaroja voi luoda <code>branch</code>-komennolla.</p>
+<p>Jos aiomme vaikkapa toteuttaa ohjelmaamme uuden ominaisuuden, voimme luoda tätä varten uuden haaran, ja siirtyä sinne</p>
+<pre><code class="hljs bash">git branch uusi_ominaisuus
+git checkout uusi_ominaisuus</code></pre>
+
+<p>tai sama lyhyemmin</p>
+<pre><code class="hljs bash">git checkout -b uusi_ominaisuus</code></pre>
+
+<hr>
+<p>Voimme tehdä haarassa tavalliseen tapaan committeja. Kun uusi ominaisuus vaikuttaa toimivalta voimme liittää sen master-haaraan:</p>
+<pre><code class="hljs bash">git checkout master
+git merge uusi_ominaisuus</code></pre>
+
+<p>Jos taas uudesta ominaisuudesta ei tullutkaan mitään, on haarasta helppo hankkiutua eroon:</p>
+<pre><code class="hljs bash">git checkout master
+git branch -D uusi_ominaisuus</code></pre>
+
+<hr>
+<h2 id="konfliktit">Konfliktit</h2>
+<p>Aina ei <code>merge</code>-komento onnistu. Näin voi käydä kun on rinnakkain editoitu samaa kohtaa samasta tiedostosta, eikä Git ei osaa automaattisesti yhdistää muutoksia. Tällaista tilannetta nimitetään <em>konfliktiksi</em>. Myös <code>pull</code>-komento voi aiheuttaa konfliktin (pull-komennon suoritus sisältää automaattisesti myös mergen).</p>
+<p>Esimerkki <code>git status</code> -komennon tuloste tilanteessa, jossa README.md -tiedostossa on konflikti.</p>
+<pre><code class="hljs bash"><span class="hljs-comment"># On branch master</span>
+<span class="hljs-comment"># Your branch and 'origin/master' have diverged,</span>
+<span class="hljs-comment"># and have 2 and 1 different commit each, respectively.</span>
+<span class="hljs-comment">#   (use "git pull" to merge the remote branch into yours)</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># You have unmerged paths.</span>
+<span class="hljs-comment">#   (fix conflicts and run "git commit"</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># Unmerged paths:</span>
+<span class="hljs-comment">#   (use "git add &lt;file&gt;..." to mark resolution)</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment">#       both modified:      README.md</span></code></pre>
+
+<hr>
+<p>Itse README.md -tiedosto voisi näyttää tältä:</p>
+<pre><code class="hljs diff">xxx
+
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+jee jee jee
+<span class="hljs-header">=======
+jee jee joo
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 0fcb2e18bc815c7a2585d0cc0c32ec45f6dfe7a0
+
+zzz</span></code></pre>
+
+<p>Konfliktitilanne on ratkaistava muokkaamalla konfliktoituneet tiedostot kuntoon ja suorittamalla tämän jälkeen (esimerkin tapauksessa)</p>
+<pre><code class="hljs bash">git add README.md
+git commit</code></pre>
+
+<p><strong>Myöskään <code>push</code>-komento ei aina onnistu. Tällöin on ensin tehtävä <code>pull</code>, ja selvitettävä mahdollinen konflikti.</strong> Tämän jälkeen voi kokeilla <code>push</code>:ia uudelleen.</p>
+<hr>
+<h2 id="loppukommentti">Loppukommentti</h2>
+<p>Gitissä on vaikka millä mitalla komentoja ja muita ominaisuuksia, joilla voi tehdä mitä ihmeellisempiä asioita. Tässä esiteltiin vain pieni osa, joiden pitäisi kuitenkin suurinpiirtein riittää peruskäyttöön ja harjoitustyön tekoon, ainakin alkuunpääsemiseen. Erittäin mahdollisesti tulee kuitenkin vastaan tilanteita, joissa joutuu selvittämään Gitin toimintaa vähän tätä ohjeistusta syvällisemmin. Internetistä löytyy onneksi reilusti hyvää Git-ohjeistusta.</p>
+<p>Esimerkiksi <a href="https://www.atlassian.com/git/tutorials/setting-up-a-repository">tässä on Git-tutoriaali</a> jossa Gitin perusteita käsitellään hieman tarkemmin.</p>
+<p>Komento <code>git status</code> on usein hyödyllinen. Se kertoo repositorion tilan lisäksi yleensä lyhyen ohjeen siitä, mitä seuraavaksi voi tehdä.</p>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

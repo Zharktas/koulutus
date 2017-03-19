@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>roskaa</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <hr>
+<ol>
+<li><p>Minkä värisiä tarkalleen ovat ylälaidassa olevat linkit?
+<img src="../img/firefox-dev-links.png" alt=""></p>
+</li>
+<li><p>Mitä muita tyylejä näille linkeille asetetaan?</p>
+</li>
+<li><p>Missä ja miten tyylejä asetetaan?</p>
+</li>
+</ol>
+<p>(1.-3. <em>Network</em>-välilehti,
+4.-6. <em>Inspect</em>-välilehti ja 
+<img src="../img/firefox-dev-select.png" alt="">-työkalu)</p>
+<hr>
+<h2 id="ajax">Ajax</h2>
+<ul>
+<li><p>Selaimen tarjoama rajapinta palvelimen kanssa kommunikointiin</p>
+<ul>
+<li><code>XMLHTTPRequest</code> -olio</li>
+</ul>
+</li>
+<li><p>Asynchronous JavaScript And XML</p>
+<ul>
+<li>Nimi juontuu siitä, että alunperin siirrettiin XML-dokumentteja</li>
+<li>Siirrettävä data voi kuitenkin olla missä muodossa tahansa, esim
+<a href="http://www.json.org/">JSON</a></li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+  xhr.open(<span class="hljs-string">'get'</span>, <span class="hljs-string">'/resurssi/palvelimella'</span>);
+  xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span>(xhr.readyState === <span class="hljs-number">4</span> &amp;&amp; xhr.status === <span class="hljs-number">200</span>) {
+      alert(xhr.responseText);
+    }
+  }
+  xhr.send(<span class="hljs-literal">null</span>);</code></pre>
+
+
+<p>#<a href="http://api.open-notify.org/iss-now.json">http://api.open-notify.org/iss-now.json</a></p>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

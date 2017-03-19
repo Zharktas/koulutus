@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>promise</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Promise
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Asynkronisuus
+
+* JavaScriptin suoritusympäristö on yksisäikeinen
+    * sekä selaimessa että Node.js-sovelluksessa
+
+* Aikaa vieviä toimenpiteitä ei ole varaa jäädä odottelemaan *synkronisesti*
+    * Tällöin ainut säie odottaa kutsun suoritusta,
+jolloin koko sovellus (esim. Node.js-palvelin) ei tee mitään muuta
+
+* Tästä syystä mm. Ajax-kutsut, tietokantahaut ja tiedostojen käsittely
+tehdään lähes aina *asynkronisesti*
+    * Vastaus annetaan funktion paluuarvon sijaan takaisinkutsufunktion
+      (callback) parametrina
+
+---
+
+## Esimerkki
+
+* Synkroninen:
+
+```javascript
+function readJSONSync(filename) {
+  return JSON.parse(fs.readFileSync(filename, 'utf8'));
+}
+```
+
+* Asynkroninen:
+
+```javascript
+function readJSON(filename, callback){
+  fs.readFile(filename, 'utf8', function (err, res){
+    if (err) return callback(err);
+    callback(null, JSON.parse(res));
+  });
+}
+```
+
+* Esimerkki varastettu [täältä](http://promisejs.org)
+
+---
+
+## Virheiden käsittely
+
+* Asynkronisuus monimutkaistaa toteutusta
+
+* Erityisesti virhekäsittelyn lisääminen asynkroniseen ratkaisuun tekee rakenteesta
+  helposti sekavan
+
+```javascript
+function readJSON(filename, callback){
+  fs.readFile(filename, 'utf8', function (err, res){
+    if (err) return callback(err);
+    try {
+      res = JSON.parse(res);
+    } catch (ex) {
+      return callback(ex);
+    }
+    callback(null, res);
+  });
+}
+```
+
+* Tätä sekavuutta pyrkii ratkaisemaan *promise*-ohjelmointimalli
+
+---
+
+## Promise
+
+* Promise on olio, joka "lupaa" palauttaa arvon
+
+* Promise on yhdessä kolmesta tilasta
+    1. **pending** - alkutila
+    2. **fulfilled** - "lupaus täytetty"
+        * tällöin promisella on *arvo* (*value*)
+    3. **rejected** - "lupaus hylätty"
+        * hylätyllä promisella on *syy* (*reason*)
+
+![](../img/promise.png)
+
+* Promise-olion luonti:
+
+```javascript
+var p = new Promise(function(resolve, reject) {
+  // call resolve or reject
+});
+```
+
+
+---
+
+## Promise.then
+
+* Promise-oliolla on metodi `then`
+    * sen avulla promiseja voidaan ketjuttaa
+
+* `then` ottaa (vapaaehtoisina) parametreinaan funktiot
+    * `onFulfilled` - kutsutaan kun lupaus täytetty
+    * `onRejected` - kutsutaan kun lupaus hylätty
+
+* `then` palauttaa uuden promisen
+    * uuden promisen tila ja arvo riippuvat alkuperäisestä promisesta ja
+      `onFulfilled` / `onRejected` -funktioista
+    * [säännöin](https://promisesaplus.com/#point-40) jotka ovat
+      intuitiiviset mutta vaikea selittää lyhyesti
+
+---
+
+## Promise.then esimerkki
+
+```javascript
+createPromise1().then(function(value1) { // onFulfilled
+  return createPromise2(value1);
+}).then(function(value2) { // onFulfilled
+  console.log("Final result:", value2);
+},
+function(err) { // onRejected
+  // All the errors end up here.
+});
+```
+
+* `then`-metodin paluuarvo riippuu siitä mihin tilaan promise päätyi
+    * *fulfilled*: palautuu `onFulfilled`-funktion palauttama uusi promise
+      (`createPromise2`)
+    * *rejected*: koska ensimmäisellä `then`:illä ei ole `onRejected`-funktiota,
+      palautuu hylätty promise sellaisenaan
+        * hylkäys käsitellään vasta seuraavan `then`:in
+          `onRejected`-funktiossa
+
+
+---
+
+## Esimerkki: readJSON
+
+* Jos `readFile` olisi toteutettu *promise*:na...
+
+```javascript
+function readFile(filename, enc){
+  return new Promise(function (fulfill, reject){
+    fs.readFile(filename, enc, function (err, res){
+      if (err) reject(err);
+      else fulfill(res);
+    });
+  });
+}
+```
+
+* ...yksinkertaistuisi `readJSON`:in toteutus huomattavasti
+
+
+```javascript
+function readJSON(filename){
+  return readFile(filename, 'utf8').then(JSON.parse);
+}
+```
+
+* Tässä ratkaisussa `readFile` ja `readJSON` palauttavat promisen
+    * eivät ota callback-parametria
+
+---
+
+## Callback vs promise
+
+
+```javascript
+foo1(function(err, value) {
+  if (err) {
+    // Virhe.
+  }
+  else {
+    foo2(value, function(err, value) {
+      if (err) {
+        // Virhe.
+      }
+      else {
+        // jne.
+      }
+    });
+  });
+}
+```
+
+```javascript
+foo1().then(function(value) {
+  return foo2(value);
+}).then(function(value) {
+  // jne.
+},
+function(reason) {
+  // Virhe.
+});
+```
+
+---
+
+## Promiset käytännössä
+
+* Useimmat selaimet tarjoavat `Promise`-olion
+
+* Eri kirjastojen promise-toteutuksissa voi olla eroja
+
+* Node.js:
+
+```sh
+npm install promise --save
+```
+
+```javascript
+var Promise = require('promise');
+```
+
+* Esim. `Mongoose`-kirjasto tukee promiseja:
+
+```javascript
+models.User.create({
+  username: username
+}).then(function(user) {
+  return res.status(201).json(user);
+},
+function(err) {
+  return res.status(500).json({error: 'ServerError'});
+});
+```
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

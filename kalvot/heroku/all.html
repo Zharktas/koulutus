@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>heroku</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="heroku">Heroku</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="heroku">Heroku</h2>
+<ul>
+<li><p><a href="https://www.heroku.com">Heroku</a> on pilvipalvelu,
+jossa voi ajaa web-sovelluksia</p>
+</li>
+<li><p>Platform as a Service (PaaS)</p>
+</li>
+<li><p>Node.js, Ruby, Java, PHP, Python, ...</p>
+</li>
+<li><p>Sovellukset ajetaan virtuaalikoneissa,
+joita Heroku kutsuu <em>dyno</em>:iksi</p>
+</li>
+<li><p>Dynoissa on tiettyjä rajoituksia</p>
+<ul>
+<li>mm. tiedostoja ei (juurikaan) voi luoda</li>
+</ul>
+</li>
+<li><p>Ilmaisten dynojen täytyy &quot;nukkua&quot; 6 tuntia vuorokaudessa</p>
+</li>
+</ul>
+<hr>
+<h2 id="herokun-k-ytt-notto">Herokun käyttöönotto</h2>
+<ul>
+<li><p><a href="https://toolbelt.heroku.com/">Heroku Toolbelt</a>
+(komento <code>heroku</code>) on Cloud9:ssä on valmiiksi asennettuna</p>
+</li>
+<li><p>Kirjaudutaan Herokuun:</p>
+<pre><code class="hljs bash">heroku login</code></pre>
+</li>
+<li><p>Sähköposti ja salasana on samat, joilla kirjaudutaan
+<a href="https://www.heroku.com">heroku.com</a>:iin</p>
+</li>
+</ul>
+<hr>
+<h2 id="git">Git</h2>
+<ul>
+<li><p>Sovellus julkaistaan Herokussa käyttäen
+<a href="https://git-scm.com/">Git</a>-versionhallintajärjestelmää</p>
+</li>
+<li><p>Täytyy siis lisätä projektimme versionhallintajärjestelmään,
+mikä onnistuu suorittamalla terminaalissa seuraavat komennot:</p>
+</li>
+</ul>
+<pre><code class="hljs bash">git init
+git add .
+git commit -m <span class="hljs-string">"eka"</span></code></pre>
+
+<ul>
+<li><p>Git on hyvä (joskaan ei ihan helposti omaksuttava)
+työkalu yleisestikin ohjelmistoprojektin versionhallintaan</p>
+</li>
+<li><p>Ei kuitenkaan käsitellä sitä tässä juuri tämän enempää</p>
+</li>
+<li><p>Kiinnostuneet voivat tutustua Git:iin vaikka
+<a href="https://try.github.io/">tässä interaktiivisessa tutoriaalissa</a> tai
+<a href="../git-harjoitus/all.html">tässä harjoituksessa</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="heroku-sovellus">Heroku-sovellus</h2>
+<ul>
+<li><p>Herokuun täytyy ensin luoda sovellus johon julkaisu tapahtuu</p>
+</li>
+<li><p>Sovellus nimeltä <code>JOKUNIMI</code> luodaan komennolla</p>
+</li>
+</ul>
+<pre><code class="hljs bash">heroku apps:create JOKUNIMI --region eu</code></pre>
+
+<ul>
+<li>Jotta voimme käyttää sovelluksessamme PostgreSQL-tietokantaa,
+täytyy vielä asentaa Heroku-sovelluksellemme PostgreSQL-lisäosa:</li>
+</ul>
+<pre><code class="hljs bash">heroku addons:add heroku-postgresql:hobby-dev</code></pre>
+
+<ul>
+<li>Herokuun on <a href="https://elements.heroku.com/addons">paljon muitakin lisäosia</a><ul>
+<li>Useimmat niistä maksavat tai ainakin vaativat luottokorttitietojen
+syöttämistä</li>
+<li>PostgreSQL-lisäosa ei</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="viel-yksi-juttu">Vielä yksi juttu</h2>
+<ul>
+<li><p>Herokun tietokanta on osoitteessa, jonka Heroku ilmoittaa
+<em>ympäristömuuttujassa</em> nimeltä <code>DATABASE_URL</code></p>
+</li>
+<li><p>Täytyy tehdä pieni muutos koodiin, jossa yhdistetään tietokantaan
+(<code>model.js</code>):</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> dbUrl = process.env.DATABASE_URL ||
+            <span class="hljs-string">'postgres://dev:dev@localhost/kanta'</span>;
+
+<span class="hljs-keyword">var</span> sequelize = <span class="hljs-keyword">new</span> Sequelize(dbUrl);</code></pre>
+
+<p><small>
+(Ylläoleva toimii, koska JavaScriptin tai-operaattori <code>||</code> toimii siten, että
+jos ensimmäinen arvo on &quot;tosi&quot;
+(<a href="https://developer.mozilla.org/en-US/docs/Glossary/Truthy">truthy</a>,
+ei <a href="https://developer.mozilla.org/en-US/docs/Glossary/Falsy">falsy</a>)
+palautuu juurikin tämä arvo. Muussa tapauksessa jälkimmäinen.)
+</small></p>
+<ul>
+<li>Sitten täytyy vielä lisätä tekemämme muutos Git-versionhallintaan</li>
+</ul>
+<h2 id="-pre-code-class-hljs-bash-git-commit-am-span-class-hljs-string-toka-span-code-pre-"><pre><code class="hljs bash">git commit -am <span class="hljs-string">&quot;toka&quot;</span></code></pre></h2>
+<h2 id="sovelluksen-julkaiseminen">Sovelluksen julkaiseminen</h2>
+<ul>
+<li><p>Nyt olemme valmiita julkaisemaan sovelluksen Herokuun</p>
+</li>
+<li><p>Se tapahtuu Git-komennolla</p>
+</li>
+</ul>
+<pre><code class="hljs bash">git push heroku master</code></pre>
+
+<ul>
+<li><a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction">Täällä pidempi ohjeistus Node.js-sovellusten julkaisuun ja hallintaan Herokussa</a></li>
+</ul>
+<hr>
+<h2 id="sovelluksen-p-ivitt-minen">Sovelluksen päivittäminen</h2>
+<ul>
+<li>Kun haluamme julkaista uuden version Herokuun,
+on muutokset ensin lisättävä Git:iin, esim.</li>
+</ul>
+<pre><code class="hljs bash">git commit -am <span class="hljs-string">"kolmas"</span></code></pre>
+
+<ul>
+<li>ja &quot;pushattava&quot; ne sitten Herokuun</li>
+</ul>
+<pre><code class="hljs bash">git push heroku master</code></pre>
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

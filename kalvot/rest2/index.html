@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>rest2</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# More REST
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+<small>Petri Ihantola, edited by Antti Nieminen</small>
+
+<small>[Creative Commons Attribution 4.0
+International](http://creativecommons.org/licenses/by/4.0/)</small>
+
+---
+
+## Trends?
+
+---
+
+
+## XML vs. JSON
+
+![](../img/trends2.png)
+
+
+---
+
+
+## Rest vs SOA etc.
+
+![](../img/trends1.png)
+
+
+---
+
+
+## However
+
+Your customers, their environment, etc.  
+vs. global trends.
+
+
+
+---
+
+
+## Rest best practices
+
+<small>continues from yesterday</small>
+
+Resources are nouns, use plurals only to keep it simple.  
+
+`/books/`  
+`/book/42`  
+`/books/42`
+
+---
+
+
+## Rest best practices (continues from yesterday)
+
+<table>
+
+<tbody>
+
+<tr>
+
+<th></th>
+
+<th>GET</th>
+
+<th>POST</th>
+
+<th>PUT</th>
+
+<th>DELETE</th>
+
+</tr>
+
+<tr>
+
+<td>/books</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+</tr>
+
+<tr>
+
+<td>/books/42</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+---
+
+
+## Rest best practices
+
+<table>
+
+<tbody>
+
+<tr>
+
+<th></th>
+
+<th>GET  
+read</th>
+
+<th>POST  
+create</th>
+
+<th>PUT  
+update</th>
+
+<th>DELETE</th>
+
+</tr>
+
+<tr>
+
+<td>/books</td>
+
+<td>Returns a list of books</td>
+
+<td>Create a new book</td>
+
+<td>Bulk update of books</td>
+
+<td>Delete all books!</td>
+
+</tr>
+
+<tr>
+
+<td>/books/42</td>
+
+<td>Returns a specific book</td>
+
+<td>Method not allowed (405)</td>
+
+<td>Updates a specific book</td>
+
+<td>Deletes a specific book</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+---
+
+
+## HTTP Return codes
+
+See, e.g.,
+[http://www.restapitutorial.com/httpstatuscodes.html](http://www.restapitutorial.com/httpstatuscodes.html)
+
+
+
+---
+
+
+## Rest best practices
+
+You can use sub-resources for relations
+
+            GET /books/42/authors/
+            GET /authors/
+
+
+
+---
+
+
+## Rest best practices
+
+HTTP headers communicating serialization format
+
+*   Content-Type defines the request format.
+*   Accept defines a list of acceptable response formats.
+
+
+
+---
+
+
+## Rest best practices
+
+Authentication and authorization are different. Remember to do both.
+
+
+
+---
+
+
+There are many other good practices related to designing REST APIs. Some
+bad practices are also listed, e.g.,
+[https://jacobian.org/writing/rest-worst-practices/](https://jacobian.org/writing/rest-worst-practices/)
+
+
+
+---
+
+
+## Is there anything like WSDL but for REST
+
+Or do I need such?
+
+
+
+---
+
+
+## Web Application Description Language (WADL)
+
+*   An XML-based language
+*   Assumes HTTP
+*   Uses hyperlinks for linking resources
+*   Development both language and platform neutral
+*   Aligned with REST terminology
+
+
+
+---
+
+
+## WADL elements
+
+*   Set of resources: Analogous to a site map showing the resources on
+    offer.
+*   Relationships between resources: Describing the links between
+    resources, both referential and causal.
+*   Methods that can be applied to each resource: The HTTP methods that
+    can be applied to each resource, the expected inputs and outputs and
+their supported formats.
+*   Resource representation formats: The supported MIME types and data
+    schemas in use
+
+
+
+---
+
+
+## WADL in Real
+
+Yahoo has a nice demo:
+[https://developer.yahoo.com/blogs/ydn/check-wadl-7130.html](https://developer.yahoo.com/blogs/ydn/check-wadl-7130.html)
+
+
+
+---
+
+
+## WADL example
+
+```xml
+<application xmlns="http://wadl.dev.java.net/2009/02" 
+       xmlns:ns="http://superbooks">
+ <grammars>
+   ...
+ </grammars>
+ <resources base="http://localhost:8080/">
+   ...
+   <resource path="/books">
+      <resource path="/bookstore/{id}">
+        <param name="id" style="template"/>
+        <method name="GET">
+          <response>
+           <representation mediaType="application/xml"
+                           element="ns:thebook"/>
+          </response>
+        </method>
+      </resource>
+   </resource>
+ </resources>  
+</application>
+```
+
+
+
+---
+
+
+## ...WADL example
+
+
+```xml
+<grammars>
+  <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://superbooks"
+        attributeFormDefault="unqualified"
+        elementFormDefault="unqualified"
+        targetNamespace="http://superbooks">
+    <xs:element name="thebook" type="tns:book"/>
+    <xs:complexType name="book">
+        <xs:sequence>
+            <xs:element minOccurs="0" ref="tns:thechapter"/>
+            <xs:element name="id" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+  </xs:schema>
+</grammars>
+```
+
+
+
+---
+
+## WADL Tools Support etc
+
+*   GlassFish – Sun Java EE 7 Application Server:
+    https://glassfish.java.net/ Support for RESTful Web Services and
+automatic generation of WADL files from Java code WADL2JAVA
+https://wadl.java.net/wadl2java.html
+*   Web Application Description Language (WADL) spec., W3C
+    http://www.w3.org/Submission/wadl/
+
+However, WADL is still not widely adopted.
+
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

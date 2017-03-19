@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>http</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+    	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="http">HTTP</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="http">HTTP</h2>
+<ul>
+<li><p>HyperText Transfer Protocol</p>
+</li>
+<li><p>Webin tiedonsiirtoprotokolla</p>
+</li>
+<li><p>Noudattaa asiakas-palvelin-mallia</p>
+</li>
+<li><p>Tilaton</p>
+</li>
+<li><p>Tekstipohjainen</p>
+</li>
+<li><p>Web-ohjelmoinnin kannalta HTTP on oleellinen protokolla</p>
+<ul>
+<li>Rajapinta web-selaimen ja palvelimen välillä</li>
+</ul>
+</li>
+<li><p>Yleensä käytössä versio HTTP/1.1 joka on määritelty dokumenteissa
+<a href="https://tools.ietf.org/html/rfc7230">RFC 7230</a>,
+<a href="https://tools.ietf.org/html/rfc7231">7231</a>,
+<a href="https://tools.ietf.org/html/rfc7232">7232</a>,
+<a href="https://tools.ietf.org/html/rfc7233">7233</a>,
+<a href="https://tools.ietf.org/html/rfc7234">7234</a>,
+<a href="https://tools.ietf.org/html/rfc7235">7235</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="http-protokollapinossa">HTTP protokollapinossa</h2>
+<ul>
+<li>HTTP on <em><a href="http://en.wikipedia.org/wiki/Application_layer">sovelluskerroksen</a></em> protokolla</li>
+</ul>
+<p><img src="../img/verkkokerrokset.png" alt="Verkkokerrokset"></p>
+<hr>
+<h2 id="asiakas-palvelin">Asiakas-palvelin</h2>
+<ul>
+<li>Asiakas-palvelin-malli (<a href="http://en.wikipedia.org/wiki/Client%E2%80%93server_model">Client-Server Model</a>) on tapa jakaa hajautettu järjestelmä kahdenlaisiin rooleihin:
+asiakkaisiin ja palvelimiin<ul>
+<li>Web-sovelluksessa asiakas on yleensä web-selain</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/asiakaspalvelin.svg" alt=""></p>
+<ul>
+<li><p>Palvelin tarjoaa resursseja, joita asiakkaat pyytävät</p>
+<ul>
+<li>Asiakas ottaa yhteyden palvelimeen, ei toisin päin</li>
+</ul>
+</li>
+<li><p>Sama tietokone voi toimia tilanteen mukaan
+sekä asiakkaan että palvelimen roolissa</p>
+</li>
+</ul>
+<hr>
+<h2 id="pyynt-vastaus">Pyyntö &amp; vastaus</h2>
+<ul>
+<li>HTTP-protokollassa asiakas lähettää pyynnön (request)<ul>
+<li>Palvelin vastaa pyyntöön</li>
+</ul>
+</li>
+</ul>
+<p><img src="../img/http.svg" alt=""></p>
+<hr>
+<h2 id="tilattomuus">Tilattomuus</h2>
+<ul>
+<li><p>HTTP on tilaton protokolla</p>
+</li>
+<li><p>Tilattomuus = palvelin ei muista aiempia pyyntöjä</p>
+<ul>
+<li>Jokainen pyyntö-vastaus-pari on erillinen kokonaisuutensa</li>
+<li>Pyynnössä on oltava kaikki sen käsittelemiseen tarvittava tieto</li>
+</ul>
+</li>
+<li><p>Tilattomuus yksinkertaistaa palvelimen toteutusta</p>
+</li>
+<li><p>Usein kuitenkin web-sovelluksissa täytyy säilöä tilaa</p>
+<ul>
+<li>Esim. ostoskorin sisältö</li>
+<li>Tilanhallinta täytyy toteuttaa sovelluskohtaisesti</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="http-esimerkki">HTTP-esimerkki</h2>
+<ul>
+<li>Pyyntö</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-request">GET <span class="hljs-string">/index.html</span> HTTP/1.1</span>
+<span class="hljs-attribute">Host</span>: <span class="hljs-string">www.example.com</span></code></pre>
+
+<ul>
+<li>Vastaus</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-status">HTTP/1.1 <span class="hljs-number">200</span> OK</span>
+<span class="hljs-attribute">Date</span>: <span class="hljs-string">Tue, 13 Jan 2015 08:15:00 GMT</span>
+<span class="hljs-attribute">Content-type</span>: <span class="hljs-string">text/html; charset=UTF-8</span>
+<span class="hljs-attribute">Content-length</span>: <span class="hljs-string">132</span>
+
+<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>An Example Page<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+  Hello World, this is a very simple HTML document.
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></span></code></pre>
+
+<hr>
+<h2 id="http-pyynt-">HTTP-pyyntö</h2>
+<ul>
+<li><p>HTTP-pyynnön rakenne:</p>
+<ol>
+<li>Pyyntö-rivi (Request Line)</li>
+<li>Otsikkotiedot (Headers)</li>
+<li>Tyhjä rivi</li>
+<li>Runko (Message Body)</li>
+</ol>
+</li>
+<li><p>Osa pyynnöistä sisältää vain kohdat 1. ja 2.</p>
+</li>
+<li><p>Pyyntö-rivi sisältöö HTTP-<em>metodin</em>, haettavan <em>resurssin</em> ja HTTP:n version</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-request">GET <span class="hljs-string">/index.html</span> HTTP/1.1</span></code></pre>
+
+<ul>
+<li>Otsikkotiedot ovat kaksoispisteellä erotettuja avain-arvo-pareja:</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Accept</span>: <span class="hljs-string">text/plain</span></code></pre>
+
+<ul>
+<li>Runko voi olla mitä tahansa</li>
+</ul>
+<hr>
+<h2 id="http-vastaus">HTTP-vastaus</h2>
+<ul>
+<li><p>HTTP-vastauksen rakenne:</p>
+<ol>
+<li>Status-rivi</li>
+<li>Otsikkotiedot</li>
+<li>Tyhjä rivi</li>
+<li>Runko</li>
+</ol>
+</li>
+<li><p>Status-rivi sisältää HTTP:n version ja status-koodin selitysteksteineen</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-status">HTTP/1.1 <span class="hljs-number">404</span> Not Found</span></code></pre>
+
+<ul>
+<li>Muu viestin rakenne on sama kuin pyynnössä</li>
+</ul>
+<hr>
+<h2 id="http-metodit">HTTP-metodit</h2>
+<ul>
+<li>HTTP-pyynnön metodi (&quot;verbi&quot;) ilmoittaa minkä tyyppisestä pyynnöstä on kyse</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Metodi</th>
+<th style="text-align:left">Merkitys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>GET</code></td>
+<td style="text-align:left">hae resurssi</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>POST</code></td>
+<td style="text-align:left">lähetä dataa palvelimelle, esim. luo uusi resurssi</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>PUT</code></td>
+<td style="text-align:left">päivitä resurssi (tai luo uusi jos ei olemassa)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>DELETE</code></td>
+<td style="text-align:left">tuhoa resurssi</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Muitakin: <code>HEAD</code>, <code>OPTIONS</code>, <code>TRACE</code>, <code>PATCH</code>, <code>CONNECT</code></p>
+</li>
+<li><p>Kuvattu tarkemmin <a href="http://tools.ietf.org/html/rfc7231#section-4">RFC 7231:n kohdassa Request Methods</a></p>
+<ul>
+<li><code>PATCH</code> ei tosin ole mukana HTTP 1.1:n määritelmässä</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="turvalliset-ja-idempotentit-metodit">Turvalliset ja idempotentit metodit</h2>
+<ul>
+<li><p>Turvalliset metodit (Safe methods)</p>
+<ul>
+<li>Eivät muuta palvelimen tilaa</li>
+<li><code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>TRACE</code></li>
+</ul>
+</li>
+<li><p><a href="http://en.wikipedia.org/wiki/Idempotence">Idempotentit</a> metodit</p>
+<ul>
+<li>Yhdellä pyynnöllä on sama vaikutus kuin usealla identtisellä pyynnöllä</li>
+<li><code>PUT</code>, <code>DELETE</code></li>
+<li>Kaikki turvalliset metodit ovat myös idempontentteja</li>
+</ul>
+</li>
+<li><p>Muut</p>
+<ul>
+<li><code>POST</code>, <code>PATCH</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="http-n-statuskoodit">HTTP:n statuskoodit</h2>
+<ul>
+<li>HTTP-vastaus sisältää statuskoodin, jolla ilmoitetaan pyynnön
+onnistumisesta<ul>
+<li>Kaikki koodit: <a href="https://tools.ietf.org/html/rfc7231#section-6">RFC 7231: Response Status Codes</a></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Statuskoodi</th>
+<th style="text-align:left">Selitys</th>
+<th style="text-align:left">Esimerkkejä</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>1xx</code></td>
+<td style="text-align:left">Pyyntö kesken</td>
+<td style="text-align:left"><code>100 Continue</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>2xx</code></td>
+<td style="text-align:left">Pyyntö onnistui</td>
+<td style="text-align:left"><code>200 OK</code><br><code>201 Created</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>3xx</code></td>
+<td style="text-align:left">Uudelleenohjaus</td>
+<td style="text-align:left"><code>302 Found</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>4xx</code></td>
+<td style="text-align:left">Asiakkaan virhe</td>
+<td style="text-align:left"><code>400 Bad Request</code><br><code>403 Not Allowed</code><br><code>404 Not Found</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>5xx</code></td>
+<td style="text-align:left">Palvelimen virhe</td>
+<td style="text-align:left"><code>500 Internal Server Error</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="http-n-otsikkotiedot">HTTP:n otsikkotiedot</h2>
+<ul>
+<li><p>Otsikkotiedot (headers) ovat HTTP-viestissä määriteltyjä
+avain-arvo-pareja, joilla määritellään muun muassa</p>
+<ul>
+<li>viestin rungon tietomuoto</li>
+<li>välimuistin käyttäytymistä</li>
+<li>autentikointitietoja</li>
+<li>ja paljon muuta</li>
+</ul>
+</li>
+<li><p>Esim:</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">text/html</span></code></pre>
+
+<ul>
+<li><p>Otsikkokenttien nimet ovat kirjainkokoriippumattomia
+(case-insensitive)</p>
+</li>
+<li><p>HTTP 1.1 määrittelee joukon otsikkokenttiä</p>
+<ul>
+<li>Lisäksi voi olla muitakin, sovelluskohtaisia otsikkokenttiä</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="http-pyynn-n-otsikkotietoja">HTTP-pyynnön otsikkotietoja</h2>
+<ul>
+<li><code>Host</code> määrää kohdepalvelimen osoitteen<ul>
+<li>Voidaan erotella samassa IP-osoitteessa olevat palvelimet
+toisistaan</li>
+<li>Ainoa pakollinen otsikkokenttä HTTP 1.1:ssä</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Host</span>: <span class="hljs-string">www.tut.fi</span></code></pre>
+
+<ul>
+<li><p><code>User-Agent</code>: tietoja asiakkaasta (web-selaimesta)</p>
+</li>
+<li><p><code>Referer</code> [sic]: URI josta pyyntö on peräisin</p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Referer</span>: <span class="hljs-string">www.example.com/foo/bar.html</span></code></pre>
+
+<ul>
+<li>Web-selain lähettää nämä automaattisesti</li>
+</ul>
+<hr>
+<h2 id="viestin-esitysmuoto">Viestin esitysmuoto</h2>
+<ul>
+<li><p>Sekä pyynnön että vastauksen otsikkotiedoissa voidaan kuvata
+runko-osassa käytetty esitysmuoto</p>
+</li>
+<li><p><code>Content-Type</code>: rungon <a href="http://www.iana.org/assignments/media-types/media-types.xhtml">mediatyyppi</a></p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">text/html; charset=utf-8</span></code></pre>
+
+<ul>
+<li><code>Content-Language</code>: runko-osassa käytetty (luonnollinen)
+<a href="https://tools.ietf.org/html/rfc5646">kieli</a></li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Content-Language</span>: <span class="hljs-string">fi</span></code></pre>
+
+<ul>
+<li>Lisäksi: <code>Content-Encoding</code>, <code>Content-Location</code></li>
+</ul>
+<hr>
+<h2 id="asiakkaan-hyv-ksym-t-esitysmuodot">Asiakkaan hyväksymät esitysmuodot</h2>
+<ul>
+<li><p>HTTP-pyynnössä voidaan määritellä esitysmuoto, jolla palvelimen
+halutaan vastaavan</p>
+</li>
+<li><p><code>Accept</code>: vastauksessa hyväksyttävät <a href="http://www.iana.org/assignments/media-types/media-types.xhtml">mediatyypit</a></p>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Accept</span>: <span class="hljs-string">text/html,application/xhtml+xml,*/*;q=0.8</span></code></pre>
+* `Accept-Language`: vastauksessa hyväksyttävät [kielet](https://tools.ietf.org/html/rfc5646)
+
+<pre><code class="hljs http"><span class="hljs-attribute">Accept-Language</span>: <span class="hljs-string">fi-FI, en-US, fi, en</span></code></pre>
+
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.1"><em>quality value</em></a> <code>q=[0..1]</code> määrää kuinka mieluusti vastaanotetaan
+kutakin mediatyyppiä/kieltä/tms.<ul>
+<li>oletuksena 1</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="joitain-mediatyyppej-">Joitain mediatyyppejä</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Mediatyyppi</th>
+<th style="text-align:left">Selitys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>text/html</code></td>
+<td style="text-align:left">HTML-dokumentti</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>text/css</code></td>
+<td style="text-align:left">CSS-dokumentti</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>application/javascript</code></td>
+<td style="text-align:left">JavaScript-ohjelma</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>application/json</code></td>
+<td style="text-align:left">JSON-formaatti, käytetään datan siirtoon</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>application/xml</code></td>
+<td style="text-align:left">XML-formaatti, käytetään datan siirtoon</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>image/png</code></td>
+<td style="text-align:left">PNG-tyyppinen kuva</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>image/vnd.valve.source.texture</code></td>
+<td style="text-align:left">Valve-yhtiön tekstuuriformaatti</td>
+</tr>
+</tbody>
+</table>
+<p><a href="http://www.iana.org/assignments/media-types/media-types.xhtml">Kaikki IANA:lle rekisteröidyt mediatyypit</a></p>
+<hr>
+<h2 id="cache-control">Cache-Control</h2>
+<ul>
+<li><p>HTTP-vastauksen &quot;voimassaoloaika&quot; voidaan määritellä
+<code>Cache-Control</code>-otsikkokentässä</p>
+<ul>
+<li>Voimassaoloaika = kuinka kauan viestiä voidaan säilyttää
+välimuistissa hakematta sitä uudelleen palvelimelta</li>
+</ul>
+</li>
+<li><p>Vastausta ei saa säilöä välimuistiin:</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Cache-Control</span>: <span class="hljs-string">no-cache</span></code></pre></li>
+<li><p>Vastausta saa pitää välimuistissa korkeintaan 3600 sekuntia:</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Cache-Control</span>: <span class="hljs-string">max-age=3600</span></code></pre>
+</li>
+<li><p>Myös <a href="https://tools.ietf.org/html/rfc7234#section-5">muita välimuistin hallintaan liittyviä otsikkokenttiä on
+olemassa</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="muuta">Muuta</h2>
+<ul>
+<li><p>HTTP määrittelee myös tilanhallintaan (mm. evästeisiin) ja
+autentikointiin liittyviä otsikkokenttiä</p>
+</li>
+<li><p>Palataan näihin myöhemmin</p>
+</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<p>Katsotaan miltä HTTP pyynnöt ja vastaukset näyttävät käytännössä.
+Avaa Firefoxin kehitystyökalujen <em>Network</em>-välilehti
+ja tällä kertaa vaikkapa URL-osoite <a href="http://www.tut.fi">http://www.tut.fi</a></p>
+<ol>
+<li><p>Mitä HTTP-otsikkotietoja (headers) selain lähettää tehdessään HTTP-pyynnön?
+Entä mitä otsikkotietoja on HTTP-vastauksessa?</p>
+</li>
+<li><p>Minkä HTTP-statuskoodin <a href="http://www.tut.fi">http://www.tut.fi</a> palauttaa?
+Mitä se tarkoittaa?</p>
+</li>
+<li><p>Vaikka syötät URL:n <a href="http://www.tut.fi">http://www.tut.fi</a>,
+avaa selain lopulta URL:n <a href="http://www.tut.fi/fi/etusivu">http://www.tut.fi/fi/etusivu</a> .
+Miten tänne päädyttiin?</p>
+</li>
+<li><p>Etusivun lataamisen jälkeen selain tekee paljon muitakin
+HTTP-pyyntöjä, joilla ladataan mm. CSS-, JavaScript- ja kuvadokumentteja.
+Tarkastele vielä näiden HTTP-vastausten statuskoodeja ja otsikkotietoja.</p>
+</li>
+</ol>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

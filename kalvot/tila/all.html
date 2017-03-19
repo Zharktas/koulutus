@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>tila</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="tilanhallinta">Tilanhallinta</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="tilanhallinta">Tilanhallinta</h2>
+<ul>
+<li><p>HTTP on tilaton protokolla</p>
+<ul>
+<li>Palvelin vastaa asiakkaalle pyyntö kerrallaan</li>
+<li>Pyyntöjen välillä ei ole loogista yhteyttä</li>
+</ul>
+</li>
+<li><p>Usein on kuitenkin tarve tunnistaa, että tietyt pyynnöt kuuluvat
+samaan kokonaisuuteen eli <em>istuntoon</em></p>
+</li>
+<li><p><em>Istunto</em> (<em>session</em>) on jatkuva kommunikaatioyhteys kahden tai
+useamman tahon välillä</p>
+</li>
+<li><p>Web-sovellusten tapauksessa istunnolla tarkoitetaan erityisesti web-selaimen ja palvelimen välistä istuntoa</p>
+</li>
+</ul>
+<hr>
+<h2 id="istuntotunniste">Istuntotunniste</h2>
+<ul>
+<li><p>Istunnot erotellaan toisistaan yleensä <em>istuntotunnisteen</em> (<em>session
+id</em>) avulla</p>
+</li>
+<li><p>Tyypillisesti:</p>
+<ul>
+<li>Palvelin luo istuntotunnisteen ja palauttaa sen asiakkaalle</li>
+<li>Asiakas välittää istuntotunnisteen kaikkien tulevien
+HTTP-pyyntöjen yhteydessä</li>
+<li>Palvelin voi täten tunnistaa viestit kuuluvaksi samaan istuntoon</li>
+</ul>
+</li>
+<li><p>Istuntotunnisteen täytyy olla sellainen, että sitä ei pysty arvaamaan</p>
+<ul>
+<li>Muuten ulkopuolinen taho voisi &quot;kaapata&quot; istunnon</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="istuntotunnisteen-v-litys">Istuntotunnisteen välitys</h2>
+<ul>
+<li><p>Asiakas voi liittää istuntotunnisteen HTTP-pyyntöön mm. seuraavin
+tavoin</p>
+</li>
+<li><p>URL-parametrina</p>
+<pre><code class="hljs http">https://example.com/foo;sessionid=JO8u98JJOIY</code></pre></li>
+<li><p>Piilotettuna lomakkeen kenttänä</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"/foo"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"sessionid"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"JO8u98JJOIY"</span>&gt;</span>
+...
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+</li>
+<li><p>Evästeenä - paras tapa, kunhan evästeet ovat käytössä</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Cookie</span>: <span class="hljs-string">sessionid=JO8u98JJOIY</span></code></pre>
+
+</li>
+</ul>
+<hr>
+<h2 id="istuntotunnisteen-v-litys-ev-steen-">Istuntotunnisteen välitys evästeenä</h2>
+<ol>
+<li><p>Jos HTTP-pyynnön evästeessä on istuntotunniste,
+palvelin tulkitsee pyynnön kuuluvan ko. istuntoon</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Cookie</span>: <span class="hljs-string">sessionid=fjXeojf2fj290</span></code></pre>
+</li>
+<li><p>Jos ei, generoidaan uusi istuntotunniste ja lisätään vastaukseen</p>
+<pre><code class="hljs http"><span class="hljs-attribute">Set-Cookie</span>: <span class="hljs-string">sessionid=oiUjfg8a983f90</span></code></pre>
+
+</li>
+</ol>
+<hr>
+<h2 id="istuntokohtainen-data">Istuntokohtainen data</h2>
+<ul>
+<li>Palvelin voi tallentaa istuntoon liittyvää dataa</li>
+</ul>
+<p><img src="../img/sessionid.png" alt=""></p>
+<hr>
+<h2 id="express-session">express.session</h2>
+<ul>
+<li>Node.js Express-sovelluksessa istunnonhallinnan saa kätevästi
+<a href="https://github.com/expressjs/session"><code>express-session</code></a> -middlewarella</li>
+</ul>
+<pre><code class="hljs sh">npm install express-session --save</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">var</span> session = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express-session'</span>);
+
+<span class="hljs-keyword">var</span> app = express();
+
+app.use(session({
+  secret: <span class="hljs-string">'salaisuus123'</span>,
+  resave: <span class="hljs-literal">false</span>,
+  saveUninitialized: <span class="hljs-literal">false</span>
+});</code></pre>
+
+<ul>
+<li><p>Luo istuntotunnisteen ja asettaa sen evästeeksi</p>
+</li>
+<li><p>Istuntokohtainen data tallennetaan palvelimelle</p>
+</li>
+</ul>
+<hr>
+<h2 id="istuntodata">istuntodata</h2>
+<ul>
+<li><code>express-session</code>-middleware luo <code>req.session</code> -olion<ul>
+<li>Siihen voidaan tallentaa ja lukea istuntokohtaista dataa</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+  <span class="hljs-keyword">var</span> views = req.session.views || <span class="hljs-number">0</span>;
+  req.session.views = views + <span class="hljs-number">1</span>;
+  res.send(<span class="hljs-string">"Views: "</span> + req.session.views);
+});</code></pre>
+
+
+<ul>
+<li><p>Oletuksena istuntodata tallentuu palvelimen muistiin</p>
+<ul>
+<li>Häviää kun palvelimen sammuttaa</li>
+</ul>
+</li>
+<li><p>Muitakin tallennusvaihtoehtoja on</p>
+<ul>
+<li>Esim. <a href="https://github.com/tj/connect-redis">connect-redis</a>
+tai
+<a href="https://github.com/CarnegieLearning/connect-mysql-session">connect-mysql-session</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="istuntotunniste-ev-ste">istuntotunniste-eväste</h2>
+<ul>
+<li><code>express-session</code> allekirjoittaa evästeen laskemalla
+istuntotunnisteelle <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a>-koodin<ul>
+<li>salakirjoitusavain annetaan <code>secret</code>-attribuuttina</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs http"><span class="hljs-attribute">Set-Cookie</span>: <span class="hljs-string">connect.sid=s%3A&lt;SessionId&gt;.&lt;HMAC&gt;</span></code></pre>
+
+<ul>
+<li><p>Näin voidaan varmistua siitä, että asiakas ei voi vaihtaa
+istuntotunnistetta toiseksi</p>
+</li>
+<li><p>Kuitenkin: jos joku toinen taho saa haltuunsa käyttäjän
+istuntotunniste-evästeen, pystyy hän esiintymään ko. käyttäjänä</p>
+<ul>
+<li>&quot;Session hijacking&quot;</li>
+<li>Tästä syystä istuntotunnisteita kannattaa käyttää vain suojatussa
+yhteydessä (HTTPS)</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript">app.use(session({
+  secret: <span class="hljs-string">'salaisuus123'</span>,
+  cookie: {secure: <span class="hljs-literal">true</span>}
+});</code></pre>
+
+<hr>
+<h2 id="https">HTTPS</h2>
+<ul>
+<li><a href="../https/">Erillinen kalvosetti</a></li>
+</ul>
+<hr>
+<h2 id="web-sovelluksen-data">Web-sovelluksen data</h2>
+<ul>
+<li>Palvelimella olevaa dataa voidaan jaotella sen elinajan mukaan</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Elinaika</th>
+<th style="text-align:left">Tallennuspaikka</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Yksi HTTP-pyyntö</td>
+<td style="text-align:left">Palvelimen muisti (esim. muuttuja)</td>
+</tr>
+<tr>
+<td style="text-align:left">Istunto</td>
+<td style="text-align:left">Palvelimen muisti/tietokanta/<a href="http://redis.io">redis</a>/...</td>
+</tr>
+<tr>
+<td style="text-align:left">Pysyvä</td>
+<td style="text-align:left">Tietokanta</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Myös selainpäähän voidaan tallentaa dataa</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Elinaika</th>
+<th style="text-align:left">Tallennuspaikka</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Yksi HTML-sivu</td>
+<td style="text-align:left">JavaScript-muuttuja</td>
+</tr>
+<tr>
+<td style="text-align:left">Istunto</td>
+<td style="text-align:left"><em>Session Storage</em></td>
+</tr>
+<tr>
+<td style="text-align:left">Melko pysyvä</td>
+<td style="text-align:left"><em>Local Storage</em></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="datan-tallennus-selainp-ss-">Datan tallennus selainpäässä</h2>
+<ul>
+<li><p>Web-selaimessa voidaan tallentaa dataa <code>Web Storage</code> -rajapinnan
+kautta</p>
+<ul>
+<li>Kaksi oliota: <code>sessionStorage</code> ja <code>localStorage</code></li>
+</ul>
+</li>
+<li><p><code>sessionStorage</code>: tallennettu data säilyy selaimen sulkemiseen saakka</p>
+</li>
+<li><p><code>localStorage</code>: tallennettu data säilyy kunnes joku poistaa sen</p>
+<ul>
+<li>joku = web-sovellus/käyttäjä/selain/tms.</li>
+</ul>
+</li>
+<li><p>Web Storage -oliot ovat <em>origin</em>-kohtaisia</p>
+<ul>
+<li>Saman originin sivut näkevät saman olion</li>
+</ul>
+</li>
+<li><p>On olemassa lisäksi kehittyneempiä selainpään tallennustapoja:
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">IndexedDB</a>
+ja
+<a href="http://en.wikipedia.org/wiki/Web_SQL_Database">WebSQL</a></p>
+<ul>
+<li>Nämä eivät kuitenkaan ole vielä kovin laajalti selaimissa tuettuja</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="web-storage-rajapinta">Web Storage -rajapinta</h2>
+<ul>
+<li>Web Storage on yksinkertainen avain-arvo-varasto</li>
+</ul>
+<pre><code class="hljs javascript">localStorage.setItem(<span class="hljs-string">'avain'</span>, <span class="hljs-string">'arvo'</span>);
+<span class="hljs-keyword">var</span> x = localStorage.getItem(<span class="hljs-string">'avain'</span>);
+localStorage.removeItem(<span class="hljs-string">'avain'</span>);</code></pre>
+
+<ul>
+<li>Web Storageen voi tallentaa vain merkkijonoja<ul>
+<li>monimutkaisemmat oliot voi tallentaa serialisoimalla ne</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> olio = {a: <span class="hljs-string">"foo"</span>, b: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]};
+localStorage.setItem(<span class="hljs-string">'avain'</span>, <span class="hljs-built_in">JSON</span>.stringify(olio));
+<span class="hljs-keyword">var</span> olio2 = <span class="hljs-built_in">JSON</span>.parse(localStorage.getItem(<span class="hljs-string">'avain'</span>));</code></pre>
+
+<ul>
+<li><code>sessionStorage</code>:lla sama rajapinta kuin <code>localStorage</code>:lla</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

@@ -1,0 +1,254 @@
+<seq!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>promise</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="promise">Promise</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="asynkronisuus">Asynkronisuus</h2>
+<ul>
+<li><p>JavaScriptin suoritusympäristö on yksisäikeinen</p>
+<ul>
+<li>sekä selaimessa että Node.js-sovelluksessa</li>
+</ul>
+</li>
+<li><p>Aikaa vieviä toimenpiteitä ei ole varaa jäädä odottelemaan <em>synkronisesti</em></p>
+<ul>
+<li>Tällöin ainut säie odottaa kutsun suoritusta,
+jolloin koko sovellus (esim. Node.js-palvelin) ei tee mitään muuta</li>
+</ul>
+</li>
+<li><p>Tästä syystä mm. Ajax-kutsut, tietokantahaut ja tiedostojen käsittely
+tehdään lähes aina <em>asynkronisesti</em></p>
+<ul>
+<li>Vastaus annetaan funktion paluuarvon sijaan takaisinkutsufunktion
+(callback) parametrina</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="esimerkki">Esimerkki</h2>
+<ul>
+<li>Synkroninen:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readJSONSync</span>(<span class="hljs-params">filename</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(fs.readFileSync(filename, <span class="hljs-string">'utf8'</span>));
+}</code></pre>
+
+<ul>
+<li>Asynkroninen:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readJSON</span>(<span class="hljs-params">filename, callback</span>)</span>{
+  fs.readFile(filename, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, res</span>)</span>{
+    <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> callback(err);
+    callback(<span class="hljs-literal">null</span>, <span class="hljs-built_in">JSON</span>.parse(res));
+  });
+}</code></pre>
+
+<ul>
+<li>Esimerkki varastettu <a href="http://promisejs.org">täältä</a></li>
+</ul>
+<hr>
+<h2 id="virheiden-k-sittely">Virheiden käsittely</h2>
+<ul>
+<li><p>Asynkronisuus monimutkaistaa toteutusta</p>
+</li>
+<li><p>Erityisesti virhekäsittelyn lisääminen asynkroniseen ratkaisuun tekee rakenteesta
+helposti sekavan</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readJSON</span>(<span class="hljs-params">filename, callback</span>)</span>{
+  fs.readFile(filename, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, res</span>)</span>{
+    <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> callback(err);
+    <span class="hljs-keyword">try</span> {
+      res = <span class="hljs-built_in">JSON</span>.parse(res);
+    } <span class="hljs-keyword">catch</span> (ex) {
+      <span class="hljs-keyword">return</span> callback(ex);
+    }
+    callback(<span class="hljs-literal">null</span>, res);
+  });
+}</code></pre>
+
+<ul>
+<li>Tätä sekavuutta pyrkii ratkaisemaan <em>promise</em>-ohjelmointimalli</li>
+</ul>
+<hr>
+<h2 id="promise">Promise</h2>
+<ul>
+<li><p>Promise on olio, joka &quot;lupaa&quot; palauttaa arvon</p>
+</li>
+<li><p>Promise on yhdessä kolmesta tilasta</p>
+<ol>
+<li><strong>pending</strong> - alkutila</li>
+<li><strong>fulfilled</strong> - &quot;lupaus täytetty&quot;<ul>
+<li>tällöin promisella on <em>arvo</em> (<em>value</em>)</li>
+</ul>
+</li>
+<li><strong>rejected</strong> - &quot;lupaus hylätty&quot;<ul>
+<li>hylätyllä promisella on <em>syy</em> (<em>reason</em>)</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<p><img src="../img/promise.png" alt=""></p>
+<ul>
+<li>Promise-olion luonti:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resolve, reject</span>) </span>{
+  <span class="hljs-comment">// call resolve or reject</span>
+});</code></pre>
+
+
+<hr>
+<h2 id="promise-then">Promise.then</h2>
+<ul>
+<li><p>Promise-oliolla on metodi <code>then</code></p>
+<ul>
+<li>sen avulla promiseja voidaan ketjuttaa</li>
+</ul>
+</li>
+<li><p><code>then</code> ottaa (vapaaehtoisina) parametreinaan funktiot</p>
+<ul>
+<li><code>onFulfilled</code> - kutsutaan kun lupaus täytetty</li>
+<li><code>onRejected</code> - kutsutaan kun lupaus hylätty</li>
+</ul>
+</li>
+<li><p><code>then</code> palauttaa uuden promisen</p>
+<ul>
+<li>uuden promisen tila ja arvo riippuvat alkuperäisestä promisesta ja
+<code>onFulfilled</code> / <code>onRejected</code> -funktioista</li>
+<li><a href="https://promisesaplus.com/#point-40">säännöin</a> jotka ovat
+intuitiiviset mutta vaikea selittää lyhyesti</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="promise-then-esimerkki">Promise.then esimerkki</h2>
+<pre><code class="hljs javascript">createPromise1().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value1</span>) </span>{ <span class="hljs-comment">// onFulfilled</span>
+  <span class="hljs-keyword">return</span> createPromise2(value1);
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value2</span>) </span>{ <span class="hljs-comment">// onFulfilled</span>
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Final result:"</span>, value2);
+},
+<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{ <span class="hljs-comment">// onRejected</span>
+  <span class="hljs-comment">// All the errors end up here.</span>
+});</code></pre>
+
+<ul>
+<li><code>then</code>-metodin paluuarvo riippuu siitä mihin tilaan promise päätyi<ul>
+<li><em>fulfilled</em>: palautuu <code>onFulfilled</code>-funktion palauttama uusi promise
+(<code>createPromise2</code>)</li>
+<li><em>rejected</em>: koska ensimmäisellä <code>then</code>:illä ei ole <code>onRejected</code>-funktiota,
+palautuu hylätty promise sellaisenaan<ul>
+<li>hylkäys käsitellään vasta seuraavan <code>then</code>:in
+<code>onRejected</code>-funktiossa</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="esimerkki-readjson">Esimerkki: readJSON</h2>
+<ul>
+<li>Jos <code>readFile</code> olisi toteutettu <em>promise</em>:na...</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readFile</span>(<span class="hljs-params">filename, enc</span>)</span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fulfill, reject</span>)</span>{
+    fs.readFile(filename, enc, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, res</span>)</span>{
+      <span class="hljs-keyword">if</span> (err) reject(err);
+      <span class="hljs-keyword">else</span> fulfill(res);
+    });
+  });
+}</code></pre>
+
+<ul>
+<li>...yksinkertaistuisi <code>readJSON</code>:in toteutus huomattavasti</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readJSON</span>(<span class="hljs-params">filename</span>)</span>{
+  <span class="hljs-keyword">return</span> readFile(filename, <span class="hljs-string">'utf8'</span>).then(<span class="hljs-built_in">JSON</span>.parse);
+}</code></pre>
+
+<ul>
+<li>Tässä ratkaisussa <code>readFile</code> ja <code>readJSON</code> palauttavat promisen<ul>
+<li>eivät ota callback-parametria</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="callback-vs-promise">Callback vs promise</h2>
+<pre><code class="hljs javascript">foo1(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, value</span>) </span>{
+  <span class="hljs-keyword">if</span> (err) {
+    <span class="hljs-comment">// Virhe.</span>
+  }
+  <span class="hljs-keyword">else</span> {
+    foo2(value, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, value</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-comment">// Virhe.</span>
+      }
+      <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// jne.</span>
+      }
+    });
+  });
+}</code></pre>
+
+<pre><code class="hljs javascript">foo1().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>{
+  <span class="hljs-keyword">return</span> foo2(value);
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>{
+  <span class="hljs-comment">// jne.</span>
+},
+<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">reason</span>) </span>{
+  <span class="hljs-comment">// Virhe.</span>
+});</code></pre>
+
+<hr>
+<h2 id="promiset-k-yt-nn-ss-">Promiset käytännössä</h2>
+<ul>
+<li><p>Useimmat selaimet tarjoavat <code>Promise</code>-olion</p>
+</li>
+<li><p>Eri kirjastojen promise-toteutuksissa voi olla eroja</p>
+</li>
+<li><p>Node.js:</p>
+</li>
+</ul>
+<pre><code class="hljs sh">npm install promise --save</code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> <span class="hljs-built_in">Promise</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">'promise'</span>);</code></pre>
+
+<ul>
+<li>Esim. <code>Mongoose</code>-kirjasto tukee promiseja:</li>
+</ul>
+<pre><code class="hljs javascript">models.User.create({
+  username: username
+}).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user</span>) </span>{
+  <span class="hljs-keyword">return</span> res.status(<span class="hljs-number">201</span>).json(user);
+},
+<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+  <span class="hljs-keyword">return</span> res.status(<span class="hljs-number">500</span>).json({error: <span class="hljs-string">'ServerError'</span>});
+});</code></pre>
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

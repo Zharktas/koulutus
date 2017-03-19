@@ -1,0 +1,16 @@
+
+/* Valitsin: elementin nimi */
+p {
+  background-color: skyblue;
+}
+
+/* Valitsin: luokka (class) */
+.moi {
+  color: orange;
+}
+
+/* Valitsin: tunniste (id) */
+#eka {
+  border: 1px solid black;
+  padding: 10px;
+}

@@ -1,0 +1,20 @@
+h1.tamplr-logo {
+  font-family: 'Bree Serif', serif;
+  font-weight: bold;
+  color: violet ;
+}
+
+h2 > span.tamplr-logo {
+  font-family: 'Bree Serif', serif;
+  font-size: 44px;
+  font-weight: bold;
+  color: violet ;
+}
+
+h1.tamplr-logo:after, h2 > span.tamplr-logo:after {
+  content: ".";
+  position: relative;
+  right: 0.1em;
+}
+
+

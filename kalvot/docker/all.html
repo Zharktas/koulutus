@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>docker</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="docker">Docker</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="docker">Docker</h2>
+<ul>
+<li>Konttiteknologia</li>
+<li>Kontitettu ohjelmisto sisältää kaiken tarpeellisen: koodi, runtime, järjestelmätyökalut, järjestelmäkirjastot tai mitä tahansa palvelimelle voisi asentaa</li>
+<li><p>Tämä takaa sen että ohjelmisto toimii samalla tavalla ajoympäristöstä riippumatta</p>
+</li>
+<li><p>Lisäksi docker perustuu avoimiin standardeihin, kontit toimii kaikkien infrastruktuurien päällä</p>
+</li>
+<li><p>Virtuaalikoneet sisältävät itse aplikaation, kaikki tarpeelliset binäärit ja kirjastot, ja kokonaisen käyttöjärjestelmän -&gt; Vievät enemmän resursseja verrattuna kontittamiseen</p>
+</li>
+</ul>
+<hr>
+<h2 id="docker">Docker</h2>
+<ul>
+<li><p>Docker on kevyt koska kaikki kontit jotka pyörivät yhdessä laitteessa ja jakavat saman käyttöjärjestelmän kernelin</p>
+</li>
+<li><p>Kontit myös eristää applikaatiot toisistaan ja alla olevasta infrastruktuurista</p>
+</li>
+<li><p>Docker kontittaminen helpottaa skaalaamista</p>
+</li>
+<li><p>Docker helpottaa ongelmien tunnistamista ja niiden korjaamisesta</p>
+<ul>
+<li>Eristäminen, tilan palautus, jne.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="esimerkki-flappernews-n-kontittaminen">Esimerkki: FlapperNews:n kontittaminen</h2>
+<ul>
+<li>Miten viime viikolla tehty FlapperNews voitaisiin kontittaa?</li>
+<li>Tarvitaan kaksi uutta tiedostoa: Dockerfile ja docker-compose.yml</li>
+<li>Muutetaan myös MongoDB URL käyttämään Docker-pohjaista Mongo imagea</li>
+</ul>
+<hr>
+<h2 id="dockerfile">Dockerfile</h2>
+<ul>
+<li>Kontin määrittely ja rakentaminen</li>
+</ul>
+<pre><code class="hljs javascript"># This image will be based on the official nodejs docker image
+FROM node:4
+
+# Commands will run in this directory
+WORKDIR /home/app
+
+# Add all our code inside that directory that lives in the container
+ADD . /home/app
+
+# Install dependencies and generate production dist
+RUN npm update -g npm
+RUN npm install
+
+# Tell Docker we are going to use this port
+EXPOSE 3000
+
+# The command to run our app when the container is run
+CMD ["npm", "run", "start"]</code></pre>
+
+
+<hr>
+<h2 id="docker-compose-yml">docker-compose.yml</h2>
+<ul>
+<li>Konttien linkkaus</li>
+</ul>
+<pre><code class="hljs javascript">mongo:
+  image: <span class="hljs-string">'mongo:latest'</span>
+  ports:
+    - <span class="hljs-string">'27017:27017'</span>
+web:
+  build: .
+  links:
+    - <span class="hljs-string">'mongo:mongo'</span>
+  ports:
+    - <span class="hljs-string">'3000:3000'</span></code></pre>
+
+
+<hr>
+<h2 id="let-s-do-it">Let&#39;s do it</h2>
+<ul>
+<li>Tehdään pieni muutos app.js:ään:</li>
+</ul>
+<pre><code class="hljs javascript">mongoose.connect(<span class="hljs-string">'mongodb://mongo:27017'</span>);</code></pre>
+
+
+<ul>
+<li>Rakennetaan kontti</li>
+</ul>
+<pre><code class="hljs javascript">$ docker-compose build</code></pre>
+
+<ul>
+<li>Ja ajetaan se</li>
+</ul>
+<pre><code class="hljs javascript">$ docker-compose up</code></pre>
+
+<ul>
+<li>Nyt FlapperNews pitäisi löytyä täältä:</li>
+</ul>
+<p><a href="http://0.0.0.0:3000/#/home">http://0.0.0.0:3000/#/home</a></p>
+<hr>
+<h2 id="docker-komentoja">Docker komentoja</h2>
+<p>Listataan imaget</p>
+<pre><code class="hljs bash">$ docker images</code></pre>
+
+<p>Poistetaan image</p>
+<pre><code class="hljs bash">$ docker rmi  f7759733b11f</code></pre>
+
+<p>Postetaan kaikki imaget</p>
+<pre><code class="hljs bash">docker rmi $(docker images -q)</code></pre>
+
+<p>Listataan ajossa olevat kontit</p>
+<p><pre><code class="hljs bash">$ docker ps</code></pre>
+Listataan kaikki kontit</p>
+<h2 id="-pre-code-class-hljs-bash-docker-ps-span-class-hljs-operator-a-span-code-pre-"><pre><code class="hljs bash">$ docker ps <span class="hljs-operator">-a</span></code></pre></h2>
+<h2 id="linkkej-">Linkkejä</h2>
+<ul>
+<li><p><a href="https://www.docker.com/">Docker</a></p>
+</li>
+<li><p><a href="https://www.docker.com/products/overview">Docker asennus</a></p>
+</li>
+<li><p><a href="https://bitbucket.org/annaruokonen/flappernewsdockerized">FlapperNewsDockerized</a></p>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>
+

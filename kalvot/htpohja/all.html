@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>htpohja</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="harjoitusty-pohja">Harjoitustyöpohja</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="yleist-">Yleistä</h2>
+<ul>
+<li><p>Käydään läpi muutama käytännön asia harjoitustyötä varten</p>
+</li>
+<li><p>Harjoitustyötä varten on
+<a href="https://github.com/ahn/htpohja/">harjoitustyöpohja</a></p>
+<ul>
+<li>Se käyttää jo käsiteltyjen lisäksi muutamaa työkalua, joita vilkaistaan pikaisesti<ul>
+<li><code>bower</code>, <code>grunt</code>, <code>yeoman</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a href="#7">Sen jälkeen</a> ohjeet harjoitustyön aloittamiseen</p>
+</li>
+<li><p>Harjoitustyöohje <a href="../parkki/">toisessa kalvosetissä</a></p>
+<ul>
+<li>Ohjetta voi soveltaa mielensä mukaan</li>
+<li>Ja kokonaan omankin aiheen voi keksiä</li>
+</ul>
+</li>
+<li><p>Työn voi halutessaan tehdä parityönä</p>
+</li>
+</ul>
+<hr>
+<h2 id="bower">bower</h2>
+<ul>
+<li><p><a href="http://bower.io/">Bower</a> on npm:n tapaan paketinhallintatyökalu</p>
+</li>
+<li><p>Bower on selainpään moduuleille</p>
+<ul>
+<li>npm pääasiassa palvelinpäähän</li>
+</ul>
+</li>
+<li><p>Käyttö suunnilleen samanlaista kuin npm:n</p>
+</li>
+</ul>
+<pre><code class="hljs bash">bower install</code></pre>
+
+<pre><code class="hljs bash">bower install PAKETTI --save</code></pre>
+
+<hr>
+<h2 id="grunt">Grunt</h2>
+<ul>
+<li><p><a href="http://gruntjs.com/">Grunt</a> on automaatiotyökalu,
+jota voi käyttää mm. web-sovelluksen ajamiseen, testaamiseen ja
+buildaamiseen</p>
+</li>
+<li><p>Tiedostossa <code>Gruntfile.js</code> määritellään mitä Grunt tekee</p>
+</li>
+<li><p>Varsinaisen työn tekevät Grunt-<em>pluginit</em></p>
+<ul>
+<li>Muutama esimerkki plugineista:</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Plugin</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><a href="https://www.npmjs.com/package/grunt-contrib-jshint">Jshint</a></td>
+<td style="text-align:left">Etsii JavaScript-virheitä ja tyylirikkeitä</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="http://grunt-tasks.com/grunt-contrib-uglify/">Uglify</a></td>
+<td style="text-align:left">Minifioi JavaScript-koodit</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://www.npmjs.com/package/grunt-contrib-less">Less</a></td>
+<td style="text-align:left">Muuntaa Less-tiedostot CSS:ksi</td>
+</tr>
+<tr>
+<td style="text-align:left"><a href="https://github.com/stephenplusplus/grunt-wiredep">wiredep</a></td>
+<td style="text-align:left">Lisää Bower-riippuvuudet automaattisesti HTML-tiedostoon</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="yeoman">Yeoman</h2>
+<ul>
+<li><p><a href="http://yeoman.io/">Yeoman</a> on &quot;projektinluontityökalu&quot; web-sovelluksille</p>
+</li>
+<li><p>Mm. harjoitustyössä käytetty pohja on luotu Yeomanilla seuraavasti</p>
+</li>
+</ul>
+<pre><code class="hljs bash"><span class="hljs-comment"># Asennetaan Yeoman</span>
+npm install -g yo
+
+<span class="hljs-comment"># Asennetaan Yeoman-projektipohja nimeltä angular-fullstack</span>
+npm install -g generator-angular-fullstack
+
+<span class="hljs-comment"># Luodaan projekti käyttäen pohjaa angular-fullstack</span>
+yo angular-fullstack
+
+<span class="hljs-comment"># Yeoman kysyy muutaman kysymyksen luotavasta projektista,</span>
+<span class="hljs-comment"># luo projektitiedostot ja lopuksi suorittaa</span>
+<span class="hljs-comment"># komennot `npm install` ja `bower install`</span></code></pre>
+
+
+<p>Harjoitustyöpohjasta on karsittu muutama paketti
+(mm. testaustyökalu Karma), koska
+Cloud9:n ilmaisen workspacen 512Mb muistiraja tuli vastaan
+<code>npm install</code>:ia suorittaessa.</p>
+<hr>
+<h2 id="angular-fullstack">Angular-fullstack</h2>
+<ul>
+<li><p><a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>
+on eräs Yeoman-projektipohja (&quot;generator&quot;)</p>
+</li>
+<li><p>Se generoi &quot;MEAN&quot;-sovelluksen</p>
+<ul>
+<li>MongoDB + Express + Angular + Node</li>
+<li>me tosin käytämme MongoDB:n sijaan PostgreSQL:aa</li>
+</ul>
+</li>
+<li><p>Sitä voi käyttää projektin luonnin jälkeenkin
+uusien projektin osien generointiin</p>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code class="hljs bash">yo angular-fullstack:endpoint message
+[?] What will the url of your endpoint be? /api/messages</code></pre>
+
+<pre><code class="hljs bash">yo angular-fullstack:route myroute
+[?] Where would you like to create this route? client/app/
+[?] What will the url of your route be? /myroute</code></pre>
+
+<h2 id="-lis-angular-fullstack-in-dokumentaatiosta-https-github-com-daftmonk-generator-angular-fullstack-">* <a href="https://github.com/DaftMonk/generator-angular-fullstack">Lisää angular-fullstack:in dokumentaatiosta</a></h2>
+<h2 id="aloitus">Aloitus</h2>
+<ul>
+<li>GitHubissa on <a href="https://github.com/ahn/htpohja">harjoitustyöpohja</a></li>
+</ul>
+<!--
+* Jos sinulla on GitHub-tunnus, voit *forkata*
+[tämän harjoitustyörepositorion](#TODO)
+GitHubissa itsellesi
+![](../img/githubfork.png)
+-->
+<ul>
+<li><p>Luo Cloud9:ssa uusi custom workspace asettaen Git-osoitteeksi
+<code>https://github.com/ahn/htpohja.git</code></p>
+</li>
+<li><p>Suorita workspacen terminaalissa</p>
+</li>
+</ul>
+<pre><code class="hljs bash">npm install
+bower install
+./init-postgresql-at-cloud9.sh</code></pre>
+<small>
+<code>init-postgresql-at-cloud9.sh</code> on skripti,
+joka käynnistää PostgreSQL:n sekä luo sinne tietokannan ja käyttäjän.
+</small>
+
+* Nyt sovelluksen pitäisi käynnistyä komennolla
+
+<pre><code class="hljs bash">grunt serve</code></pre>
+
+<hr>
+<h2 id="pohja">Pohja</h2>
+<ul>
+<li><p>Harjoitustyöpohja on luotu
+<a href="https://github.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a>-generaattorilla</p>
+<ul>
+<li>ja lisätty Sequelize suunnilleen
+<a href="http://docs.sequelizejs.com/en/1.7.0/articles/express/">tässä ohjeessa</a>
+kerrotulla tavalla</li>
+<li>sekä toteutettu käyttäjän luonti ja kirjautuminen</li>
+</ul>
+</li>
+<li><p>Projektin yleinen konfiguraatio:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tiedosto</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>package.json</code></td>
+<td style="text-align:left">Palvelinpään npm-riippuvuudet</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>bower.json</code></td>
+<td style="text-align:left">Selainpään Bower-riippuvuudet</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Gruntfile.js</code></td>
+<td style="text-align:left">Grunt-tehtävien (tasks) määrittely</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="gruntin-k-ytt-">Gruntin käyttö</h2>
+<ul>
+<li>Kehitysvaiheessa sovellus ajetaan komennolla
+<pre><code class="hljs bash">grunt serve</code></pre><ul>
+<li>sovellus on saatavilla osoitteessa
+<code>http://WORKSPACE-KÄYTTÄJÄ.c9users.io</code></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Lopullisen, julkaistavan sovelluksen voi luoda komennolla
+<pre><code class="hljs bash">grunt build</code></pre><ul>
+<li>Tämä luo hakemistoon <code>dist</code> optimoidun version sovelluksesta</li>
+<li>HTML-, CSS-, ja JavaScript-tiedostot <em>minifioidaan</em> ja liitetään
+yhteen</li>
+<li>Tämän version voi julkaista vaikka Herokuun</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="client-">client/</h2>
+<ul>
+<li>Hakemistossa <code>client</code> on  selainpään Angular-sovellus<ul>
+<li>Sovelluksen Angular-moduulin nimi on <code>workspaceApp</code></li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tiedosto</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>client/index.html</code></td>
+<td style="text-align:left">Ensimmäiseksi ladattava HTML-tiedosto</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>client/app/</code></td>
+<td style="text-align:left">Angular-sovelluksen toteutus</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>client/app/app.js</code></td>
+<td style="text-align:left">Angular-sovelluksen konfiguraatio</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>client/app/main/</code></td>
+<td style="text-align:left">Etusivuun littyvät tiedostot</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>client/assets/</code></td>
+<td style="text-align:left">Kuvat ja muut staattiset tiedostot</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>client/components/</code></td>
+<td style="text-align:left">Useassa näkymässä käytettävät komponentit, esim <code>navbar</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="server-">server/</h2>
+<ul>
+<li>Hakemistossa <code>server/</code> on palvelinpään Node+Express-sovellus</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Tiedosto</th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>server/app.js</code></td>
+<td style="text-align:left">Express-sovellus, jonka mm. <code>grunt serve</code> suorittaa</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>server/routes.js</code></td>
+<td style="text-align:left">Express-reittien (routes) määrittely</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>server/api/</code></td>
+<td style="text-align:left">Reittien toteutus <code>/api/...</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>server/api/user/</code></td>
+<td style="text-align:left">&quot;Käyttäjä-reitti&quot; <code>/api/user/</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>server/models/</code></td>
+<td style="text-align:left">Sequelize-mallit</td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

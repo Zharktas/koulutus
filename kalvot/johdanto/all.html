@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>johdanto</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="web">Web</h1>
+<hr>
+<h2 id="world-wide-web">World Wide Web</h2>
+<ul>
+<li><p><em>World Wide Web</em> (<em>WWW</em>, <em>Web</em>) on web-resurssien muodostama verkko.</p>
+</li>
+<li><p>Kaikilla web-resurssieilla on oma <em>URL</em> (<em>Uniform Resource Locator</em>),
+joka määrittää resurssin sijainnin.</p>
+</li>
+<li><p>URL:n perusteella web-resurssi voidaan saavuttaa käyttäen <em>Internetin</em>
+päällä toimivaa <em>HTTP</em>-protokollaa.</p>
+</li>
+<li><p>Usein web-resursseja käsitellään web-selaimella (Chrome, Firefox, IE,
+ym.), mutta muitakin tapoja on.</p>
+</li>
+</ul>
+<hr>
+<h2 id="webin-historiaa">Webin historiaa</h2>
+<ul>
+<li><p>1969: ARPANET</p>
+<ul>
+<li>Internetin edeltäjä</li>
+</ul>
+</li>
+<li><p>1983: TCP/IP</p>
+<ul>
+<li>Internetin tiedonsiirtoprotokolla</li>
+</ul>
+</li>
+<li><p>1989: World Wide Web</p>
+<ul>
+<li>HTTP, HTML</li>
+</ul>
+</li>
+<li><p>1994: CSS</p>
+<ul>
+<li>Kieli web-sivujen tyylin määrittelyyn</li>
+</ul>
+</li>
+<li><p>1995: JavaScript</p>
+<ul>
+<li>Web-selainten ohjelmointikieli</li>
+</ul>
+</li>
+<li><p>1998: Ajax</p>
+<ul>
+<li>Monipuolisempi selain-palvelin-kommunikaatio</li>
+</ul>
+</li>
+<li><p>2011: HTML5</p>
+<ul>
+<li>Joukko erilaisia web-teknologioita</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="web-sovellusten-historiaa">Web-sovellusten historiaa</h2>
+<ul>
+<li><p>1990-luku</p>
+<ul>
+<li>Suurelta osin staattisia HTML-sivuja</li>
+<li>Esim. <a href="http://www.cs.tut.fi/~seitti/">http://www.cs.tut.fi/~seitti/</a></li>
+<li>&quot;Web 1.0&quot;</li>
+</ul>
+</li>
+<li><p>2000-luku</p>
+<ul>
+<li>Dynaamisia web-sovelluksia</li>
+<li>Käyttäjien luomaa sisältöä</li>
+<li>Esim. <a href="http://www.wikipedia.org">http://www.wikipedia.org</a></li>
+<li>&quot;Web 2.0&quot;</li>
+</ul>
+</li>
+<li><p>2010-luku</p>
+<ul>
+<li>HTML5, työpöytäsovelluksen tasoinen käyttäjäkokemus</li>
+<li><a href="http://en.wikipedia.org/wiki/Semantic_Web">Semanttinen web</a>, <a href="http://en.wikipedia.org/wiki/Mashup_%28web_application_hybrid%29">Mashupit</a>, ...</li>
+<li>Esim. <a href="http://play.spotify.com">http://play.spotify.com</a></li>
+<li>&quot;Web 3.0&quot;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="web-sovellus">Web-sovellus</h2>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Web_application">en.wikipedia.org</a>:<blockquote>
+<p><em>Web application</em> is a client-server software application in which the client (or user
+interface) runs in a web browser.</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h2 id="web-sivu-vs-web-sovellus">Web-sivu vs web-sovellus</h2>
+<ul>
+<li><p>Web-sivu: käyttäjä hakee tietoa</p>
+<ul>
+<li>esim. <a href="http://www.tut.fi">http://www.tut.fi</a></li>
+</ul>
+</li>
+<li><p>Web-sovellus: käyttäjä suorittaa toimintoja</p>
+<ul>
+<li>esim. <a href="http://www.tut.fi/pop">http://www.tut.fi/pop</a></li>
+</ul>
+</li>
+<li><p>Rajanveto epätarkkaa</p>
+</li>
+<li><p><a href="http://www.visionmobile.com/blog/2013/07/web-sites-vs-web-apps-what-the-experts-think/">Keskustelua aiheesta</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="web-sovellusten-hy-tyj-">Web-sovellusten hyötyjä</h2>
+<ul>
+<li><p>Käytettävissä kaikkialla</p>
+<ul>
+<li>Alustariippumaton</li>
+<li>Ainut vaatimus on moderni web-selain</li>
+</ul>
+</li>
+<li><p>Sovellusten päivittäminen helppoa</p>
+</li>
+<li><p>Turvallisempi suorittaa kuin natiivi sovellus</p>
+<ul>
+<li>Web-selaimen &quot;hiekkalaatikko&quot;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="web-sovellusten-haittoja">Web-sovellusten haittoja</h2>
+<ul>
+<li><p>Käyttäjäkokemus?</p>
+</li>
+<li><p>Käyttö vaatii verkkoyhteyden</p>
+</li>
+<li><p>Omanlaisensa tietoturvaongelmat</p>
+<ul>
+<li>Sovellus koko maailman saavutettavissa</li>
+</ul>
+</li>
+<li><p>Sovellusten kehitys</p>
+<ul>
+<li>Teknologiarajoitteet</li>
+<li>Web-selainten erot ym.</li>
+</ul>
+</li>
+</ul>
+<p>Kaikki nämä ongelmat ovat vähenemään päin web-teknologioiden
+kehittymisen myötä.</p>
+<hr>
+<h2 id="web-sovelluksen-arkkitehtuuri">Web-sovelluksen arkkitehtuuri</h2>
+<p><img src="../img/webapp.png" alt="Arkkitehtuuri"></p>
+<ul>
+<li><p>Web-sovelluksen karkea arkkitehtuuri:</p>
+<ol>
+<li><em>Asiakaspää</em> (<em>Frontend</em>), suoritetaan selaimessa<ul>
+<li>HTML, CSS, JavaScript</li>
+</ul>
+</li>
+<li><em>Palvelinpää</em> (<em>Backend</em>)<ul>
+<li>Lukuisia vaihtoehtoisia toteutustapoja, sovelluskehyksiä, ohjelmointikieliä, ...</li>
+<li>Useimmiten sisältää tietokannan</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Näiden välillä kommunikoidaan HTTP-protokollalla</p>
+</li>
+</ul>
+<hr>
+<h2 id="palvelinp-n-toteutus">Palvelinpään toteutus</h2>
+<ul>
+<li><p>Palvelinpään toteuttamiseen on lukemattomia tapoja</p>
+</li>
+<li><p>Sopiva arkkitehtuuri riippuu sovelluksen tyypistä</p>
+<ul>
+<li>Yksinkertaisimmillaan staattisten sivujen palauttaja</li>
+<li>Monimutkaisimmillaan... esim. google.com</li>
+</ul>
+</li>
+<li><p>Tällä kurssilla tutustutaan tarkemmin
+<a href="http://nodejs.org/">Node.js-ympäristöön</a></p>
+</li>
+<li><p>Muita suosittuja vaihtoehtoja esim.
+<a href="http://httpd.apache.org/">Apache</a>, <a href="https://www.djangoproject.com/">Django</a>, <a href="http://rubyonrails.org/">Ruby on Rails</a>, <a href="http://en.wikipedia.org/wiki/Java_servlet">Java Servlets</a>, <a href="http://php.net/">PHP</a>, ...</p>
+</li>
+</ul>
+<hr>
+<h2 id="asiakasp-n-teknologiat">Asiakaspään teknologiat</h2>
+<ul>
+<li><p>HTML</p>
+<ul>
+<li>kuvaa web-sivun rakenteen</li>
+</ul>
+</li>
+<li><p>CSS</p>
+<ul>
+<li>kuvaa web-sivun ulkoasun</li>
+</ul>
+</li>
+<li><p>JavaScript</p>
+<ul>
+<li>web-sivun toiminnallisuus</li>
+</ul>
+</li>
+<li><p>HTTP</p>
+<ul>
+<li>kommunikointi palvelimen kanssa</li>
+</ul>
+</li>
+<li><p>Ajax</p>
+<ul>
+<li>mahdollistaa dynaamisen kommunikoinnin palvelimen kanssa</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="http">HTTP</h2>
+<ul>
+<li><p>HyperText Transfer Protocol</p>
+</li>
+<li><p>Protokolla asiakkaan (web-selain) ja palvelimen väliseen kommunikaatioon</p>
+</li>
+<li><p>Tekstipohjainen</p>
+</li>
+<li><p>Tilaton</p>
+</li>
+</ul>
+<p><img src="../img/http.png" alt=""></p>
+<hr>
+<h2 id="html">HTML</h2>
+<ul>
+<li><p>HyperText Markup Language</p>
+</li>
+<li><p>Merkkauskieli web-sivun rakenteen kuvaamiseen</p>
+<ul>
+<li>Puumainen rakenne erilaisia HTML-elementtejä</li>
+<li>Elementit voivat sisältää attribuutteja (<code>foo=&quot;bar&quot;</code>)</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"fi"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"otsikko"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"eka"</span>&gt;</span>Eka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Toka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+<hr>
+<h2 id="joitain-html-elementtej-">Joitain HTML-elementtejä</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- Suorakulmion muotoinen alue --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Otsikko<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Alaotsikko<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- ... --&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Tekstikappale<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"sivu.html"</span>&gt;</span>Linkki<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"kuva.png"</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">"Kuva"</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">form</span>&gt;</span> <span class="hljs-comment">&lt;!-- Lomake --&gt;</span> <span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">canvas</span>&gt;</span> <span class="hljs-comment">&lt;!-- Piirtoalue --&gt;</span> <span class="hljs-tag">&lt;/<span class="hljs-title">canvas</span>&gt;</span></code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/tags/">Paljon muitakin</a></li>
+</ul>
+<hr>
+<h2 id="css">CSS</h2>
+<ul>
+<li><p>Cascading Style Sheets</p>
+</li>
+<li><p>Kieli web-sivun ulkoasun määrittämiseen</p>
+</li>
+<li><p>Määritellään <em>valitsin</em> (<em>selector</em>) ja tälle attribuutti-arvo-parit</p>
+</li>
+</ul>
+<ul>
+<li><a href="../../assets/misc/style.css">style.css</a> </li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-comment">/* Valitsin: elementin nimi */</span>
+<span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> orange</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Valitsin: luokka (class) */</span>
+<span class="hljs-class">.otsikko</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Valitsin: tunniste (id) */</span>
+<span class="hljs-id">#eka</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1px</span> solid black</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span></code></pre>
+
+
+
+
+<ul>
+<li><a href="../../assets/misc/moi.html">moi.html</a></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"fi"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>
+          <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/css"</span>
+          <span class="hljs-attribute">href</span>=<span class="hljs-value">"style.css"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"otsikko"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"eka"</span>&gt;</span>Eka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Toka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+
+
+<hr>
+<h2 id="lis-css-valitsimia">Lisää CSS-valitsimia</h2>
+<pre><code class="hljs css"><span class="hljs-comment">/* Useampi valitsin */</span>
+<span class="hljs-tag">h1</span>, <span class="hljs-tag">h2</span>, <span class="hljs-tag">h3</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bold</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Useampi luokka samassa elementissä */</span>
+<span class="hljs-class">.iso</span><span class="hljs-class">.musta</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span>
+
+<span class="hljs-comment">/* Jälkeläinen (descendant) */</span>
+<span class="hljs-class">.laatikko</span> <span class="hljs-tag">a</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">text-decoration</span>:<span class="hljs-value"> none</span></span>;
+}</span>
+
+<span class="hljs-comment">/* Suora lapsi */</span>
+<span class="hljs-class">.laatikko</span> &gt; <span class="hljs-tag">a</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> orange</span></span>;
+}</span></code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/cssref/css_selectors.asp">Paljon muitakin</a></li>
+</ul>
+<hr>
+<h2 id="css-valitsinten-j-rjestys">CSS-valitsinten järjestys</h2>
+<ul>
+<li>Useampi CSS-sääntö voi osua saman elementin samaan attribuuttiin, esim:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"iidee"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"luokka"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span></code></pre>
+
+<pre><code class="hljs css"><span class="hljs-tag">p</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>; }</span>
+<span class="hljs-class">.luokka</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> green</span></span>; }</span>
+ <span class="hljs-id">#iidee</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> blue</span></span>; }</span></code></pre>
+
+<ul>
+<li><p>CSS <a href="http://www.w3.org/TR/CSS2/cascade.html#cascade">määrittelee sääntöjen tärkeysjärjestyksen</a></p>
+<ul>
+<li>&quot;Tarkin sääntö voittaa&quot;</li>
+<li>Tasapelin sattuessa viimeiseksi määritelty voittaa</li>
+</ul>
+</li>
+<li><p>Tärkeysjärjestys voidaan kumota <code>!important</code> määreellä</p>
+</li>
+</ul>
+<pre><code class="hljs css"><span class="hljs-tag">p</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red <span class="hljs-important">!important</span></span></span>; }</span></code></pre>
+
+
+<hr>
+<h2 id="javascript">JavaScript</h2>
+<ul>
+<li><p>Ohjelmointikieli selainpään toiminnallisuuden toteuttamiseen</p>
+</li>
+<li><p>Dynaamisesti tyypitetty</p>
+</li>
+<li><p>Prototyyppipohjainen</p>
+</li>
+<li><p>First-class functions</p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">p</span>) </span>{
+  <span class="hljs-keyword">return</span> p * p;
+}
+
+<span class="hljs-keyword">var</span> x = foo(<span class="hljs-number">6</span>);
+<span class="hljs-keyword">var</span> li = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].map(foo);
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Moi"</span>);</code></pre>
+
+<ul>
+<li>Voidaan suorittaa muuallakin kuin web-selaimessa<ul>
+<li>Esim. <a href="http://nodejs.org/">NodeJS</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="html-javascript">HTML + JavaScript</h2>
+<ul>
+<li>HTML-dokumenttia voidaan manipuloida JavaScriptillä <a href="http://www.w3.org/DOM/">DOM-rajapinnan</a> kautta</li>
+</ul>
+<ul>
+<li><a href="../../assets/misc/moi.html">moi.html</a></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"fi"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello World<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"stylesheet"</span>
+          <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/css"</span>
+          <span class="hljs-attribute">href</span>=<span class="hljs-value">"style.css"</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"otsikko"</span>&gt;</span>Moi<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"eka"</span>&gt;</span>Eka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Toka!<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"script.js"</span>&gt;</span><span class="undefined">
+      </span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+
+
+
+<ul>
+<li><a href="../../assets/misc/script.js">script.js</a></li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-pi">"use strict"</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pClicked</span>(<span class="hljs-params">event</span>) </span>{
+  event.srcElement.style.
+    backgroundColor = <span class="hljs-string">'red'</span>;
+}
+
+<span class="hljs-keyword">var</span> ps = <span class="hljs-built_in">document</span>.
+  getElementsByTagName(<span class="hljs-string">'p'</span>);
+
+<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;ps.length; ++i){
+  <span class="hljs-keyword">var</span> p = ps[i];
+  p.onclick = pClicked;
+}</code></pre>
+
+
+<hr>
+<h2 id="ajax">Ajax</h2>
+<ul>
+<li><p>Selaimen tarjoama rajapinta palvelimen kanssa kommunikointiin</p>
+<ul>
+<li><code>XMLHTTPRequest</code> -olio</li>
+</ul>
+</li>
+<li><p>Asynchronous JavaScript And XML</p>
+<ul>
+<li>Nimi juontuu siitä, että alunperin siirrettiin XML-dokumentteja</li>
+<li>Siirrettävä data voi kuitenkin olla missä muodossa tahansa, esim
+<a href="http://www.json.org/">JSON</a></li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+  xhr.open(<span class="hljs-string">'get'</span>, <span class="hljs-string">'/resurssi/palvelimella'</span>);
+  xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span>(xhr.readyState === <span class="hljs-number">4</span> &amp;&amp; xhr.status === <span class="hljs-number">200</span>) {
+      alert(xhr.responseText);
+    }
+  }
+  xhr.send(<span class="hljs-literal">null</span>);</code></pre>
+
+<hr>
+<h2 id="apua-selainp-n-kehitykseen">Apua selainpään kehitykseen</h2>
+<ul>
+<li><p>Jotkut selaimen tarjoamista teknologioista ovat kömpelöitä ja työläitä käyttää
+sellaisenaan</p>
+<ul>
+<li>Lisähaasteita tuottavat eri web-selainten väliset erot</li>
+</ul>
+</li>
+<li><p>Usein käytetäänkin erilaisia kirjastoja ja sovelluskehyksiä, jotka
+abstrahoivat näitä hankaluuksia pois</p>
+</li>
+<li><p><a href="http://jquery.com/">jQuery</a> on erittäin suosittu selainpään
+JavaScript-kirjasto</p>
+<ul>
+<li>Helpottaa mm. DOM:n manipulointia ja Ajax-kutsuja</li>
+</ul>
+</li>
+<li><p><a href="http://getbootstrap.com/">Bootstrap</a> on kehys
+<a href="http://en.wikipedia.org/wiki/Responsive_web_design">responsiivisten</a>
+web-layoutien tekoon</p>
+</li>
+<li><p>HTML-, CSS- ja JavaScript-kieliä voidaan myös generoida &quot;käännösvaiheessa&quot;
+jostain kehittäjän kannalta miellyttävimmistä kielistä</p>
+</li>
+<li><p>Näihinkin palataan myöhemmin tällä kurssilla</p>
+</li>
+</ul>
+<hr>
+<h2 id="materiaalia-ja-tulevaa">Materiaalia ja tulevaa</h2>
+<ul>
+<li><p>Jos HTML ja CSS eivät ole tuttuja, niin niihin voi tutustua
+esimerkiksi <a href="http://www.w3schools.com/">w3schools.com:in</a>
+tutoriaaleista: <a href="http://www.w3schools.com/html/">HTML</a>, <a href="http://www.w3schools.com/css/">CSS</a></p>
+<ul>
+<li>Tai vaikkapa näistä verkkoluennoista: <a href="https://class.coursera.org/webapplications-002/lecture/103">HTML</a>, <a href="https://class.coursera.org/webapplications-002/lecture/111">CSS</a> (vaatii kirjautumisen)</li>
+</ul>
+</li>
+<li><p>HTML:ää ja CSS:ää käsitellään myös tarkemmin kurssilla <a href="http://www.tut.fi/wwwoppaat/opas2014-2015/perus/laitokset/Matematiikka/MAT-80000.html">MAT-80000 Hypermedian perusteet</a></p>
+</li>
+<li><p>Ensi viikolla HTTP:tä ja lisää web-sovelluksista</p>
+<ul>
+<li>sitä seuraavalla JavaScriptiä</li>
+<li>...</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

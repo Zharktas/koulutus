@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>webcomponents</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="web-components">Web Components</h1>
+<h3 id="tie-23500-web-ohjelmointi">TIE-23500 Web-ohjelmointi</h3>
+<hr>
+<h1 id="web-components">Web Components</h1>
+<ul>
+<li>Web komponentit ovat uudelleen käytettäviä käyttöliittymä widgettejä, jotka toteutaan ilman ulkoisia JavaScript kirjastoja.</li>
+<li>Komponentti voidaan ladata import tagilla, jonka jälkeen sitä voidaan käyttää html-merkkauksessa.</li>
+<li>Web komponentit koostuvat neljästä eri teknologiasta, joita voidaan myös käyttää erikseen:<ul>
+<li>Custom Elements</li>
+<li>HTML Templates</li>
+<li>Shadow DOM</li>
+<li>HTML Imports</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="custom-elements">Custom elements</h1>
+<ul>
+<li>Tyypillinen tapa totetuttaa modernin näköisiä web sovelluksia on rakentaa se div-elementeistä</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"container"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"header"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Hi!<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Subtitle<span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"content"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"article"</span>&gt;</span>
+    ...
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"footer"</span>&gt;</span>
+  2015
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<hr>
+<h1 id="custom-elements">Custom Elements</h1>
+<ul>
+<li>Custom elementit mahdollistavat uusien epästandardien elementtien luomisen ja uudelleen käytön.</li>
+<li>Elementti rekisteröidään JavaScriptillä:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> XComponent = <span class="hljs-built_in">document</span>.registerElement(<span class="hljs-string">'x-component'</span>)</code></pre>
+
+<ul>
+<li>Jonka jälkeen komponenttia voidaan käyttää:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">x-component</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">x-component</span>&gt;</span></code></pre>
+
+<ul>
+<li>Elementti voidaan myös luoda JavaScriptillä:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> dom = <span class="hljs-keyword">new</span> XComponent();
+<span class="hljs-built_in">document</span>.body.appendChild(dom);</code></pre>
+
+<hr>
+<h1 id="custom-elements">Custom Elements</h1>
+<ul>
+<li>Elementtiin voidaan lisätä toiminallisuutta, joka tekee custom elementistä paljon hyödyllisemmän:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> proto = <span class="hljs-built_in">Object</span>.create(HTMLElement.prototype);
+proto.name = <span class="hljs-string">'Custom Element'</span>;
+proto.alert = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+  alert(<span class="hljs-string">'This is '</span> + <span class="hljs-keyword">this</span>.name);
+}
+<span class="hljs-built_in">document</span>.registerElement(<span class="hljs-string">'x-component'</span>, {
+  prototype: proto
+});</code></pre>
+
+<hr>
+<h1 id="custom-elements">Custom Elements</h1>
+<ul>
+<li>Olemassa olevia HTML elementtejä voidaan myös laajentaa:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">is</span>=<span class="hljs-value">'x-component'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<ul>
+<li>Laajennetulla elementillä on kaikki entisen elementin toiminnot + uudet määritetyt.</li>
+</ul>
+<hr>
+<h1 id="custom-elements">Custom Elements</h1>
+<ul>
+<li>Esimerkki <a href="https://github.com/github/time-elements">Githubin time-elementit</a></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">time</span> <span class="hljs-attribute">is</span>=<span class="hljs-value">"relative-time"</span> <span class="hljs-attribute">datetime</span>=<span class="hljs-value">"2014-04-01T16:30:00-08:00"</span>&gt;</span>
+  April 1, 2014
+<span class="hljs-tag">&lt;/<span class="hljs-title">time</span>&gt;</span></code></pre>
+
+<hr>
+<h1 id="custom-elements">Custom Elements</h1>
+<ul>
+<li>Määritetty time-elementti näyttää kellonaikoja riippuen nykyisestä kellon ajasta.</li>
+<li><p>Vaihtoehtoja mitä selaimeen renderöidään voi olla:</p>
+<ul>
+<li>just now</li>
+<li>30 seconds ago</li>
+<li>a minute ago</li>
+<li>30 minutes ago</li>
+<li>jne</li>
+</ul>
+</li>
+<li><p>Jos custom elementit eivät ole selaimessa tuettuna, github käyttää apuna JavaScriptiä</p>
+</li>
+<li>Jos JavaScriptiäkään ei suoritetaan niin github näyttää staattisen kellonajan.</li>
+</ul>
+<hr>
+<h1 id="html-templates">HTML Templates</h1>
+<ul>
+<li>HTML Templatet ovat selainpään sivupohjia html merkkauksessa joita ei automaattisesti renderöidä.</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">template</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"mytemplate"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">""</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">"Badger"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"comment"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span></code></pre>
+
+<ul>
+<li>Template tagin sisäinen html ei rendereröidy</li>
+<li>tagin sisällä olevat interaktiot eivät käynnisty<ul>
+<li>skriptejä ei ajeta</li>
+<li>kuvia ei ladata</li>
+<li>audio ei soi</li>
+</ul>
+</li>
+<li>Sisältö ei ole osa dokumenttia</li>
+<li>Template tagi voidaan sijoittaa tagien <head>, <body> ja <frameset> sisään ja se voidaan sijoittaa paikkoihin joissa muut html elementit olisivat laittomia</li>
+</ul>
+<hr>
+<h1 id="html-templates">HTML Templates</h1>
+<ul>
+<li>Template voidaan aktivoida JavaScriptillä:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> t = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#mytemplate'</span>);
+t.content.querySelector(<span class="hljs-string">'img'</span>).src = <span class="hljs-string">'logo.png'</span>;
+
+<span class="hljs-keyword">var</span> clone = <span class="hljs-built_in">document</span>.importNode(t.content, <span class="hljs-literal">true</span>);
+<span class="hljs-built_in">document</span>.body.appendChild(clone);</code></pre>
+
+<ul>
+<li>Kun importNode kutsutaan, kaikki templaten sisäinen html aktivoituu: kuvat ladataan, skriptit ajetaan.</li>
+<li>Lopullinen merkkaus renderöidään.</li>
+</ul>
+<hr>
+<h1 id="html-templates">HTML Templates</h1>
+<ul>
+<li>Demo</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"useIt()"</span>&gt;</span>Use me<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"container"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="javascript">
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useIt</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> content = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'template'</span>).content;
+    <span class="hljs-comment">// Update something in the template DOM.</span>
+    <span class="hljs-keyword">var</span> span = content.querySelector(<span class="hljs-string">'span'</span>);
+    span.textContent = <span class="hljs-built_in">parseInt</span>(span.textContent) + <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#container'</span>).appendChild(
+        <span class="hljs-built_in">document</span>.importNode(content, <span class="hljs-literal">true</span>));
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>Template used: <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="actionscript">alert(<span class="hljs-string">'Thanks!'</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span></code></pre>
+
+<ul>
+<li><a href="http://www.html5rocks.com/en/tutorials/webcomponents/template/#toc-using">Linkki demoon</a></li>
+</ul>
+<hr>
+<h1 id="shadow-dom">Shadow DOM</h1>
+<ul>
+<li>Shadow DOM kapseloi DOM puun erilleen muusta dokumentista.</li>
+<li>Näkyvyysalueet on sidottu isäntäelementtiin.</li>
+<li>Shadow DOM:ssa määritetyt css määreet eivät vaikuta koko dokumenttiin, Shadow DOM:n ulkopuolella olevat css määreet eivät vaikuta Shadow DOM:iin.</li>
+<li>Shadow DOM luodaan JavaScriptillä isäntäelementistä:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"host"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></code></pre>
+
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> host = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#host'</span>);
+<span class="hljs-keyword">var</span> root = host.createShadowRoot();
+
+<span class="hljs-keyword">var</span> div = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
+div.textContent = <span class="hljs-string">"Woo!"</span>;
+root.appendChild(div);</code></pre>
+
+<hr>
+<h1 id="shadow-dom">Shadow DOM</h1>
+<ul>
+<li>Shadow DOM voidaan yhdistää templatejen kanssa.</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">template</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"nameTagTemplate"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+  …
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"outer"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"boilerplate"</span>&gt;</span>
+    Hi! My name is
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"name"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">content</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">content</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">template</span>&gt;</span></code></pre>
+
+<hr>
+<h1 id="shadow-dom">Shadow DOM</h1>
+<ul>
+<li>Luodaan Shadow DOM:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> shadow = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#nameTag'</span>).createShadowRoot();
+<span class="hljs-keyword">var</span> template = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#nameTagTemplate'</span>);
+<span class="hljs-keyword">var</span> clone = <span class="hljs-built_in">document</span>.importNode(template.content, <span class="hljs-literal">true</span>);
+shadow.appendChild(clone);</code></pre>
+
+<ul>
+<li>Templaten content tagin sisältö voidaan vaihtaa:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#nameTag'</span>).textContent = <span class="hljs-string">'Shellie'</span>;</code></pre>
+
+<ul>
+<li>Demo: <a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/#toc-separation">http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/#toc-separation</a></li>
+</ul>
+<hr>
+<h1 id="html-import">HTML import</h1>
+<ul>
+<li>HTML importilla voidaan includoida toisia html tiedostoja samaan dokumenttiin.</li>
+<li>Yksinkertaisimmillaan:</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">"import"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"demo.html"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span></code></pre>
+
+<ul>
+<li>Voidaan käyttää esimerkiksi muiden html, js ja css tiedostojen lataamiseen.</li>
+<li>import ei sisällytä toista tiedostoa automaattisesti dokumenttiin.</li>
+</ul>
+<hr>
+<h1 id="html-import">HTML import</h1>
+<ul>
+<li>Importatun html-tiedoston sisältöä voi käsitellä javascriptillä:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> content = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'link[rel="import"]'</span>).import;</code></pre>
+
+<ul>
+<li>content muuttujaan tulee koko html importin dom puu</li>
+<li>Dokumenttiin voidaan lisätä koko puu tai vain osa siitä</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> el = content.querySelector(<span class="hljs-string">'.warning'</span>);
+<span class="hljs-built_in">document</span>.body.appendChild(el.cloneNode(<span class="hljs-literal">true</span>));</code></pre>
+
+<hr>
+<h1 id="html-import">HTML import</h1>
+<ul>
+<li>Importattu html voi käyttää ulkopuolista dokumenttia</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> importDoc = <span class="hljs-built_in">document</span>.currentScript.ownerDocument;
+<span class="hljs-keyword">var</span> mainDoc = <span class="hljs-built_in">document</span>;</code></pre>
+
+<hr>
+<h1 id="web-components">Web Components</h1>
+<ul>
+<li>Näitä neljää speksiä yhdistelmällä voidaan tehdä webbi komponentteja.</li>
+<li>Importeilla voidaan määrittää itse komponentti omaan tiedostoon.</li>
+<li>Templateilla voidaan ja Shadow DOM:lla voidaan määrittää komponentti.</li>
+<li>Custom Elementeillä voidaan määrittää komponenteilla helposti käytettävät elementit.</li>
+<li>Huonona puolena selaintuki:<ul>
+<li>Chrome ja Opera tukee kaikkia neljää speksiä</li>
+<li>Firefox Templateja mutta muita vain osittain.</li>
+<li>Safari tukee vain templateja mutta muita ei ollenkaan.</li>
+<li>IE ei tue mitään :)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="web-components">Web Components</h1>
+<ul>
+<li><p>Lisälukemistoa:</p>
+<ul>
+<li><a href="http://webcomponents.org/">http://webcomponents.org/</a></li>
+<li><a href="http://www.html5rocks.com/en/">http://www.html5rocks.com/en/</a></li>
+</ul>
+</li>
+<li><p>Kysyttävää ?</p>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

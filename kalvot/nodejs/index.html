@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>nodejs</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Node.js
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Node.js
+
+* [Node.js](https://nodejs.org/en/)
+on palvelinpuolen JavaScript-alusta
+
+* Perustuu Googlen
+  [V8-JavaScript-moottoriin](https://developers.google.com/v8/)
+
+* Soveltuu hyvin aina pienistä protoista suuriin järjestelmiin saakka
+
+* Alustalla voi ajaa muitakin kuin weppisovelluksia,
+mutta keskitymme webbipuoleen
+
+* Node.js tarjoaa rajapinnat esimerkiksi tiedostojen käsittelyyn
+ja HTTP-toiminnallisuuteen
+
+---
+
+## Node.js käytännössä
+
+* Kaikessa yksinkertaisuudessaan Node.js on alusta jolla voidaan
+  suorittaa JavaScript-koodia
+
+```bash
+$ node hello.js
+Hello World!
+```
+
+* Node.js tarjoaa myös interaktiivisen tulkin
+
+```javascript
+$ node
+> var x = 1 + 3;
+> x * x
+16
+```
+
+* Oleellisin ero selain-JavaScriptiin on ympäristön tarjoamissa rajapinnoissa
+    * Node.js ei ole selaimessa joten tietenkään rajapintoja mm. DOM:n
+      manipulointiin ei ole
+    * Sen sijaan voidaan tehdä mm. tiedostojenkäsittelyä ja
+      HTTP-pyyntöjä/vastauksia
+
+---
+
+## NPM
+
+* Node.js:n mukana tulee paketinhallintatyökalu
+  [npm](https://www.npmjs.com/)
+
+* `npm`:llä voi liittää Node.js-sovellukseensa moduuleja laajasta
+  valikoimasta
+
+* Esim. moduuli nimeltä `express`
+
+```bash
+npm install express --save
+```
+
+* Kun moduuli on asennettu, se voidaan ottaa JavaScriptissa käyttöön `require`-funktiolla
+
+```javascript
+var express = require('express');
+```
+
+* Usein kannattaa käyttää valmista moduulia eikä keksiä pyörää uudelleen!
+
+---
+
+## Package.json
+
+* Node.js-projektin riippuvuudet ja muut tiedot määritellään
+  [package.json](https://docs.npmjs.com/files/package.json)-tiedostossa
+
+```json
+{
+  "name": "esimerkki",
+  "description": "Esimerkkisovellus",
+  "version": "0.0.1",
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "dependencies": {
+    "express": "*"
+  }
+}
+```
+
+* [Interaktiivinen package.json -esimerkki](http://browsenpm.org/package.json)
+
+---
+
+## Moduulien asentaminen
+
+* Asentaa packages.json:issa määritellyt riippuvuudet:
+```bash
+npm install
+```
+
+* Asentaa uuden moduulin:
+```bash
+npm install MODUULIN_NIMI
+```
+
+* Asentaa uuden moduulin JA lisää sen package.json:iin riippuvuudeksi:
+```bash
+npm install MODUULIN_NIMI --save
+```
+
+---
+
+## Riippuvuuksista
+
+* `npm` asentaa automaattisesti moduulien riippuvuudet
+
+* `npm`-moduulit ovat tyypillisesti pieniä ja tekevät yhden
+  yksinkertaisen asian
+
+* Isommat moduulit käyttävät hyväkseen useita muita moduuleja
+
+* Asennetut moduulit riippuvuuksineen näkee komennolla `npm list`
+
+```bash
+$ npm list
+esimerkki@0.0.1 /home/ubuntu/workspace
+├─┬ express@4.13.3
+│ ├─┬ accepts@1.2.13
+│ │ ├─┬ mime-types@2.1.7
+│ │ │ └── mime-db@1.19.0
+│ │ └── negotiator@0.5.3
+│ ├── array-flatten@1.1.1
+│ ├── content-disposition@0.5.0
+│ ├── content-type@1.0.1
+│ ├── cookie@0.1.3
+...
+```
+
+---
+
+## Moduulien käyttö
+
+* Kun moduuli on asennettu, voi sen ottaa JavaScript-tiedostossa
+  käyttöön `require`-funktiolla
+
+```javascript
+var express = require('express');
+```
+
+* Myös oman sovelluksen jako useaan tiedostoon tehdään käyttäen samaa
+  moduulijärjestelmää
+
+```javascript
+var oma = require('./oma.js');
+
+oma.jokuFunktio();
+```
+
+---
+
+## Omat moduulit
+
+* Toisin kuin selaimen JavaScriptissa, Node.js:ssä muuttujat eivät suoraan näy tiedostosta toiseen
+
+* Muualla määritellyt muuttujat (funktiot, oliot, ym.) täytyy erikseen ottaa
+  käyttöön `require`-funktiolla
+
+* Ulospäin näkyvät muuttujat taas tallennetaan
+  `module.exports` tai `exports`-muuttujiin
+
+.pull-left[
+hello.js
+
+```javascript
+function tervehdi(nimi) {
+  console.log("Hello " + nimi);
+}
+
+module.exports = tervehdi;
+```
+]
+
+.pull-right[
+toinen.js
+
+```javascript
+var he = require('./hello.js');
+
+he("Anna");
+```
+]
+
+---
+
+## moduuli-esimerkki
+
+* Alla olevat määrittelyt tekevät saman asian, eli määrittelevät kolme
+  muuttujaa näkymään moduulista ulos
+
+.pull-left[
+
+```javascript
+function eka() {}
+
+exports.eka = eka;
+exports.toka = 100;
+exports.kolmas = {};
+```
+
+]
+
+.pull-right[
+
+```javascript
+function eka() {}
+
+module.exports = {
+  eka: eka,
+  toka: 100,
+  kolmas: {}
+};
+```
+]
+
+Yllä määritellyn moduulin käyttö:
+
+```javascript
+var moduuli = require('./moduuli.js');
+
+moduuli.eka();
+var k = moduuli.toka;
+
+```
+
+---
+
+## Globaalit muuttujat
+
+* Node.js:ssä on kuitenkin sama JavaScript:n ominaisuus, jossa ilman
+  `var`-avainsanaa määritellyt muuttujat ovat globaaleja
+    * Tällainen muuttuja siis näkyy kaikissa tiedostoissa, mikä tuskin
+      on hyvä asia
+
+```javascript
+// Jos muuttujaa ei ole aiemmin määritelty,
+// luodaan globaali muuttuja
+muuttuja = 100;
+```
+
+* Hyvä IDE osaa varoittaa tästä:
+
+![](../img/c9-global.png)
+
+---
+
+## Express.js
+
+* [Express.js](http://expressjs.com/) on suosittu sovelluskehys web-sovellusten tekoon
+  Node.js:llä
+
+* Siinä web-sovellus on helppo jakaa MVC-mallin (Mode-View-Controller)
+  mukaisesti
+
+* Expressin asennus:
+```bash
+npm install express --save
+```
+
+* Uusin stabiili versio on Express 4, jota myös tässä käsitellään
+
+---
+
+## Expressin käyttöönotto
+
+* Asennuksen jälkeen voidaan `express` ottaa käyttöön `require`:lla
+```javascript
+var express = require('express');
+```
+
+* Luodaan Express-sovellus
+```javascript
+var app = express();
+```
+
+* ja asetetaan sovellus kuuntelemaan HTTP-pyyntöjä:
+```javascript
+// Kuunnellaan porttia 8080
+app.listen(8080);
+```
+
+---
+
+## Reititys-esimerkki
+
+* Jotta Express-sovelluksemme tekisi jotain, täytyy määritellä miten se
+  vastaa HTTP-pyyntöihin
+
+* Esim.
+
+```javascript
+app.get('/hello', function(req, res) {
+  res.send("Hello World!");
+});
+```
+
+* Nyt kun palvelimelle tulee HTTP GET -pyyntö osoitteeseen
+  `http://palvelimemme.fi:8080/hello`, reitittyy pyyntö yllä määritellylle funktiolle
+
+* Funktion parametrina saaman `res`-olion `send`-metodilla voidaan lähettää vastaus
+
+---
+
+## Reititys
+
+* Express-sovellus tarjoaa metodeita HTTP-reittien määrittelemiseksi
+
+```javascript
+app.METODI(POLKU, FUNKTIO);
+```
+
+* `METODI` = `get`, `post`, `put`, `delete`, ...
+
+* `POLKU` = URL:n polku johon pyyntö kohdistuu
+
+* `FUNKTIO` = funktio, joka saa parametrikseen:
+    * Pyyntöolion "req", joka sisältää tietoja pyynnöstä
+    * Vastausolion "res", jonka avulla lähetetään vastaus
+
+---
+
+## Express-esimerkki
+
+```javascript
+var express = require('express');
+var app = express();
+
+app.get('/', function(req, res) {
+  res.redirect('/home');
+});
+
+app.get('/home', function(req, res) {
+  res.send("Moi!");
+});
+
+app.post('/home', function(req, res) {
+  teeJotain(function() {
+    res.send("Jotain tehtiin");
+  });
+});
+
+app.listen(8080);
+
+```
+
+---
+
+## Middlewaret
+
+* Express-sovellukseen voi liittää ns. *middleware*:ja
+
+* Middleware vastaanottaa pyynnön, tekee jotain ja välittää pyynnön
+  eteenpäin käsiteltäväksi
+
+* Käytännössä middleware muokkaa `req`- ja `res` -olioita
+    * Muutokset näkyvät tämän jälkeen muillle pyyntöjä käsitteleville
+      metodeille
+
+* Middlewareja voi tehdä itse sekä hakea `npm`:stä
+
+* Middlewaren voi ottaa käyttöön (mm.) Express-sovelluksen
+  `use`-metodilla
+
+```javascript
+app.use(MIDDLEWARE);
+```
+
+---
+
+## body-parser
+
+* Esimerkiksi `body-parser` -middleware helpottaa HTTP-pyynnössä olevien
+  parametrien käsittelyä
+
+* Asennus:
+
+```bash
+npm install body-parser --save
+```
+
+* Sitten:
+
+```javascript
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.get('/', function(req, res) {
+  // body-parser:n ansiosta HTTP-pyynnön parametrit
+  // ovat muuttujassa req.body
+  var nimi = req.body.nimi;
+  res.send("Moi " + nimi);
+});
+```
+
+---
+
+<h2 class="harjoitus">Harjoitus</h2>
+
+* Kaivetaan jälleen Plunkerissa oleva supersankarilomake esiin
+ (jos se on hukkunut niin voi käyttää
+[tätä](http://plnkr.co/edit/JxksgePGCjx1TkCGP79J))
+
+* Nyt voimme toteuttaa Node.js:n + Expressin avulla
+  palvelinpään toteutuksen, joka vastaanottaa lomakkeen tiedot
+
+* Eli avaa Cloud9-workspacesi, ja...
+    1. Asenna `body-parser` middleware ja ota se käyttöön
+    2. Toteuta `app.post('/supersankari', ...)` reitti, joka vastaa
+       lomakkeen lähetykseen jotain
+        * Lomakeen arvot pitäisi löytyä muuttujista `req.body.nimi` ja
+          `req.body.supersankari`
+
+* Aseta Plunkerissa olevan supersankarilomakkeen
+`action=` -attribuutti osoittamaan Cloud9:ssä ajossa olevan
+sovelluksesi polkuun `/supersankari`
+
+* Kokeile onnistuuko lomakkeen lähetys toivotusti
+
+
+---
+
+## Express-vastaukset
+
+* Express voi lähettää vastauksen muutenkin kuin `send`-metodilla
+
+|Metodi |Selitys|
+|:----|:----|
+|`res.send(teksti)` | Lähettää annetun merkkijonon HTTP-vastauksen runkona|
+|`res.json(olio)` | Lähettää annetun JavaScript-olion JSON-muotoisena datana|
+|`res.render(sivupohja, muuttujat)` | Lähettää sivupohjan  |
+
+---
+
+## Sivupohjat
+
+* Expressissä (kuten lähes kaikissa muissakin web-frameworkeissa)
+  voidaan käyttää *sivupohjia* (*templates*)
+
+* Sivupohjat ovat HTML- tai muita dokumentteja, joiden "puuttuvat osat"
+  täydennetään dynaamisesti
+
+* Esim. [ejs](http://www.embeddedjs.com/)-sivupohja:
+
+```html
+<div>
+  <p>Moi <%= nimi %></p>
+</div>
+```
+
+* Renderöitäessä voidaan asettaa käytetyt muuttujat
+
+```javascript
+res.render('pohja', {nimi: "Anna"});
+```
+
+---
+
+## EJS
+
+* Esim. [EJS](http://www.embeddedjs.com/) on yksinkertainen
+  sivupohjakirjasto
+
+* See käsittelee HTML-dokumentteja, joissa voi olla kahdenlaisia
+  erikoiselementtejä
+
+1. Liitä JavaScript-muuttujan arvo dokumenttiin:
+```html
+<%= muuttuja %>
+```
+
+2. Suorita JavaScript-koodi
+```html
+<% if (jotain) { %>
+  <p>Moi</p>
+<% } %>
+```
+
+---
+
+## EJS Expressissä
+
+* Käyttääkseen sivupohjakirjasto Expressissä on se ensin asennettava
+(esimerkeissä `ejs`-kirjasto)
+
+```bash
+npm install ejs --save
+```
+
+* ja otettava se käyttöön Express-sovelluksessa
+
+```javascript
+app.set('view engine', 'ejs');
+```
+
+* ja vielä määriteltävä missä sivupohjat ovat
+
+```javascript
+app.set('views', './views');
+```
+
+* Nyt komento
+```javascript
+res.render('sivu', {nimi: "Annna"});
+```
+käyttää tiedostoa `./views/sivu.ejs`
+sivupohjana
+
+---
+
+<h2 class="harjoitus">Harjoitus</h2>
+
+Supersankari-backendimme ei ole vielä täydellinen.
+Nyt se vastaa pelkkänä tekstinä.
+Sivupohjan avulla voimme antaa vastauksen HTML-muodossa.
+
+* Luo Cloud9:ssä uusi hakemisto nimeltä `views` ja sen sisälle tiedosto `index.ejs`
+    * Kopioi tiedoston sisällöksi Plunkerissa luomasi supersankarilomake
+
+* Asenna ejs ja ota se käyttöön.
+
+```javascript
+app.set('views', './views');
+app.set('view engine', 'ejs');
+
+app.get('/', function(req, res) {
+  res.render('index');
+});
+```
+
+Nyt juuriosoitteen `/` pitäisi palauttaa lomake, vaikka
+EJS:n ominaisuuksia ei vielä olekaan käytössä. -->
+
+---
+
+Voimme käyttää samaa pohjaa `index.ejs` myös vastauksen esittämiseen,
+kunhan lisäämme siihen vaikkapa tämänlaisen elementin:
+
+```html
+<% if(locals.nimi) { %>
+  <p>Moi, <%= nimi %>! Suosikkisupersankarisi on siis
+     <%= supersankari %>. Selvä.</p>
+<% } %>
+```
+
+Nyt voimme vaihtaa lomakkeenlähetyksen käsittelyfunktion käyttämään
+sivupohjaa pelkän tekstin lähettämisen sijaan:
+
+```javascript
+app.post('/supersankari', function(req, res) {
+  var nimi = req.body.nimi;
+  var supersankari = req.body.supersankari;
+  res.render('index', {nimi: nimi, supersankari: supersankari});
+}
+```
+
+---
+
+## Staattiset tiedostot
+
+* Staattisia tiedostoja voi tarjoilla Expressin mukana tulevalla
+  `express.static`-middlewarella
+
+* Esim.
+```javascript
+app.use(express.static('assets'));
+```
+aiheuttaa sen, että hakemistossa `assets` oleva tiedosto `xxx.txt`
+on saatavilla URL-polussa `/xxx.txt`
+
+* Voit vaikkapa luoda hakemiston `assets`
+ja sinne CSS-tiedoston `style.css`,
+minkä jälkeen
+```html
+<link rel="stylesheet" href="style.css">
+```
+osoittaa jälleen olemassaolevaan tyylitiedostoon ja lomake saa tyylin
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

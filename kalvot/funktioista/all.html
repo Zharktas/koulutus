@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>funktioista</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="funktioista">Funktioista</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="funktioista">Funktioista</h2>
+<ul>
+<li><p>JavaScriptissä funktiot ovat ns. ensimmäisen luokan kansalaisia (first class functions).
+Funktioita voi näin ollen mm.</p>
+<ul>
+<li>sijoittaa muuttujiin</li>
+<li>välittää parametreina</li>
+<li>luoda nimettöminä</li>
+<li>luoda toistensa sisällä</li>
+<li>käyttää tiedon piilottamiseen</li>
+<li>ja olioiden luomiseen</li>
+</ul>
+</li>
+<li><p>Funktio on näin ollen hyvin keskeinen käsite JavaScriptissä</p>
+</li>
+</ul>
+<hr>
+<h2 id="funktiot">Funktiot</h2>
+<ul>
+<li>Funktion määrittely</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">teeJotain</span>(<span class="hljs-params">p1, p2</span>) </span>{
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}</code></pre>
+
+<ul>
+<li>tai</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> teeJotain = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p1, p2</span>) </span>{
+  <span class="hljs-comment">// ...</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+}</code></pre>
+
+<ul>
+<li>Funktiokutsu</li>
+</ul>
+<pre><code class="hljs javascript">teeJotain(<span class="hljs-number">1</span>, <span class="hljs-string">"hello"</span>);</code></pre>
+
+<hr>
+<h2 id="n-kyvyysalueet">Näkyvyysalueet</h2>
+<ul>
+<li><p>Monissa ohjelmointikielissä, kuten Javassa ja C++:ssa,
+näkyvyysalue on koodilohkokohtainen (block scope)</p>
+<ul>
+<li>Muuttujat jotka määritellään koodilohkon sisällä, näkyvät vain ko. lohkon sisällä</li>
+</ul>
+</li>
+<li><p>JavaScriptissä näkyvyysaluetta ei määritä koodilohko vaan funktio (function scope)</p>
+<ul>
+<li>Kaikki funktion sisällä määritellyt muuttujat näkyvät funktion sisällä</li>
+<li>Esimerkiksi silmukan sisällä määritelty muuttuja on olemassa myös silmukan ulkopuolella!</li>
+</ul>
+</li>
+<li><p>JavaScriptissä on myös ns. eksplisiittinen globaali näkyvyysalue</p>
+<ul>
+<li>Kaikki muuttujat, joita ei ole määritelty funktion sisällä ovat globaaleja</li>
+<li>Kaikki muttujat, joiden määrittelyn edessä ei ole avainsanaa <code>var</code> ovat globaaleja!</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="n-kyvyysalue-esimerkki">Näkyvyysalue-esimerkki</h2>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">var</span> x = <span class="hljs-number">0</span>;
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> y = <span class="hljs-number">0</span>;
+
+    <span class="hljs-comment">// x ja y näkyvät täällä</span>
+  }
+
+  <span class="hljs-comment">// x näkyy, y ei</span>
+
+  <span class="hljs-keyword">return</span> bar;
+}
+
+<span class="hljs-comment">// x ei näy, eikä y</span></code></pre>
+
+<ul>
+<li>Funktio <code>bar</code> näkee <code>x</code>:n ja <code>y</code>:n niin kauan kuin se on olemassa,
+vaikka olemassaolo jatkuisi <code>foo</code>:n suoritusta kauemmin<ul>
+<li>Näin voi käydä <code>return bar;</code> lauseesta johtuen</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="asynkronisuus">Asynkronisuus</h2>
+<ul>
+<li><p>JavaScriptin suoritusympäristö on yksisäikeinen</p>
+<ul>
+<li>sekä selaimessa että Node.js:ssa</li>
+</ul>
+</li>
+<li><p>Aikaa vieviä toimenpiteitä ei ole varaa jäädä odottelemaan <em>synkronisesti</em></p>
+<ul>
+<li>Tällöin ainut säie odottaa kutsun suoritusta,
+jolloin koko sovellus (esim. Node.js-palvelin) ei tee mitään muuta</li>
+</ul>
+</li>
+<li><p>Tästä syystä mm. Ajax-kutsut, tietokantahaut ja tiedostojen käsittely
+tehdään lähes aina <em>asynkronisesti</em></p>
+<ul>
+<li>Vastaus annetaan funktion paluuarvon sijaan takaisinkutsufunktion
+(callback) parametrina</li>
+</ul>
+</li>
+<li><p><a href="http://plnkr.co/edit/RNKCj33op0E56sNW0ZbY?p=preview">Esimerkki</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="takaisinkutsufunktiot">Takaisinkutsufunktiot</h2>
+<ul>
+<li><p><em>Takaisinkutsufunktio</em> (<em>callback function</em>) on funktio,
+joka välitetään toiselle ohjelman osalle myöhemmin kutsuttavaksi</p>
+</li>
+<li><p>Esim. kaikki DOM:n tapahtumankuuntelijat ovat takaisinkutsufunktiota</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">nappula.onclick = nappulaaKlikattiin;</code></pre>
+
+<ul>
+<li>Takaisinkutsufunktiot voivat olla myös nimettömiä (anonyymeja)</li>
+</ul>
+<pre><code class="hljs javascript">nappula.onclick = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"klix"</span>);
+};</code></pre>
+
+<hr>
+<h2 id="funktioesimerkki">Funktioesimerkki</h2>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sanoHei</span>(<span class="hljs-params">nimi</span>) </span>{ alert(<span class="hljs-string">"Hei "</span> + nimi); }
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayHi</span>(<span class="hljs-params">nimi</span>) </span>{ alert(<span class="hljs-string">"Hi "</span> + nimi); }
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">luoTervehtija</span>(<span class="hljs-params">nimi</span>) </span>{
+  <span class="hljs-keyword">var</span> tervehdysfunktio;
+  <span class="hljs-keyword">if</span> (onSuomalainenNimi(nimi)) {
+    tervehdysfunktio = sanoHei;
+  }
+  <span class="hljs-keyword">else</span> {
+    tervehdysfunktio = sayHi;
+  }
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    tervehdysfunktio(nimi);
+  }
+}
+
+<span class="hljs-keyword">var</span> terve = luoTervehtija(<span class="hljs-string">"Anna"</span>);
+
+terve(); <span class="hljs-comment">// Hei Anna</span>
+
+nappula1.onclick = terve;
+nappula2.onclick = luoTervehtija(<span class="hljs-string">"Barack Hussein Obama II"</span>);</code></pre>
+
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

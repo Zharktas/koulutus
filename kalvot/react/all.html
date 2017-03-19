@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>react</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="react">React</h1>
+<h3 id="tie-23500-web-ohjelmointi">TIE-23500 Web-ohjelmointi</h3>
+<hr>
+<h1 id="react">React</h1>
+<ul>
+<li><p><a href="http://facebook.github.io/react/">React</a>
+(React.js) on JavaScript-kirjasto web-käyttöliittymien tekoon</p>
+</li>
+<li><p>Komponenttipohjainen</p>
+<ul>
+<li>React-komponentteja voidaan käyttää myös osana muilla
+teknologioilla/frameworkeilla tehtyjä web-sovelluksia</li>
+</ul>
+</li>
+<li><p>Deklaratiivinen</p>
+<ul>
+<li>Kun komponentin data muuttuu,
+React renderöi komponentin automaattisesti</li>
+</ul>
+</li>
+<li><p>Ylläpitää sisäistä virtuaalista DOM-puuta</p>
+<ul>
+<li>Nopeuttaa varsinaisen selaimen DOM:n päivitystä</li>
+</ul>
+</li>
+<li><p>Kehittäjiä: Facebook, Instagram, et. al.</p>
+</li>
+</ul>
+<hr>
+<h1 id="react-komponentti">React-komponentti</h1>
+<ul>
+<li><p>Reactissa määritellään komponentteja</p>
+</li>
+<li><p>Komponentti voi koostua muista React-komponenteista sekä tavallisista
+HTML-elementeistä</p>
+</li>
+<li><p>React-komponentti luodaan <code>createClass</code>-funktiolla</p>
+</li>
+<li><p>Komponentilla on metodi <code>render</code>, joka piirtää komponentin</p>
+</li>
+</ul>
+<pre><code><span class="hljs-keyword">var</span> HelloMessage = React.createClass({
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> &lt;div&gt;Hello {<span class="hljs-keyword">this</span>.props.name}&lt;/div&gt;;
+  }
+});
+
+React.render(&lt;HelloMessage name=<span class="hljs-string">"John"</span> /&gt;, mountNode);</code></pre>
+
+<hr>
+<h1 id="jsx">JSX</h1>
+<ul>
+<li><p>React-komponentin määrittelyssä <em>voi</em> käyttää
+<a href="http://facebook.github.io/jsx/">JSX-kieltä</a></p>
+</li>
+<li><p>JSX:llä elementtipuita voidaan kuvata kompaktisti</p>
+</li>
+<li><p>JSX laajentaa JavaScriptin syntaksia lisäämällä siihen XML-tyylisen komponenttien määrittelyn</p>
+<ul>
+<li>(<a href="http://www.ecma-international.org/ecma-262/5.1/#sec-11.1">EcmaScriptin <em>PrimaryExpression</em></a> voi olla myös muotoa <code>&lt;komponentti&gt;...&lt;/komponentti&gt;</code> tai <code>&lt;komponentti /&gt;</code>)</li>
+</ul>
+</li>
+<li><p>Komponenttien sisällä olevien aaltosulkujen <code>{}</code> sisältö tulkitaan
+JavaScript-lausekkeeksi</p>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code><span class="hljs-variable"><span class="hljs-keyword">var</span> x</span> = <span class="hljs-type">&lt;Komponentti /&gt;</span>;</code></pre>
+
+<pre><code>var foo = <span class="hljs-string">"fofo"</span>;
+<span class="hljs-command">return</span>  &lt;<span class="hljs-keyword">div</span> className={foo}&gt;{foo.<span class="hljs-property">length</span>}!!!&lt;/<span class="hljs-keyword">div</span>&gt;;</code></pre>
+
+<hr>
+<h1 id="jsx-n-k-nt-minen">JSX:n kääntäminen</h1>
+<ul>
+<li><p>JSX täytyy jossain vaiheessa kääntää tavalliseksi JavaScriptiksi</p>
+</li>
+<li><p>Kehitysvaiheessa käännös voidaan tehdä selaimessa React-kirjaston
+avulla</p>
+</li>
+<li><p>Tuotantoympäristössä käännös kannattaa tehokkuussyistä tehdä etukäteen</p>
+<ul>
+<li>Onnistuu <code>jsx</code>-työkalulla</li>
+</ul>
+</li>
+</ul>
+<pre><code>npm <span class="hljs-operator"><span class="hljs-keyword">install</span> -<span class="hljs-keyword">g</span> react-tools</span></code></pre>
+
+<pre><code>jsx <span class="hljs-comment">--watch src/ build/</span></code></pre>
+
+<ul>
+<li>Käännöstä voi kokeilla
+<a href="https://facebook.github.io/react/jsx-compiler.html">JSX Compilerilla</a></li>
+</ul>
+<hr>
+<h1 id="jsx-esimerkki">JSX-esimerkki</h1>
+<ul>
+<li>JSX:</li>
+</ul>
+<pre><code><span class="hljs-keyword">var</span> HelloMessage = React.createClass({
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> &lt;div&gt;Hello {<span class="hljs-keyword">this</span>.props.name}&lt;/div&gt;;
+  }
+});
+
+React.render(&lt;HelloMessage name=<span class="hljs-string">"John"</span> /&gt;, mountNode);</code></pre>
+
+<ul>
+<li>Vastaava JavaScript:</li>
+</ul>
+<pre><code><span class="hljs-keyword">var</span> HelloMessage = React.createClass({displayName: <span class="hljs-string">"HelloMessage"</span>,
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> React.createElement(<span class="hljs-string">"div"</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">"Hello "</span>,
+                               <span class="hljs-keyword">this</span>.props.name);
+  }
+});
+
+React.render(React.createElement(HelloMessage, {name: <span class="hljs-string">"John"</span>}),
+                                 mountNode);</code></pre>
+
+<hr>
+<h1 id="komponentin-data">Komponentin data</h1>
+<ul>
+<li><p>React-komponentti voi sisältää kahdenlaista dataa:</p>
+<ol>
+<li><p>Attribuuttidata: <code>props</code></p>
+<ul>
+<li>Asetetaan komponentin &quot;ulkopuolelta&quot;</li>
+<li>Esim. <code>&lt;Komponentti nimi=&quot;Ahto&quot; /&gt;</code></li>
+<li>Luettavissa (mutta ei kirjoitettavissa)
+komponentin sisällä muuttujassa <code>this.props</code></li>
+</ul>
+</li>
+<li><p>Tiladata: <code>state</code></p>
+<ul>
+<li>Komponentin sisäinen tila</li>
+<li>Komponentti voi itse muuttaa tilaansa</li>
+<li>Muuttujassa <code>this.state</code></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Kun <code>props</code> tai <code>state</code> muuttuu, renderöityy komponentti uudelleen</p>
+</li>
+<li><p>Jos mahdollista, kannattaa tehdä tilattomia komponentteja</p>
+<ul>
+<li>Ei <code>state</code>-muuttujaa</li>
+<li>Yksinkertaisempia</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="state">state</h1>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> Numero = React.createClass({
+  getInitialState: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> {};
+  },
+  componentDidMount: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    lataaNumeroPalvelimelta(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">n</span>) </span>{
+      <span class="hljs-keyword">this</span>.setState({numero: n});
+    });
+  },
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.numero === <span class="hljs-literal">undefined</span>) {
+      <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>Ladataan...<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+    }
+    <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>{this.state.numero}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+    }
+  }
+});</code></pre>
+
+<ul>
+<li><code>componentDidMount</code>:ia kutsutaan kun komponentti on liitetty DOM:iin</li>
+<li><code>getInitialState</code> määrittää alkutilan</li>
+<li><code>setState</code> muuttaa tilaa</li>
+</ul>
+<hr>
+<h1 id="interaktiivisuus">Interaktiivisuus</h1>
+<ul>
+<li>React-komponentti voi kuunnella käyttöliittymätapahtumia</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> Nappi = React.createClass({
+  getInitialState: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> {teksti: <span class="hljs-string">"Paina tästä"</span>;};
+  },
+  handleClick: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>.setState({teksti: <span class="hljs-string">"Kiitos"</span>});
+  },
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.handleClick}</span>&gt;</span>
+             {this.state.text}
+           <span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>;</span>
+  }
+});</code></pre>
+
+<ul>
+<li>Näyttävät tavallisilta DOM-tapahtumilta, mutta sisäisesti React liittää
+juurikomponenttiin yhden tapahtumankuuntelijan, joka välittää
+tapahtumia lapsilleen<ul>
+<li>samalla huolehtii selainyhteinsopivuudesta</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="react">React</h1>
+<ul>
+<li><p>React soveltuu moneen tarkoitukseen</p>
+<ul>
+<li>Kokonaisista <em>single-page applicationeista</em>
+(esim. <a href="https://instagram.com/">instagram.com</a>)
+pieniin yksittäisiin komponentteihin</li>
+</ul>
+</li>
+<li><p>Reactiin on olemassa erilaisia <a href="https://facebook.github.io/react/docs/addons.html">add-oneja</a></p>
+</li>
+<li><p>Ja erilaista muuta, kuten <a href="http://gaearon.github.io/react-hot-loader/getstarted/">React Hot Loader</a></p>
+</li>
+<li><p><a href="https://facebook.github.io/react/docs/getting-started.html">Tästä pääsee alkuun</a></p>
+</li>
+<li><p><a href="https://facebook.github.io/react/docs/tutorial.html">Tutoriaali</a></p>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

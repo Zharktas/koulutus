@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>jquery</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="jquery">jQuery</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="jquery">jQuery</h2>
+<ul>
+<li><p><a href="https://jquery.com/">jQuery</a>
+on supersuosittu JavaScript-kirjasto</p>
+</li>
+<li><p><a href="http://libscore.com/#libs">697860 sivua miljoonasta käyttää jQueryä</a>
+(2015-11-05)</p>
+</li>
+<li><p>jQuery helpottaa DOM:n käsittelyä, Ajax-kutsujen tekemistä, ym.</p>
+</li>
+<li><p>Lisäksi jQuery paikkaa selainten yhteensopivuusongelmia</p>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$(<span class="hljs-string">'.luokka'</span>).html(<span class="hljs-string">''</span>);</code></pre>
+
+<p>vs</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> els = <span class="hljs-built_in">document</span>.getElementsByClassName(<span class="hljs-string">'luokka'</span>);
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;els.length; ++i) {
+  els[i].innerHTML = <span class="hljs-string">''</span>;
+}</code></pre>
+
+<hr>
+<h2 id="-">$</h2>
+<ul>
+<li><p>jQuery määrittelee muuttujan nimeltä <code>$</code></p>
+<ul>
+<li>vaihtoehtoinen nimi muuttujalle on <code>jQuery</code></li>
+</ul>
+</li>
+<li><p><code>$(VALITSIN)</code> palauttaa kaikki valitsinta vastaavat elementit</p>
+<ul>
+<li>ei palauta taulukkoa vaan erityisen jQuery-olion</li>
+<li>tämän olion kautta usean elementin yhtäaikainen käsittely on helppoa</li>
+</ul>
+</li>
+<li><p>Esim.</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$(<span class="hljs-string">'img'</span>).hide();</code></pre>
+
+<ul>
+<li>Esim.</li>
+</ul>
+<pre><code class="hljs javascript">$(<span class="hljs-string">'a.linkki'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  alert(<span class="hljs-string">"Jotain linkkiä klikattiin"</span>);
+});</code></pre>
+
+<hr>
+<h2 id="tapahtumank-sittely">Tapahtumankäsittely</h2>
+<ul>
+<li><p>Tapahtumien <em>takaisinkutsufunktioissa</em> (callback functions)
+jQuery asettaa muuttujan <code>this</code>
+arvoksi elementin, johon tapahtuma kohdistui</p>
+</li>
+<li><p>$( ... ) -kutsulla mistä tahansa elementistä saa vastaavan
+jQuery-olion</p>
+</li>
+<li><p>Esim. piilota nappula kun sitä klikataan</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$(<span class="hljs-string">'button'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  $(<span class="hljs-keyword">this</span>).hide();
+});</code></pre>
+
+<ul>
+<li>jQuery-olioilla on myös metodi <code>.on()</code> joka ottaa parametrikseen
+kuunneltavan tapahtuman tyypin</li>
+</ul>
+<pre><code class="hljs javascript">$(<span class="hljs-string">"input[type=text]"</span>).on(<span class="hljs-string">"input"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
+  $(<span class="hljs-string">'h1'</span>).text($(<span class="hljs-keyword">this</span>).val());
+});</code></pre>
+
+<hr>
+<h2 id="jquery-metodit">jQuery-metodit</h2>
+<ul>
+<li><p>Useat jQuery-olioiden metodit joko palauttavat arvon tai asettavat
+arvon riippuen siitä, annetaanko niille parametri</p>
+</li>
+<li><p>Esim. <code>html()</code></p>
+</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-comment">// Haetaan ensimmäisen h1-elementin sisältö</span>
+<span class="hljs-keyword">var</span> h = $(<span class="hljs-string">'h1'</span>).html();
+
+<span class="hljs-comment">// Asetetaan kaikkien h1-elementtien sisältö</span>
+$(<span class="hljs-string">'h1'</span>).html(<span class="hljs-string">'moi'</span>);</code></pre>
+
+<ul>
+<li>Elementin (esim <code>input</code>) arvon voi lukea ja asettaa <code>val</code>-metodilla:</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> email = $(<span class="hljs-string">'input[name=email]'</span>).val();
+
+$(<span class="hljs-string">'input[name=email]'</span>).val(<span class="hljs-string">''</span>);</code></pre>
+
+<hr>
+<h2 id="jquery-ajax-">jQuery.ajax()</h2>
+<ul>
+<li>jQueryn avulla voidaan tehdä myös Ajax-kutsuja</li>
+</ul>
+<pre><code class="hljs javascript">$.ajax({
+  url: <span class="hljs-string">"./resurssi.txt"</span>,
+  method: <span class="hljs-string">'GET'</span>,
+  success: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">result</span>)</span>{
+    $(<span class="hljs-string">"div"</span>).html(result);
+  }
+});</code></pre>
+
+<ul>
+<li><a href="http://www.w3schools.com/jquery/ajax_ajax.asp">W3Schools: jQuery ajax() method</a></li>
+</ul>
+<hr>
+<h2 id="linkkej-">Linkkejä</h2>
+<ul>
+<li><p><a href="https://learn.jquery.com/">learn.jquery.com</a></p>
+</li>
+<li><p><a href="https://api.jquery.com/">jQuery API</a></p>
+</li>
+<li><p><a href="http://www.w3schools.com/jquery/default.asp">W3Schools: jQuery</a></p>
+</li>
+</ul>
+<hr>
+<h2 class="harjoitus">Harjoitus</h2>
+
+<ul>
+<li><p>Avaa aiemmin tekemäsi supersankarilomake tai jatka
+<a href="http://plnkr.co/edit/1dq7EoqMUR95W5sfKj1J">tästä</a>.</p>
+</li>
+<li><p>Lisää jQuery-kirjasto. Plunkerissa voit tehdä sen oikean laidan
+kirja-painikkeella ja taikasauvanapilla.</p>
+</li>
+</ul>
+<p>Tehdään supersankarilomakkeesta modernimpi!</p>
+<p>Nykyisellään web-sovelluksemme toimii niin, että kun lomake lähetetään, niin
+ladataan kokonaan uusi sivu ja meidän lomakesivumme katoaa.</p>
+<ul>
+<li>Muuta toiminnallisuutta siten, että lomaketta ei lähetetäkään
+tavalliseen tapaan vaan kivasti taustalla <em>Ajax</em>-kutsulla samaan osoitteeseen.
+Näytä vastaus web-sivulla lomakkeen ohessa.</li>
+</ul>
+<p>Tämä kaivannee vähän vinkkejä ja lisäselitystä --&gt;</p>
+<hr>
+<p>Aloittaa voi vaikkapa siitä, että kuunnellaan lomakkeen
+<code>submit</code>-tapahtumia. Tiedostossa <code>script.js</code>:</p>
+<pre><code class="hljs javascript"><span class="hljs-comment">// Varmistutaan että dokumentti on latautunut</span>
+$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+
+  <span class="hljs-comment">// Kuunnellaan submit-tapahtumia</span>
+  $(<span class="hljs-string">'form'</span>).submit(laheta);
+
+});</code></pre>
+
+<p>Takaisinkutsufunktiossa <code>laheta</code> perumme submit-tapahtuman oletustoiminnallisuuden
+eli lomakkeen lähetyksen</p>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">laheta</span>(<span class="hljs-params">event</span>) </span>{
+  event.preventDefault();
+}</code></pre>
+
+<p>Nyt lomakkeen lähetä-napin ei pitäisi tehdä mitään kun sitä klikkaa.</p>
+<hr>
+<p>Jos ei näytä toimivan odotetusti niin ensimmäisenä voi vaikkapa
+tarkistaa kehitystyökalujen konsolista näkyykö siellä virheitä.
+(Plunker:in kanssa konsoliin tulee myös ylimääräistä roskaa.
+Debuggausta helpottaa jos avaa sivun uuteen ikkunaan
+<img src="../img/plunkernewwindow.png" alt="">)</p>
+<p>Jos kaikki meni hyvin tähän asti, voimme <code>laheta</code>-funktion sisällä tehdä Ajax-kutsun samaan
+osoitteeseen, johon aiemmin lähetimme lomakkeen</p>
+<pre><code class="hljs javascript">$.ajax({
+  url: <span class="hljs-string">"http://pilvilomake.appspot.com/supersankari"</span>,
+  method: <span class="hljs-string">'POST'</span>,
+  data: {nimi: <span class="hljs-string">"Anna"</span>, supersankari: <span class="hljs-string">"Superhessu"</span>},
+  success: lahetysOnnistui
+});</code></pre>
+
+<ul>
+<li>Jos kaikki meni hyvin kutsutaan funktiota <code>lahetysOnnistui</code>
+joka saa parametrinaan vastauksen</li>
+</ul>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">lahetysOnnistui</span>(<span class="hljs-params">response</span>) </span>{
+  alert(response);
+}</code></pre>
+
+<hr>
+<p>Nyt pitäisi vielä käyttää Ajax-pyynnössä oikeita käyttäjän syöttämiä
+arvoja.</p>
+<p>Funktiossa <code>laheta</code> voimme lukea lomakkeen arvot tämännäköisillä
+ei-ihan-yksinkertaisilla valitsimilla:</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> nimi = $(<span class="hljs-string">'form input[name=nimi]'</span>).val();
+<span class="hljs-keyword">var</span> sankari = $(<span class="hljs-string">'form input[name=supersankari]:checked'</span>).val();</code></pre>
+
+
+<p>ja muuttaa Ajax-kutsu käyttämään niitä</p>
+<pre><code class="hljs javascript">$.ajax({
+  <span class="hljs-comment">// ...</span>
+  data: {nimi: nimi, supersankari: sankari},
+  <span class="hljs-comment">// ...</span>
+});</code></pre>
+
+<p>Sitten pitäisi enää näyttää vastaus jotenkin hienommin kuin
+<code>alert</code>:lla...</p>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

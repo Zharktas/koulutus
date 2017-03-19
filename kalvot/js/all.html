@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>js</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+	<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 id="javascript">JavaScript</h1>
+				<p><a href="./">Kalvot</a></p>
+				<hr>
+				<h2 id="javascript">JavaScript</h2>
+				<ul>
+					<li>
+						<p>JavaScript on ohjelmointikieli erityisesti web-sovellusten selainpään toiminnallisuuden toteuttamiseen</p>
+					</li>
+					<li>
+						<p>Käytännössä ainoa vaihtoehto suorittaa ohjelmia selaimessa ilman selain-plugineja
+						</p>
+					</li>
+					<li>
+						<p>Nykyään myös muuta käyttöä kuin selainpään ohjelmointi</p>
+					</li>
+					<li>
+						<p><em>&quot;Maailman väärinymmärretyn ohjelmointikieli&quot;</em></p>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="javascriptin-historiaa">JavaScriptin historiaa</h2>
+				<ul>
+					<li>
+						<p>JavaScript kehitettiin Netscapella vuonna 1995</p>
+						<ul>
+							<li>Ilmestyi ensimmäisen kerran Netscape 2.0 selaimeen</li>
+						</ul>
+					</li>
+					<li>
+						<p>JavaScript on ECMA Script -spesifikaation toteutus</p>
+						<ul>
+							<li>JavaScript toteutuksissa on kuitenkin eroja selainten välillä</li>
+							<li>On olemassa myös muita kieliä, jotka perustuvat ECMA Scriptiin (mm. ActionScript 3)</li>
+						</ul>
+					</li>
+					<li>
+						<p>JavaScriptillä ei nimestään huolimatta ole mitään tekemistä Javan kanssa</p>
+						<ul>
+							<li>JavaScript ei itseasiassa ole kielen alkuperäinen nimi
+								<ul>
+									<li>alkuperäinen nimi oli Mocha</li>
+									<li>seuraava nimi oli LiveScript</li>
+								</ul>
+							</li>
+							<li>Nimi muutettiin JavaScriptiksi markkinointisyistä</li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="javascriptin-historiaa">JavaScriptin historiaa</h2>
+				<ul>
+					<li>
+						<p>JavaScriptin merkitys ohjelmointikielenä on kasvanut huomattavasti viimeisen 5 vuoden aikana web-sovellusten yleistymisen
+							myötä.</p>
+					</li>
+					<li>
+						<p>JavaScript on edelleen ainoa hyvin tuettu selainpuolen ohjelmointikieli</p>
+					</li>
+					<li>
+						<p>Muitakin yrityksiä on, kuten Googlen Dart</p>
+					</li>
+					<li>
+						<p>Yleistä on myös kääntäminen JavaScriptille</p>
+						<ul>
+							<li>CoffeeScript</li>
+							<li>WebGL:n myötä myös C-kielellä tehtyjä ohjelmia on käännetty JavaScriptille</li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="is-nt-ymp-rist-">Isäntäympäristö</h2>
+				<ul>
+					<li>
+						<p>JavaScript tarvitsee aina isäntäympäristön</p>
+						<ul>
+							<li>Web-selain</li>
+							<li>Node.js</li>
+						</ul>
+					</li>
+					<li>
+						<p>Isäntäympäristö tarjoaa JavaScriptille joukon isäntäolioita</p>
+						<ul>
+							<li>JavaScript on tarkoitettu näiden olioiden muokkaamiseen</li>
+							<li>Suoraa pääsyä esimerkiksi laitteistoajureihin ei ole</li>
+						</ul>
+					</li>
+					<li>
+						<p>Isäntäoliot ovat määritetty kielestä erillään</p>
+						<ul>
+							<li>Selain tarjoaa erilaisen ympäristön JS-koodille kuin node.js</li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="javascript-ja-html">JavaScript ja HTML</h2>
+				<ul>
+					<li>
+						<p>JavaScript-koodia voidaan liittää HTML-dokumenttiin <code>&lt;script&gt;</code>-tagilla</p>
+					</li>
+					<li>
+						<p>Joko suoraan <code>&lt;script&gt;</code>-tagin sisään</p>
+					</li>
+				</ul>
+				<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="actionscript">
+  alert(<span class="hljs-string">"Tämä on JavaScript-koodia!"</span>);
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+
+				<ul>
+					<li>Tai lataamalla erillinen JavaScript-tiedosto</li>
+				</ul>
+				<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"./script.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+
+				<hr>
+				<h2 class="harjoitus">Harjoitus</h2>
+
+				<ul>
+					<li>Avaa plunk <a href="http://plnkr.co/edit/FqutOKVfm4xkR4dt7B2I">http://plnkr.co/edit/FqutOKVfm4xkR4dt7B2I</a> ja suorita
+						se.</li>
+				</ul>
+				<p>Sen HTML-sivulla on <code>button</code>, jolla on <code>onclick</code>-attribuutti:</p>
+				<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"nappi"</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"painallus()"</span>&gt;</span>Paina tästä!<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span></code></pre>
+
+				<p>Kun nappia painaa, kutsutaan <code>painallus</code>-nimistä funktiota, joka on määritelty <code>script.js</code>-tiedostossa.
+					Funktion sisältö määritellään aaltosulkujen <code>{ ... }</code> sisällä.</p>
+				<ul>
+					<li>Muokkaa <code>painallus</code>-funktiota siten, että klikkauksen jälkeen nappi &quot;disabloidaan&quot; eli laitetaan
+						pois päältä. Saat toteutettua sen lisäämällä funktioon rivit:</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> nappi = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'nappi'</span>);
+nappi.disabled = <span class="hljs-literal">true</span>;</code></pre>
+
+				<hr>
+				<h2 id="kielen-perusteet">Kielen perusteet</h2>
+				<ul>
+					<li>
+						<p>JavaScript on</p>
+						<ul>
+							<li>dynaamisesti tyypitetty</li>
+							<li>prototyyppipohjainen</li>
+							<li>tulkattava kieli</li>
+						</ul>
+					</li>
+					<li>
+						<p>JavaScript on myös ehkä yksi väärin ymmärretyimmistä ohjelmointikielistä.</p>
+					</li>
+					<li>
+						<p>Kieli sisältää paljon tutun näköisiä asioita, mutta ulkonäkö voi pettää!</p>
+						<ul>
+							<li>Samat avainsanat eivät välttämättä tee samoja asioita kuin jossain toisessa kielessä.</li>
+							<li>Ota selvää ja opettele, niin vältät pahimmat miinat!</li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="muuttujat">Muuttujat</h2>
+				<ul>
+					<li>JavaScriptin <em>muuttujat</em> määritellään avainsanalla <code>var</code>
+						<ul>
+							<li><code>var</code> <code>MUUTTUJAN_NIMI</code> <code>=</code> <code>MUUTTUJAN_ARVO</code> <code>;</code></li>
+						</ul>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> totuusarvo = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">var</span> toinenTotuusarvo = <span class="hljs-literal">false</span>;
+
+<span class="hljs-keyword">var</span> x = <span class="hljs-number">5</span>;
+<span class="hljs-keyword">var</span> y = <span class="hljs-number">6.8</span>;
+<span class="hljs-keyword">var</span> z = -<span class="hljs-number">100</span>;
+
+<span class="hljs-keyword">var</span> teksti = <span class="hljs-string">"moi"</span>;
+<span class="hljs-keyword">var</span> toinenTeksti = <span class="hljs-string">'yksöishipsut'</span>;</code></pre>
+
+				<ul>
+					<li>Sijoitus jo olemassaolevaan muuttujaan ilman <code>var</code>:ia</li>
+				</ul>
+				<pre><code class="hljs javascript">teksti = <span class="hljs-number">100</span>;</code></pre>
+
+				<ul>
+					<li>Mitä tapahtuu jos muuttujan määrittelystä unohtaa <code>var</code>-avainsanan pois?
+					</li>
+				</ul>
+				<ul>
+					<li><a href="http://www.w3schools.com/js/js_variables.asp">W3Schools: JavaScript Variables</a></li>
+				</ul>
+				<hr>
+				<h2 id="perustietotyypit">Perustietotyypit</h2>
+				<ul>
+					<li>Totuusarvo (Boolean)</li>
+					<li>Lukuarvo (Number)
+						<ul>
+							<li>Ei erillistä tyyppiä kokonaisluvuille</li>
+						</ul>
+					</li>
+					<li>Merkkijono (String)
+						<ul>
+							<li>Yksittäinenkin merkki on merkkijono</li>
+						</ul>
+					</li>
+					<li><code>undefined</code></li>
+					<li><code>null</code></li>
+				</ul>
+				<hr>
+				<h2 id="operaattorit">Operaattorit</h2>
+				<ul>
+					<li>
+						<p>JavaScriptin <em>operaattorit</em> ovat samantapaisia kuin monessa muissa kielissä
+						</p>
+					</li>
+					<li>
+						<p>Aritmeettiset operaattorit <code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>%</code> <code>++</code>							<code>--</code></p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> x = <span class="hljs-number">5</span> + <span class="hljs-number">5</span>;</code></pre>
+
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> y = x * <span class="hljs-number">2</span> - <span class="hljs-number">1</span>;</code></pre>
+
+				<pre><code class="hljs javascript">x++;</code></pre>
+
+				<ul>
+					<li>Merkkijonoja voidaan liittää toisiinsa <code>+</code>-operaattorilla</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> nimi = <span class="hljs-string">"Anna"</span>;
+<span class="hljs-keyword">var</span> tervehdys = <span class="hljs-string">"Moi "</span> + nimi + <span class="hljs-string">"!"</span>;</code></pre>
+
+				<p><a href="http://www.w3schools.com/js/js_operators.asp">W3Schools: JavaScript Operators</a></p>
+				<hr>
+				<h2 class="harjoitus">Harjoitus</h2>
+
+				<p>JavaScript-lauseita voi testailla mm. selaimen kehitystyökalujen
+					<em>Console</em>-välilehdellä</p>
+				<ul>
+					<li>Avaa konsoli ja kokeile luoda JavaScript-muuttujia ja tehdä vaikkapa laskutoimituksia
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> x = <span class="hljs-number">5</span>;
+
+x + <span class="hljs-number">100</span> * <span class="hljs-number">2</span>
+
+<span class="hljs-comment">// jne.</span></code></pre>
+
+				<ul>
+					<li>Voit myös vaikkapa etsiä joltain HTML-sivulta elementin jolla on <code>id</code> ja tyhjentää sen sisällön kirjoittamalla
+						saman sivun konsoliin</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'ELEMENTIN_ID'</span>).innerHTML = <span class="hljs-string">''</span>;</code></pre>
+
+
+
+
+				<hr>
+				<h2 id="if">IF</h2>
+				<ul>
+					<li>
+						<p>JavaScriptin kontrollirakenteet ovat samantapaisia kuin monessa muussa ohjelmointikielessä
+						</p>
+					</li>
+					<li>
+						<p>Ehtolause <code>if</code></p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> hinta = <span class="hljs-number">2</span>;
+
+<span class="hljs-keyword">if</span> (hinta &lt; <span class="hljs-number">10</span>) {
+  alert(<span class="hljs-string">"Hinta on halpa"</span>);
+}</code></pre>
+
+				<ul>
+					<li>Ja-operaattori <code>&amp;&amp;</code>, tai-operaattori <code>||</code></li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">if</span> (tunti &gt;= <span class="hljs-number">9</span> &amp;&amp; tunti &lt; <span class="hljs-number">21</span>) {
+  alert(<span class="hljs-string">"Kauppa on auki"</span>);
+}</code></pre>
+
+				<pre><code class="hljs javascript"><span class="hljs-keyword">if</span> (hinta &gt; <span class="hljs-number">10</span> || tunti &gt; <span class="hljs-number">21</span>) {
+  alert(<span class="hljs-string">"Kalja jää ostamatta"</span>);
+}</code></pre>
+
+				<hr>
+				<h2 id="if-else">IF-ELSE</h2>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">if</span> (x === <span class="hljs-number">5</span> &amp;&amp; y &lt; <span class="hljs-number">2</span>) {
+  alert(<span class="hljs-string">"jee"</span>);
+}
+<span class="hljs-keyword">else</span> {
+  alert(<span class="hljs-string">"buu"</span>);
+}</code></pre>
+
+				<ul>
+					<li><a href="http://www.w3schools.com/js/js_if_else.asp">W3Schools: if...else</a></li>
+				</ul>
+				<hr>
+				<h2 id="silmukat">Silmukat</h2>
+				<ul>
+					<li><code>while</code></li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">while</span> (x &lt; <span class="hljs-number">10</span>) {
+  <span class="hljs-built_in">console</span>.log(x);
+  x += <span class="hljs-number">2</span>;
+}</code></pre>
+
+				<ul>
+					<li><code>for</code></li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; ++i) {
+  <span class="hljs-built_in">console</span>.log(i);
+}</code></pre>
+
+				<ul>
+					<li>W3Schools:
+						<a href="http://www.w3schools.com/js/js_loop_for.asp">for</a> ja
+						<a href="http://www.w3schools.com/js/js_loop_while.asp">while</a></li>
+				</ul>
+				<hr>
+				<h2 id="vertailu">Vertailu</h2>
+				<ul>
+					<li>
+						<p>Vertailuoperaattoritkin näyttävät ensimmäkseen samoilta kuin monessa muussa kielessä</p>
+						<ul>
+							<li><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code></li>
+						</ul>
+					</li>
+					<li>
+						<p><strong>mutta</strong> erityisesti yhtäsuuruusvertailun kanssa on oltava tarkkana
+						</p>
+					</li>
+					<li>
+						<p>Operaattori <code>==</code> testaa ovatko arvot mahdollisen tyyppimuunnoksen jälkeen samat</p>
+						<ul>
+							<li>johtaa outouksiin, esimerkki:</li>
+						</ul>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-string">''</span> == <span class="hljs-string">'0'</span> <span class="hljs-comment">// false</span>
+ <span class="hljs-number">0</span> == <span class="hljs-string">''</span>  <span class="hljs-comment">// true</span>
+ <span class="hljs-number">0</span> == <span class="hljs-string">'0'</span> <span class="hljs-comment">// true</span></code></pre>
+
+				<ul>
+					<li>Operaattori <code>===</code> sen sijaan tarkastaa aidon yhtäsuuruuden
+						<ul>
+							<li>Kannattaa lähes aina käyttää sitä</li>
+							<li>Sama operaattoreille <code>!=</code> ja <code>!==</code></li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="funktiot">Funktiot</h2>
+				<ul>
+					<li>
+						<p>Funktiot on tapa jakaa toiminnallisuutta osiin</p>
+					</li>
+					<li>
+						<p>Esim. määrittelemme funktion nimeltä <code>laskeSumma</code> joka ottaa kaksi
+							<em>parametria</em> nimeltä <code>a</code> ja <code>b</code>, laskee niiden summan ja <em>palauttaa</em> tuloksen
+							<code>return</code>-lauseella:</p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">laskeSumma</span>(<span class="hljs-params">a, b</span>) </span>{
+  <span class="hljs-keyword">return</span> a + b;
+}</code></pre>
+
+				<ul>
+					<li>Funktiota kutsutaan antamalla funktion nimi jonka jälkeen sulut <code>()</code>. Sulkujen sisällä mahdolliset parametrit
+						pilkuin eroteltuina.</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> summa = laskeSumma(<span class="hljs-number">4</span>, <span class="hljs-number">17</span>);</code></pre>
+
+				<ul>
+					<li>
+						<p>Funktion paluuarvo tallennetaan yllä muuttujaan <code>summa</code></p>
+					</li>
+					<li>
+						<p><a href="http://www.w3schools.com/js/js_functions.asp">W3Schools: JavaScript Functions</a></p>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="funktion-m-rittely">Funktion määrittely</h2>
+				<ul>
+					<li>Funktioiden määrittelyyn on kaksi vaihtoehtoista syntaksia:</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">laskeSumma</span>(<span class="hljs-params">a, b</span>) </span>{
+  <span class="hljs-keyword">return</span> a + b;
+}</code></pre>
+
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> laskeSumma = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a, b</span>) </span>{
+  <span class="hljs-keyword">return</span> a + b;
+};</code></pre>
+
+				<hr>
+				<h2 class="harjoitus">Harjoitus</h2>
+
+				<ul>
+					<li>
+						<p>Avaa jälleen plunk <a href="http://plnkr.co/edit/FqutOKVfm4xkR4dt7B2I">http://plnkr.co/edit/FqutOKVfm4xkR4dt7B2I</a>							tai jatka siitä mihin viimeksi jäit</p>
+					</li>
+					<li>
+						<p>Toteuta laskuri, joka pitää kirjaa siitä kuinka monta kertaa käyttäjä on nappia painanut. Näytä painallusten lukumäärä
+							web-sivulla.</p>
+					</li>
+				</ul>
+				<p>Voit luoda vaikkapa (globaalin) muuttujan:</p>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> painalluksia = <span class="hljs-number">0</span>;</code></pre>
+
+				<p>ja aina klikatessa kasvattaa sitä <code>++</code>-operaattorilla:</p>
+				<pre><code class="hljs javascript">painalluksia++;</code></pre>
+
+				<ul>
+					<li>Voit vielä näyttää onnittelutekstin kun käyttäjä saa 10 klikkausta täyteen
+					</li>
+				</ul>
+				<hr>
+				<h2 id="javascript-oliot">Javascript-oliot</h2>
+				<ul>
+					<li>
+						<p>Olioiden avulla JavaScriptin perustietotyypeistä voidaan koostaa suurempia kokonaisuuksia
+						</p>
+					</li>
+					<li>
+						<p>Olio on joukko avain-arvo-pareja, joissa avain on merkkijono ja arvo mitä vain: perustietotyyppi, funktio, toinen olio,
+							...</p>
+					</li>
+					<li>
+						<p>Esimerkki:</p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> viesti = {
+  teksti: <span class="hljs-string">"Moi kaikki"</span>,
+  tykkayksia: <span class="hljs-number">43</span>,
+  laheta: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{}
+};
+
+<span class="hljs-comment">// Olion attribuuttiin voidaan viitata joko . tai [] syntaksilla</span>
+<span class="hljs-keyword">var</span> v1 = viesti.teksti;
+<span class="hljs-keyword">var</span> v2 = viesti[<span class="hljs-string">'teksti'</span>];
+
+<span class="hljs-comment">// Myös uusia attribuutteja voidaan lisätä</span>
+viesti.uusi = <span class="hljs-string">"hehe"</span>;</code></pre>
+
+				<ul>
+					<li><a href="http://www.w3schools.com/js/js_objects.asp">W3Schools: JavaScript Objects</a></li>
+				</ul>
+				<hr>
+				<h2 id="taulukko">Taulukko</h2>
+				<ul>
+					<li>
+						<p>JavaScriptissä on myös taulukko-tietotyyppi (Array)</p>
+					</li>
+					<li>
+						<p>Indeksoitava lista erityyppisiä alkioita</p>
+					</li>
+					<li>
+						<p>Esim.</p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> juttuja = [<span class="hljs-number">200</span>, <span class="hljs-literal">true</span>, <span class="hljs-string">"Moi!"</span>];
+
+<span class="hljs-comment">// Haetaan ensimmäinen (nollas) alkio, eli 200</span>
+<span class="hljs-keyword">var</span> x = juttuja[<span class="hljs-number">0</span>];
+
+<span class="hljs-comment">// Vaihdetaan alkio toiseksi</span>
+juttuja[<span class="hljs-number">1</span>] = <span class="hljs-number">50</span>;
+
+<span class="hljs-comment">// Lisätään uusi alkio</span>
+juttuja.push(<span class="hljs-string">"heh"</span>);</code></pre>
+
+				<ul>
+					<li><a href="http://www.w3schools.com/js/js_arrays.asp">W3Schools: JavaScript Arrays</a> ja <a href="http://www.w3schools.com/js/js_array_methods.asp">Array Methods</a></li>
+				</ul>
+				<hr>
+				<h2 id="dom">DOM</h2>
+				<ul>
+					<li>
+						<p><em>DOM</em> (<em>Document Object Model</em>) on web-selaimen tarjoama ohjelmointirajapinta HTML (ja XML ja SVG) -dokumenttien
+							muokkaamiseen</p>
+						<ul>
+							<li>Selain sallii JavaScript-koodin muokata dokumentin tilaa rajapinnan läpi</li>
+						</ul>
+					</li>
+					<li>
+						<p>DOM tarjoaa dokumentista rakenteisen esityksen</p>
+						<ul>
+							<li>Puu, joka koostuu solmuista (node)</li>
+							<li>Solmuja voi muokata, lisätä ja poistaa ohjelmallisesti</li>
+						</ul>
+					</li>
+					<li>
+						<p>Tarjoaa rajapinnan myös tapahtumakäsittelyyn</p>
+						<ul>
+							<li>Jokaisen DOM-puun solmuun voi liittyä tapahtumakäsittelijöitä</li>
+							<li>Tapahtumakäsittelijöillä hoidetaan mm. käyttäjäinteraktio</li>
+						</ul>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="document">document</h2>
+				<ul>
+					<li>
+						<p>DOM-rajapinta tarjoaa olion nimeltä <code>document</code>, jonka kautta HTML-dokumenttia on mahdollista manipuloida
+							ohjelmallisesti</p>
+					</li>
+					<li>
+						<p><code>document</code>:n kautta pääsee käsiksi kaikkiin dokumentissa oleviin HTML-elementteihin</p>
+					</li>
+					<li>
+						<p>Esim. haetaan elementti id:n perusteella ja muutetaan sen sisältö sijoittamalla <code>innerHTML</code>-attribuuttiin
+							uusi teksti</p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> ele = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'joku'</span>);
+ele.innerHTML = <span class="hljs-string">"heippahei"</span>;</code></pre>
+
+				<ul>
+					<li><a href="http://www.w3schools.com/js/js_htmldom_document.asp">W3Schools: DOM Document</a></li>
+				</ul>
+				<hr>
+				<h2 id="dom-elements">DOM Elements</h2>
+				<ul>
+					<li>
+						<p>Kaikki HTML-elementit näkyvät DOM:n kautta <code>Element</code>-olioina</p>
+					</li>
+					<li>
+						<p>Element-olioilla on erilaisia metodeja ja attribuutteja, joiden avulla elementtiä voi käsitellä</p>
+					</li>
+					<li>
+						<p>Esim. luodaan uusi elementti ja lisätään se olemassaolevan elementin lapseksi:
+						</p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> a = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'a'</span>);
+a.setAttribute(<span class="hljs-string">'href'</span>, <span class="hljs-string">'http://www.example.com'</span>);
+a.innerHTML = <span class="hljs-string">'Linkki'</span>;
+
+<span class="hljs-keyword">var</span> ele = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'joku'</span>);
+ele.appendChild(a);</code></pre>
+
+				<ul>
+					<li><a href="http://www.w3schools.com/jsref/dom_obj_all.asp">W3Schools: HTML DOM Element Object</a></li>
+				</ul>
+				<hr>
+				<h2 id="queryselector">querySelector</h2>
+				<ul>
+					<li>
+						<p><code>document</code> -olion kautta voi hakea elementtejä muutenkin kuin id:n perusteella
+						</p>
+					</li>
+					<li>
+						<p><code>document.querySelector</code> ottaa parametrikseen CSS-säännöistä tutun valitsimen ja palauttaa ensimmäisen osuman</p>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> iso = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.iso'</span>);</code></pre>
+
+				<ul>
+					<li><code>document.querySelectorAll</code> palauttaa kaikki osumat taulukkona</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> isot = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.iso'</span>);
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;isot.length; ++i) {
+  <span class="hljs-comment">// ...</span>
+}</code></pre>
+
+				<ul>
+					<li><a href="http://www.w3schools.com/jsref/met_document_queryselector.asp">W3Schools: document.querySelector</a> ja
+						<a href="http://www.w3schools.com/jsref/met_document_queryselectorall.asp">querySelectorAll</a></li>
+				</ul>
+				<hr>
+				<h2 id="dom-tapahtumat">DOM-tapahtumat</h2>
+				<ul>
+					<li>
+						<p>Elementit lähettävät <em>tapahtumia</em> (<em>events</em>)</p>
+						<ul>
+							<li>Esim. elementin klikkaaminen aiheuttaa <code>click</code>-tapahtuman</li>
+						</ul>
+					</li>
+					<li>
+						<p>Tapahtumia voidaan kuunnella kolmella tavalla:</p>
+						<ul>
+							<li>Kaikki esimerkit kutsuvat funktiota <code>painallus</code> klikattaessa</li>
+						</ul>
+					</li>
+					<li>
+						<p>HTML:ssä elementin <code>onXXX</code>-attribuutilla</p>
+						<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"nappi"</span> <span class="hljs-attribute">onclick</span>=<span class="hljs-value">"klikkaus()"</span>&gt;</span>Nappi<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span></code></pre>
+					</li>
+					<li>
+						<p>JavaScriptissä DOM-elementin <code>onXXX</code>-attribuutilla</p>
+						<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> nappi = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'nappi'</span>);
+nappi.onclick = klikkaus;</code></pre>
+					</li>
+					<li>
+						<p>JavaScriptissä DOM-elementin <code>addEventListener</code>-metodilla</p>
+						<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> nappi = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'nappi'</span>);
+nappi.addEventListener(<span class="hljs-string">'click'</span>, klikkaus);</code></pre>
+
+					</li>
+				</ul>
+				<hr>
+				<h2 id="dom-tapahtumat">DOM-tapahtumat</h2>
+				<ul>
+					<li>
+						<p>... kahdessa jälkimmäisessä tavassa on se hyvä puoli, että kutsuttava funktio saa parametrikseen <em>tapahtuma-olion</em></p>
+					</li>
+					<li>
+						<p>Tapahtumaolion avulla voidaan mm. perua tapahtuman oletustoiminnallisuus
+						</p>
+						<ul>
+							<li>esim. estää linkin klikkaus</li>
+						</ul>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript">linkki.onclick = klikkaus;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">klikkaus</span>(<span class="hljs-params">event</span>) </span>{
+  event.preventDefault();
+}</code></pre>
+
+				<hr>
+				<h2 id="joitain-tapahtumatyyppej-">Joitain tapahtumatyyppejä</h2>
+				<table>
+					<thead>
+						<tr>
+							<th style="text-align:left">Tapahtuma</th>
+							<th style="text-align:left">Selitys</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align:left"><code>click</code></td>
+							<td style="text-align:left">Klikkaus (tai kosketusnäytön &quot;täppäys&quot;)</td>
+						</tr>
+						<tr>
+							<td style="text-align:left"><code>mousemove</code></td>
+							<td style="text-align:left">Kursori liikahti elementin päällä</td>
+						</tr>
+						<tr>
+							<td style="text-align:left"><code>change</code></td>
+							<td style="text-align:left">Elementin (esim. tekstikentän) arvo muuttui. Tapahtuu vasta elementin muututtua ei-aktiiviseksi</td>
+						</tr>
+						<tr>
+							<td style="text-align:left"><code>input</code></td>
+							<td style="text-align:left">Sama kuin yllä, mutta tapahtuu heti kuin arvo muuttuu</td>
+						</tr>
+						<tr>
+							<td style="text-align:left"><code>submit</code></td>
+							<td style="text-align:left">Lomake (form) lähetettiin</td>
+						</tr>
+						<tr>
+							<td style="text-align:left"><code>load</code></td>
+							<td style="text-align:left">Elementti latautui. Esim. <code>&lt;body onload=&quot;sivuLadattu()&gt;</code></td>
+						</tr>
+					</tbody>
+				</table>
+				<ul>
+					<li><a href="http://www.w3schools.com/jsref/dom_obj_event.asp">W3Schools: HTML DOM Events</a></li>
+				</ul>
+				<hr>
+				<h2 id="ajax">Ajax</h2>
+				<ul>
+					<li>
+						<p>Termillä <a href="https://developer.mozilla.org/en-US/docs/AJAX">Ajax</a> tarkoitetaan joukkoa teknologioita, joiden
+							avulla voidaan ladata uutta sisältöä web-sivulle lataamatta koko sivua uudelleen</p>
+					</li>
+					<li>
+						<p>Nimi Ajax (Asyncronous JavaScript And XML) viittaa alkuperäiseen käyttötarkoitukseen XML-dokumenttien siirtämisessä</p>
+					</li>
+					<li>
+						<p>Ajaxilla voidaan kuitenkin siirtää mitä tahansa dataa</p>
+					</li>
+					<li>
+						<p>Keskiössä selaimen tarjoama <code>XMLHttpRequest</code>-olio</p>
+					</li>
+				</ul>
+				<hr>
+				<h2 id="xmlhttprequest">XMLHttpRequest</h2>
+				<ul>
+					<li><code>XMLHttpRequest</code>-olion avulla voidaan web-selaimelta tehdä ~mielivaltaisia HTTP-pyyntöjä palvelimelle</li>
+				</ul>
+				<pre><code class="hljs javascript"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest();
+  xhr.open(<span class="hljs-string">'GET'</span>, <span class="hljs-string">'/resurssi/palvelimella'</span>);
+  xhr.onload = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.status === <span class="hljs-number">200</span>) {
+      alert(e.response);
+    }
+  }
+  xhr.send();</code></pre>
+
+				<hr>
+				<h2 id="xmlhttprequest">XMLHttpRequest</h2>
+				<ul>
+					<li>
+						<p>Ajax-pyynnöissä voidaan käyttää kaikkia HTTP-metodeja</p>
+						<ul>
+							<li><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>, ...</li>
+						</ul>
+					</li>
+					<li>
+						<p>Ja asettaa otsikkotietoja</p>
+						<ul>
+							<li><a href="http://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader%28%29-method">Tietyt otsikkotiedot</a> tosin on
+								rajoitettu ainoastaan selaimen kirjoitettavaksi, eikä niitä voi asettaa <code>XMLHttpRequest</code>-olion kautta
+								<ul>
+									<li>Esim. <code>Host</code>, <code>Referer</code>, <code>User-Agent</code>, <code>Cookie</code>, ...</li>
+									<li><code>Sec-</code> -alkuiset</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<pre><code class="hljs javascript">xhr.setRequestHeader(<span class="hljs-string">'user-agent'</span>, <span class="hljs-string">'salainen agentti'</span>);</code></pre>
+				<pre><code class="hljs">&gt; Refused <span class="hljs-keyword">to</span> <span class="hljs-built_in">set</span> unsafe <span class="hljs-keyword">header</span> <span class="hljs-string">"user-agent"</span></code></pre>
+
+
+			</div>
+		</div>
+	</div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<script src="../../assets/js/bootstrap.min.js"></script>
+	<script src="../../assets/js/scripts.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>webapps</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Web-sovelluksista
+
+.yhdensivunversio[
+[Yhden sivun versio](./all.html)
+]
+
+---
+
+## Erilaisia web-sovelluksia
+
+* Perinteisesti web-selain on toiminut vain renderöintialustana palvelimen tuottamille HTML-dokumenteille
+    * Dokumenteissa on linkkejä, joita seuraamalla ladataan seuraava HTML-dokumentti
+
+* JavaScript-kielen ja selaimen tarjoamien rajapintojen myötä entistä enemmän toiminnallisuutta voidaan siirtää selaimen suoritettavaksi
+
+* Web-sovellusta suunniteltaessa yksi olennainen kysymys on kuinka
+  paljon toiminnallisuutta toteutetaan selainpäähän vs palvelinpäähän
+
+<!--
+
+* Rikkaat internet-sovellukset (Rich Internet Applications, RIA)
+    * kattokäsite "työpöytäsovellusmaisille" web-sovelluksille
+    * ["The term RIA refers to a heterogeneous family of solutions, characterized by a common goal of adding new capabilities to the conventional hypertext-based Web."](http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=5481362)
+
+-->
+
+---
+
+## Kerrosarkkitehtuuri
+
+* Web-sovelluksen ohjelmakoodi voidaan jakaa loogisiin kerroksiin, joilla kullakin on oma roolinsa
+    * ns. kerrosarkkitehtuuri
+
+![](../img/layers.png)
+
+* Usein käytetty jaottelu on kolme kerrosta:
+    1. Esityskerros (Presentation Layer)
+        * Näkymän manipulointi
+    2. Logiikkakerros (Business Logic Layer)
+        * Sovelluksen toimintalogiikka
+    3. Datakerros (Data Layer)
+        * Datan lukeminen ja kirjoittaminen
+        * Yhteys tietokantaan
+
+---
+
+## Monitasoarkkitehtuuri
+
+* Loogisen jaottelun lisäksi täytyy huomioida se miten koko sovellus on *fyysisesti* jaoteltu
+    * Esim. mikä osa palvelimella ja mikä selaimessa
+
+* Fyysisen jaottelun yhteydessä puhutaan *monitasoarkkitehtuureista* (n-tier architecture)
+    * Tasot (tiers): fyysinen jaottelu
+    * Kerrokset (layers): looginen jaottelu
+
+* [What's the difference between "Layers" and
+  "Tiers"?](http://stackoverflow.com/a/120487)
+
+---
+
+# Kolmitasoarkkitehtuuri
+
+* Usein pienessä/keskisuuressa web-sovelluksessa on kolme tasoa (3-tier
+  architecture).red[&#42;]
+    1. Web-selain (asiakastaso, client tier)
+    2. Web-palvelin (sovellustaso, wep application tier)
+    3. Tietokantapalvelin (tietokantataso, database tier)
+
+![](../img/tiers0.png)
+
+.footnote[.red[&#42;] n-tier architecture on yleisesti käytetty käsite,
+mutta eri tasojen nimet eivät ole vakiintuneita.
+Näissä kalvoissa käytetään samoja käsitteitä kuin mm.
+[tässä artikkelissa](http://msdn.microsoft.com/en-us/library/ee658120.aspx),
+jossa on muutenkin hyvää lisätietoa aiheeseen liittyen.]
+
+---
+
+# Tasot & kerrokset
+
+* Web-sovelluksen arkkitehtuuria suunnitellessa täytyy päättää mitä
+  kerroksia sijoitetaan millekin tasolle
+
+* Kerrokset
+
+![](../img/layers.png)
+
+* Tasot
+
+![](../img/tiers0.png)
+
+* Käydään läpi muutama eri vaihtoehto -->
+
+
+---
+
+# Kevyt asiakas
+
+* Perinteinen tapa on sijoittaa kaikki kerrokset web-palvelimelle
+
+![](../img/tiers1.png)
+
+* Näkymät generoiva esityskerroskin on palvelimella
+    * Selain toimii vain yksinkertaisena HTML-renderöijänä
+
+* Tällaisesta ratkaisusta käytetään nimitystä *kevyt asiakas*
+    * *thin client*
+
+---
+
+# Kevyt asiakas -esimerkki
+
+![](../img/webapp-kevyt.png)
+
+---
+
+# Raskas asiakas
+
+* Kevyen asiakkaan vastakohta on *raskas asiakas*
+    * *fat/thick/heavy/rich client*
+
+![](../img/tiers3.png)
+
+* Sekä sovelluslogiikka että näkymän päivitys suoritetaan selaimessa
+    * Palvelimelle jää vain datarajapinta
+
+---
+
+# Raskas asiakas -esimerkki
+
+![](../img/webapp-raskas.png)
+
+---
+
+# Kevyt vs raskas asiakas
+
+* Kevyt asiakas
+    * Ei juurikaan toimintalogiikkaa selaimessa
+    * Kun selain pyytää sivua, palvelin koostaa sen kokonaisuudessaan ja
+      palauttaa selaimelle
+
+* Raskas asiakas
+    * Hyödyntää runsaasti JavaScriptiä, mm.
+        * näkymän manipulointiin
+        * datan hakemiseen palvelimelta Ajax-kutsuilla
+        * ym.
+
+* Myös saman web-sovelluksen/-sivuston jotkut osat voidaan toteuttaa kevyenä
+  asiakkaana, jotkut raskaana
+
+---
+
+# Raskaan asiakkaan hyötyjä
+
+* Ei sivunlatauksia
+    * parempi käyttökokemus
+
+* Vähemmän ladattavaa
+    * ei koko sivua, vain tarvittava data
+
+* Yksinkertaisempi palvelin
+    * skaalautuu
+    * palvelinresursseja ei tarvita niin paljoa, sillä suuri osa työstä tehdään käyttäjien selaimissa
+
+* HTML-, CSS- ja JavaScript-tiedostot ovat staattisia
+    * cacheutuvat hyvin
+
+---
+
+# Raskaan asiakkaan ongelmia
+
+* Ensimmäinen sivunlataus voi olla hidas
+
+* Vaatii suorituskykyä selainpäässä
+    * voi olla ongelma mobiililaitteille
+
+* Selaimen takaisin-painike ja muu navigointi?
+
+* Hankala hakukoneroboteille
+    * ja kaikille muille jotka eivät suorita JavaScriptiä
+
+* Toteutuskielenä oltava JavaScript
+    * tai joku selain-plugin
+    * tai joku kieli, josta generoidaan julkaisuvaiheessa JavaScriptiä
+
+---
+
+# Yhden sivun sovellus
+
+* Sellaista web-sovellusta, jossa HTML-dokumentti ladataan vain kerran, kutsutaan *yhden sivun sovellukseksi*
+    * *Single Page Application* (*SPA*)
+    * Esityskerros selainpäässä
+
+* Ensimmäisen latauksen jälkeen kaikki palvelin-kommunikaatio tapahtuu Ajax-kutsuin
+
+* SPA voi silti käyttäjän näkökulmasta koostua useammasta "sivusta"
+
+* SPA on yleensä raskas asiakas
+    * Esim. edellisen kalvon sähköpostiohjelma
+    * On kuitenkin myös kevyempiä SPA:eja
+        * kuten seuraavalla kalvolla -->
+
+---
+
+# Kevyehkö asiakas.red[&#42;]
+
+* Esityskerros selaimella, muut palvelimella
+    * Selaimelta lähetetään palvelimelle "käyttöliittymätapahtumia"
+    * Palvelin lähettää näkymään tehtävät muutokset selaimelle
+
+![](../img/tiers2.png)
+
+
+.footnote[.red[&#42;] Ei oikea termi]
+
+---
+
+# Kevyehkö asiakas -esimerkki
+
+![](../img/webapp-kevyehko.png)
+
+---
+
+# Vielä yksi
+
+* Kerrokset eivät ole aina selkeästi yhdellä tasolla
+    * Esim. toimintalogiikkaa voi olla sekä selaimessa että palvelimella
+
+![](../img/tiers4.png)
+
+---
+
+# Leluesimerkki: Tervehtijä
+
+* Web-sovellus joka tervehtii käyttäjää nimeltä
+    * Kaksi toteutusta: kevyt ja raskas asiakas
+
+
+.footnote[(Molemmat toteutukset huonoja ja epätietoturvallisia,
+oikeaa sovellusta ei kannata tehdä näin)]
+
+* [Kevyt asiakas](http://www.cs.tut.fi/cgi-bin/run/~seitti/tervekevyt.py)
+    * Käyttäjän nimi lähetetään HTML-lomakkeella palvelimelle
+    * Palvelin koostaa vastaukseksi kokonaisen HTML-sivun
+    * Toteutettu [CGI](http://www.oreilly.com/openbook/cgi/ch01_01.html) Python -skriptinä [Lintulassa](http://www.cs.tut.fi/lintula/ohjeet/www-palvelu/dynaamisetsivut.shtml#cgi-ohjelmat)
+
+* [Raskas asiakas](../../assets/misc/terveraskas.html)
+    * Selainpään JavaScriptillä luetaan käyttäjän nimi ja
+      päivitetään näkymä
+    * Yhden sivun sovellus
+
+* Koska sovellus ei käytä dataa, ei datakerrosta tarvita
+
+---
+
+# Tervehtijä
+
+* [Kevyt asiakas](http://www.cs.tut.fi/cgi-bin/run/~seitti/tervekevyt.py)
+
+![](../img/terve-kevyt.png)
+
+* [Raskas asiakas](../../assets/misc/terveraskas.html)
+
+![](../img/terve-raskas.png)
+
+
+---
+
+# Tervehtijä: kevyt asiakas (Python CGI)
+
+```python
+import cgi
+import tervelogiikka
+
+def print_http_headers():
+    print 'Content-Type: text/html; charset=utf-8'
+
+def print_html(tervehdys):
+    print('''<!DOCTYPE html>
+    ...
+    <form method="GET" action="tervekevyt.py" >
+        Syötä nimesi: <input id="nimi" name="nimi" type="text">
+        <input type="submit">
+    </form>
+    <p class="tervehdys">%s</p>
+  </body>
+</html>''' % tervehdys)
+
+form = cgi.FieldStorage()
+if 'nimi' in form:
+    tervehdys = tervelogiikka.tervehdi(form['nimi'].value)
+else:
+    tervehdys = ""
+
+print_http_headers()
+print('')
+print_html(tervehdys)
+```
+
+
+---
+
+# Tervehtijä: raskas asiakas (JavaScript)
+
+```html
+<body onload="init()">
+<form>
+    Syötä nimesi: <input id="nimi" name="nimi" type="text">
+    <input type="submit">
+</form>
+<p class="tervehdys"></p>
+
+<script src="tervelogiikka.js"></script>
+<script>
+  function init() {
+    var form = document.getElementsByTagName('form')[0];
+    form.addEventListener('submit', submitForm, false);
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    e.returnValue = false;
+    var nimi = document.getElementById('nimi').value;
+    var tervehdys = tervelogiikka.tervehdys(nimi);
+    var out = document.getElementsByClassName('tervehdys')[0];
+    out.innerHTML = tervehdys;
+  }
+</script>
+</body>
+```
+
+---
+
+# Tiedotteita
+
+* [Harjoitustyöhönilmoittautumisharjoitustyö](../../harjoitustyot/#HT0) on
+  julkaistu
+    * Tee ilmoittautumislomake ja ilmoittaudu
+    * Bonustehtävä: Ajax-ilmoittautuminen
+    * Ilmoittautumisdedis 8.3.2015
+
+* Ensi viikon luennolla JavaScriptiä
+    * Ota läppäri mukaan - pieni tehtävä
+
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+

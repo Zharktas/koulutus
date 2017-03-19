@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>rest2</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+	 		<link href="../../assets/css/slides.css" rel="stylesheet">
+	<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="more-rest">More REST</h1>
+<p><a href="./">Kalvot</a></p>
+<p><small>Petri Ihantola, edited by Antti Nieminen</small></p>
+<p><small><a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0
+International</a></small></p>
+<hr>
+<h2 id="trends-">Trends?</h2>
+<hr>
+<h2 id="xml-vs-json">XML vs. JSON</h2>
+<p><img src="../img/trends2.png" alt=""></p>
+<hr>
+<h2 id="rest-vs-soa-etc-">Rest vs SOA etc.</h2>
+<p><img src="../img/trends1.png" alt=""></p>
+<hr>
+<h2 id="however">However</h2>
+<p>Your customers, their environment, etc.<br>vs. global trends.</p>
+<hr>
+<h2 id="rest-best-practices">Rest best practices</h2>
+<p><small>continues from yesterday</small></p>
+<p>Resources are nouns, use plurals only to keep it simple.  </p>
+<p><code>/books/</code><br><code>/book/42</code><br><code>/books/42</code></p>
+<hr>
+<h2 id="rest-best-practices-continues-from-yesterday-">Rest best practices (continues from yesterday)</h2>
+<table>
+
+<tbody>
+
+<tr>
+
+<th></th>
+
+<th>GET</th>
+
+<th>POST</th>
+
+<th>PUT</th>
+
+<th>DELETE</th>
+
+</tr>
+
+<tr>
+
+<td>/books</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+</tr>
+
+<tr>
+
+<td>/books/42</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+<td>???</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+<hr>
+<h2 id="rest-best-practices">Rest best practices</h2>
+<table>
+
+<tbody>
+
+<tr>
+
+<th></th>
+
+<th>GET<br>read</th>
+
+<th>POST<br>create</th>
+
+<th>PUT<br>update</th>
+
+<th>DELETE</th>
+
+</tr>
+
+<tr>
+
+<td>/books</td>
+
+<td>Returns a list of books</td>
+
+<td>Create a new book</td>
+
+<td>Bulk update of books</td>
+
+<td>Delete all books!</td>
+
+</tr>
+
+<tr>
+
+<td>/books/42</td>
+
+<td>Returns a specific book</td>
+
+<td>Method not allowed (405)</td>
+
+<td>Updates a specific book</td>
+
+<td>Deletes a specific book</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+<hr>
+<h2 id="http-return-codes">HTTP Return codes</h2>
+<p>See, e.g.,
+<a href="http://www.restapitutorial.com/httpstatuscodes.html">http://www.restapitutorial.com/httpstatuscodes.html</a></p>
+<hr>
+<h2 id="rest-best-practices">Rest best practices</h2>
+<p>You can use sub-resources for relations</p>
+<pre><code>        GET /books/42/authors/
+        GET /authors/
+</code></pre><hr>
+<h2 id="rest-best-practices">Rest best practices</h2>
+<p>HTTP headers communicating serialization format</p>
+<ul>
+<li>Content-Type defines the request format.</li>
+<li>Accept defines a list of acceptable response formats.</li>
+</ul>
+<hr>
+<h2 id="rest-best-practices">Rest best practices</h2>
+<p>Authentication and authorization are different. Remember to do both.</p>
+<hr>
+<p>There are many other good practices related to designing REST APIs. Some
+bad practices are also listed, e.g.,
+<a href="https://jacobian.org/writing/rest-worst-practices/">https://jacobian.org/writing/rest-worst-practices/</a></p>
+<hr>
+<h2 id="is-there-anything-like-wsdl-but-for-rest">Is there anything like WSDL but for REST</h2>
+<p>Or do I need such?</p>
+<hr>
+<h2 id="web-application-description-language-wadl-">Web Application Description Language (WADL)</h2>
+<ul>
+<li>An XML-based language</li>
+<li>Assumes HTTP</li>
+<li>Uses hyperlinks for linking resources</li>
+<li>Development both language and platform neutral</li>
+<li>Aligned with REST terminology</li>
+</ul>
+<hr>
+<h2 id="wadl-elements">WADL elements</h2>
+<ul>
+<li>Set of resources: Analogous to a site map showing the resources on
+offer.</li>
+<li>Relationships between resources: Describing the links between
+resources, both referential and causal.</li>
+<li>Methods that can be applied to each resource: The HTTP methods that
+can be applied to each resource, the expected inputs and outputs and
+their supported formats.</li>
+<li>Resource representation formats: The supported MIME types and data
+schemas in use</li>
+</ul>
+<hr>
+<h2 id="wadl-in-real">WADL in Real</h2>
+<p>Yahoo has a nice demo:
+<a href="https://developer.yahoo.com/blogs/ydn/check-wadl-7130.html">https://developer.yahoo.com/blogs/ydn/check-wadl-7130.html</a></p>
+<hr>
+<h2 id="wadl-example">WADL example</h2>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">application</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">"http://wadl.dev.java.net/2009/02"</span> 
+       <span class="hljs-attribute">xmlns:ns</span>=<span class="hljs-value">"http://superbooks"</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-title">grammars</span>&gt;</span>
+   ...
+ <span class="hljs-tag">&lt;/<span class="hljs-title">grammars</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-title">resources</span> <span class="hljs-attribute">base</span>=<span class="hljs-value">"http://localhost:8080/"</span>&gt;</span>
+   ...
+   <span class="hljs-tag">&lt;<span class="hljs-title">resource</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">"/books"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">resource</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">"/bookstore/{id}"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">param</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"id"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"template"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">method</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"GET"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">response</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-title">representation</span> <span class="hljs-attribute">mediaType</span>=<span class="hljs-value">"application/xml"</span>
+                           <span class="hljs-attribute">element</span>=<span class="hljs-value">"ns:thebook"</span>/&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">response</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">method</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">resource</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-title">resource</span>&gt;</span>
+ <span class="hljs-tag">&lt;/<span class="hljs-title">resources</span>&gt;</span>  
+<span class="hljs-tag">&lt;/<span class="hljs-title">application</span>&gt;</span></code></pre>
+
+
+
+<hr>
+<h2 id="-wadl-example">...WADL example</h2>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-title">grammars</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">xs:schema</span> <span class="hljs-attribute">xmlns:xs</span>=<span class="hljs-value">"http://www.w3.org/2001/XMLSchema"</span>
+        <span class="hljs-attribute">xmlns:tns</span>=<span class="hljs-value">"http://superbooks"</span>
+        <span class="hljs-attribute">attributeFormDefault</span>=<span class="hljs-value">"unqualified"</span>
+        <span class="hljs-attribute">elementFormDefault</span>=<span class="hljs-value">"unqualified"</span>
+        <span class="hljs-attribute">targetNamespace</span>=<span class="hljs-value">"http://superbooks"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">xs:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"thebook"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"tns:book"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">xs:complexType</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"book"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">xs:sequence</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">xs:element</span> <span class="hljs-attribute">minOccurs</span>=<span class="hljs-value">"0"</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">"tns:thechapter"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">xs:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"id"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"xs:int"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">xs:sequence</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">xs:complexType</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">xs:schema</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">grammars</span>&gt;</span></code></pre>
+
+
+
+<hr>
+<h2 id="wadl-tools-support-etc">WADL Tools Support etc</h2>
+<ul>
+<li>GlassFish – Sun Java EE 7 Application Server:
+<a href="https://glassfish.java.net/">https://glassfish.java.net/</a> Support for RESTful Web Services and
+automatic generation of WADL files from Java code WADL2JAVA
+<a href="https://wadl.java.net/wadl2java.html">https://wadl.java.net/wadl2java.html</a></li>
+<li>Web Application Description Language (WADL) spec., W3C
+<a href="http://www.w3.org/Submission/wadl/">http://www.w3.org/Submission/wadl/</a></li>
+</ul>
+<p>However, WADL is still not widely adopted.</p>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>

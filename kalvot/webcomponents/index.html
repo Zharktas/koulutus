@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>webcomponents</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Web Components
+### TIE-23500 Web-ohjelmointi
+
+---
+
+# Web Components
+
+* Web komponentit ovat uudelleen käytettäviä käyttöliittymä widgettejä, jotka toteutaan ilman ulkoisia JavaScript kirjastoja.
+* Komponentti voidaan ladata import tagilla, jonka jälkeen sitä voidaan käyttää html-merkkauksessa.
+* Web komponentit koostuvat neljästä eri teknologiasta, joita voidaan myös käyttää erikseen:
+  * Custom Elements
+  * HTML Templates
+  * Shadow DOM
+  * HTML Imports
+
+---
+
+# Custom elements
+
+* Tyypillinen tapa totetuttaa modernin näköisiä web sovelluksia on rakentaa se div-elementeistä
+
+```html
+<div class="container">
+  <div class="header">
+    <h1>Hi!</h1>
+    <h2>Subtitle<h2>
+  </div>
+  <div class="content">
+    <div class="article">
+    ...
+    </div>
+  </div>
+  <div class="footer">
+  2015
+  </div>
+</div>
+```
+
+---
+
+# Custom Elements
+
+* Custom elementit mahdollistavat uusien epästandardien elementtien luomisen ja uudelleen käytön.
+* Elementti rekisteröidään JavaScriptillä:
+
+```javascript
+var XComponent = document.registerElement('x-component')
+```
+
+* Jonka jälkeen komponenttia voidaan käyttää:
+
+```html
+<x-component></x-component>
+```
+
+* Elementti voidaan myös luoda JavaScriptillä:
+
+```javascript
+var dom = new XComponent();
+document.body.appendChild(dom);
+```
+
+---
+
+# Custom Elements
+
+* Elementtiin voidaan lisätä toiminallisuutta, joka tekee custom elementistä paljon hyödyllisemmän:
+
+```javascript
+var proto = Object.create(HTMLElement.prototype);
+proto.name = 'Custom Element';
+proto.alert = function(){
+  alert('This is ' + this.name);
+}
+document.registerElement('x-component', {
+  prototype: proto
+});  
+```
+
+---
+
+# Custom Elements
+
+* Olemassa olevia HTML elementtejä voidaan myös laajentaa:
+
+```html
+<div is='x-component'></div>
+```
+
+* Laajennetulla elementillä on kaikki entisen elementin toiminnot + uudet määritetyt.
+
+---
+
+# Custom Elements
+
+* Esimerkki [Githubin time-elementit](https://github.com/github/time-elements)
+
+```html
+<time is="relative-time" datetime="2014-04-01T16:30:00-08:00">
+  April 1, 2014
+</time>
+```
+
+---
+
+# Custom Elements
+
+* Määritetty time-elementti näyttää kellonaikoja riippuen nykyisestä kellon ajasta.
+* Vaihtoehtoja mitä selaimeen renderöidään voi olla:
+  * just now
+  * 30 seconds ago
+  * a minute ago
+  * 30 minutes ago
+  * jne
+
+* Jos custom elementit eivät ole selaimessa tuettuna, github käyttää apuna JavaScriptiä
+* Jos JavaScriptiäkään ei suoritetaan niin github näyttää staattisen kellonajan.
+
+---
+
+# HTML Templates
+
+* HTML Templatet ovat selainpään sivupohjia html merkkauksessa joita ei automaattisesti renderöidä.
+
+```html
+<template id="mytemplate">
+  <img src="" alt="Badger">
+  <div class="comment"></div>
+</template>
+```
+
+* Template tagin sisäinen html ei rendereröidy
+* tagin sisällä olevat interaktiot eivät käynnisty
+  * skriptejä ei ajeta
+  * kuvia ei ladata
+  * audio ei soi
+* Sisältö ei ole osa dokumenttia
+* Template tagi voidaan sijoittaa tagien <head>, <body> ja <frameset> sisään ja se voidaan sijoittaa paikkoihin joissa muut html elementit olisivat laittomia
+
+---
+
+# HTML Templates
+
+* Template voidaan aktivoida JavaScriptillä:
+
+```javascript
+var t = document.querySelector('#mytemplate');
+t.content.querySelector('img').src = 'logo.png';
+
+var clone = document.importNode(t.content, true);
+document.body.appendChild(clone);
+```
+
+* Kun importNode kutsutaan, kaikki templaten sisäinen html aktivoituu: kuvat ladataan, skriptit ajetaan.
+* Lopullinen merkkaus renderöidään.
+
+---
+
+# HTML Templates
+
+* Demo
+
+```html
+<button onclick="useIt()">Use me</button>
+<div id="container"></div>
+<script>
+  function useIt() {
+    var content = document.querySelector('template').content;
+    // Update something in the template DOM.
+    var span = content.querySelector('span');
+    span.textContent = parseInt(span.textContent) + 1;
+    document.querySelector('#container').appendChild(
+        document.importNode(content, true));
+  }
+</script>
+
+<template>
+  <div>Template used: <span>0</span></div>
+  <script>alert('Thanks!')</script>
+</template>
+```
+
+* [Linkki demoon](http://www.html5rocks.com/en/tutorials/webcomponents/template/#toc-using)
+
+---
+
+# Shadow DOM
+
+* Shadow DOM kapseloi DOM puun erilleen muusta dokumentista.
+* Näkyvyysalueet on sidottu isäntäelementtiin.
+* Shadow DOM:ssa määritetyt css määreet eivät vaikuta koko dokumenttiin, Shadow DOM:n ulkopuolella olevat css määreet eivät vaikuta Shadow DOM:iin.
+* Shadow DOM luodaan JavaScriptillä isäntäelementistä:
+
+```html
+<div id="host"></div>
+```
+
+```javascript
+var host = document.querySelector('#host');
+var root = host.createShadowRoot();
+
+var div = document.createElement('div');
+div.textContent = "Woo!";
+root.appendChild(div);
+```
+
+---
+
+# Shadow DOM
+
+* Shadow DOM voidaan yhdistää templatejen kanssa.
+
+```html
+<template id="nameTagTemplate">
+<style>
+  …
+</style>
+<div class="outer">
+  <div class="boilerplate">
+    Hi! My name is
+  </div>
+  <div class="name">
+    <content></content>
+  </div>
+</div>
+</template>
+```
+
+---
+
+# Shadow DOM
+
+* Luodaan Shadow DOM:
+
+```javascript
+var shadow = document.querySelector('#nameTag').createShadowRoot();
+var template = document.querySelector('#nameTagTemplate');
+var clone = document.importNode(template.content, true);
+shadow.appendChild(clone);
+```
+
+* Templaten content tagin sisältö voidaan vaihtaa:
+
+```javascript
+document.querySelector('#nameTag').textContent = 'Shellie';
+```
+
+* Demo: http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/#toc-separation
+
+---
+
+# HTML import
+
+* HTML importilla voidaan includoida toisia html tiedostoja samaan dokumenttiin.
+* Yksinkertaisimmillaan:
+
+```html
+<head>
+  <link rel="import" href="demo.html">
+</head>
+```
+
+* Voidaan käyttää esimerkiksi muiden html, js ja css tiedostojen lataamiseen.
+* import ei sisällytä toista tiedostoa automaattisesti dokumenttiin.
+
+---
+
+# HTML import
+
+* Importatun html-tiedoston sisältöä voi käsitellä javascriptillä:
+
+```javascript
+var content = document.querySelector('link[rel="import"]').import;
+```
+
+* content muuttujaan tulee koko html importin dom puu
+* Dokumenttiin voidaan lisätä koko puu tai vain osa siitä
+
+```javascript
+var el = content.querySelector('.warning');
+document.body.appendChild(el.cloneNode(true));
+```
+
+---
+
+# HTML import
+
+* Importattu html voi käyttää ulkopuolista dokumenttia
+
+```javascript
+var importDoc = document.currentScript.ownerDocument;
+var mainDoc = document;
+```
+
+---
+
+# Web Components
+
+* Näitä neljää speksiä yhdistelmällä voidaan tehdä webbi komponentteja.
+* Importeilla voidaan määrittää itse komponentti omaan tiedostoon.
+* Templateilla voidaan ja Shadow DOM:lla voidaan määrittää komponentti.
+* Custom Elementeillä voidaan määrittää komponenteilla helposti käytettävät elementit.
+* Huonona puolena selaintuki:
+  * Chrome ja Opera tukee kaikkia neljää speksiä
+  * Firefox Templateja mutta muita vain osittain.
+  * Safari tukee vain templateja mutta muita ei ollenkaan.
+  * IE ei tue mitään :)
+
+---
+
+# Web Components
+
+* Lisälukemistoa:
+  * http://webcomponents.org/
+  * http://www.html5rocks.com/en/
+
+* Kysyttävää ?
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
+
