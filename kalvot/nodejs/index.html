@@ -18,10 +18,6 @@
 
 # Node.js
 
-.yhdensivunversio[
-[Yhden sivun versio](./all.html)
-]
-
 ---
 
 ## Node.js
@@ -438,15 +434,15 @@ app.get('/', function(req, res) {
 * Nyt voimme toteuttaa Node.js:n + Expressin avulla
   palvelinpään toteutuksen, joka vastaanottaa lomakkeen tiedot
 
-* Eli avaa Cloud9-workspacesi, ja...
-    1. Asenna `body-parser` middleware ja ota se käyttöön
+* Eli avaa Node.js projekti, ja...
+    1. Siirretään supersankarilomake projektin  `public` kansioon
     2. Toteuta `app.post('/supersankari', ...)` reitti, joka vastaa
        lomakkeen lähetykseen jotain
         * Lomakeen arvot pitäisi löytyä muuttujista `req.body.nimi` ja
           `req.body.supersankari`
 
-* Aseta Plunkerissa olevan supersankarilomakkeen
-`action=` -attribuutti osoittamaan Cloud9:ssä ajossa olevan
+* Aseta supersankarilomakkeen
+`action=` -attribuutti osoittamaan ajossa olevan
 sovelluksesi polkuun `/supersankari`
 
 * Kokeile onnistuuko lomakkeen lähetys toivotusti
@@ -548,8 +544,8 @@ Supersankari-backendimme ei ole vielä täydellinen.
 Nyt se vastaa pelkkänä tekstinä.
 Sivupohjan avulla voimme antaa vastauksen HTML-muodossa.
 
-* Luo Cloud9:ssä uusi hakemisto nimeltä `views` ja sen sisälle tiedosto `index.ejs`
-    * Kopioi tiedoston sisällöksi Plunkerissa luomasi supersankarilomake
+* Luo projektiin uusi hakemisto nimeltä `views` ja sen sisälle tiedosto `index.ejs`
+    * Kopioi tiedoston sisällöksi luomasi supersankarilomake
 
 * Asenna ejs ja ota se käyttöön.
 
