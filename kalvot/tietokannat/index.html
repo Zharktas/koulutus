@@ -284,12 +284,12 @@ exports.Vastaus = Vastaus;
 
 ## Vastauksen tallennus
 
-* Otetaan `Vastaus`-malli käyttöön tiedostossa `server.js` ja muutetaan
+* Otetaan `Vastaus`-malli käyttöön tiedostossa `index.js` ja muutetaan
   `POST /supersankari` -käsittelijäfunktiota siten, että ennen
   vastaamista tallennetaan vastaus tietokantaan
 
 ```javascript
-var Vastaus = require('./model.js').Vastaus;
+var Vastaus = require('../model.js').Vastaus;
 ```
 
 ```javascript
@@ -330,7 +330,7 @@ var Vastaus = require('./model.js').Vastaus;
 ## Vastausten tarkastelu: luodaan uusi reitti
 
 
-* Tiedostoon `server.js` uusi reitti `/vastaukset` joka hakee vastaukset
+* Tiedostoon `index.js` uusi reitti `/vastaukset` joka hakee vastaukset
   tietokannasta ja renderöi `vastaukset`-näkymän
 
 ```javascript
