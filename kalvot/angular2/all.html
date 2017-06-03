@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+    <title>angular</title>
+    
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides-onepage.css" rel="stylesheet">
+ 		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+	</head>
+	<body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 id="angular">Angular</h1>
+<p><a href="./">Kalvot</a></p>
+<hr>
+<h2 id="angular">Angular</h2>
+<ul>
+<li><p><a href="https://angularjs.org/">Angular</a> (AngularJS)
+on selainpään web-sovelluskehys (front-end web framework)</p>
+</li>
+<li><p>Mahdollistaa HTML-syntaksin laajentamisen Angular-direktiivein</p>
+<ul>
+<li>Angularissa on valmiita direktiivejä</li>
+<li>lisäksi niitä voi luoda myös itse</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>&quot;HTML is great for declaring static documents, but it falters when we try to use it for declaring dynamic views in web-applications. AngularJS lets you extend HTML vocabulary for your application. The resulting environment is extraordinarily expressive, readable, and quick to develop.&quot;</p>
+</blockquote>
+<ul>
+<li><p>Angular laajentaa/muuttaa myös HTML-elementtien toimintaa</p>
+<ul>
+<li>mm. <code>form</code>, <code>a</code>, ...</li>
+</ul>
+</li>
+<li><p>Lisäksi tarjoaa paljon muita juttuja:</p>
+<ul>
+<li><a href="http://www.w3schools.com/angular/angular_directives.asp">Directives</a>,
+<a href="http://www.w3schools.com/angular/angular_controllers.asp">Controllers</a>,
+<a href="https://docs.angularjs.org/guide/services">Services</a>, ...</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="esimerkki">Esimerkki</h2>
+<ul>
+<li><p><a href="https://docs.angularjs.org/api/ng/directive">Angularin mukana tulevat direktiivit</a> ovat muotoa <code>ng-*</code></p>
+<ul>
+<li>Esim. <code>ng-app</code> ja <code>ng-model</code></li>
+</ul>
+</li>
+<li><p><code>ng-app</code> määrittelee Angular-sovelluksen &quot;juuren&quot;</p>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"fi"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">title="..."</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">"angular.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">ng-app</span>=<span class="hljs-value">""</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Nimi : <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">ng-model</span>=<span class="hljs-value">"nimi"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Moi {{nimi}}!<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre>
+
+<ul>
+<li><a href="../../assets/misc/angular.html">angular.html</a></li>
+</ul>
+<hr>
+<h2 id="controller">Controller</h2>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">ng-app</span>=<span class="hljs-value">"jokuApp"</span> <span class="hljs-attribute">ng-controller</span>=<span class="hljs-value">"jokuCtrl"</span>&gt;</span>
+  Etunimi: <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">ng-model</span>=<span class="hljs-value">"etu"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">br</span>&gt;</span>
+  Sukunimi: <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">ng-model</span>=<span class="hljs-value">"suku"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">br</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">br</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">ng-click</span>=<span class="hljs-value">"vaihda()"</span>&gt;</span>{{etu + " ⇄ " + suku}}<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span>&gt;</span><span class="actionscript">
+<span class="hljs-keyword">var</span> app = angular.module(<span class="hljs-string">'jokuApp'</span>, []);
+app.controller(<span class="hljs-string">'jokuCtrl'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">($scope)</span> </span>{
+  $scope.etu= <span class="hljs-string">"Pertti"</span>;
+  $scope.suku= <span class="hljs-string">"Pasanen"</span>;
+  $scope.vaihda = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">var</span> etu = $scope.etu;
+    $scope.etu = $scope.suku;
+    $scope.suku = etu;
+  };
+});
+</span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre>
+
+<ul>
+<li><a href="../../assets/misc/angular2.html">angular2.html</a></li>
+</ul>
+<hr>
+<h2 id="ng-repeat">ng-repeat</h2>
+<ul>
+<li><p><a href="https://docs.angularjs.org/api/ng/directive/ngRepeat"><code>ng-repeat</code></a>
+on usein käytetty direktiivi</p>
+</li>
+<li><p>Sillä voidaan generoida taulukoista HTML-elementtejä</p>
+</li>
+<li><p>Esim. controllerissa:</p>
+</li>
+</ul>
+<pre><code class="hljs javascript">$scope.kayttajat = [{ etunimi: <span class="hljs-string">"Anna"</span>, sukunimi: <span class="hljs-string">"Ruokonen"</span> },
+                    { etunimi: <span class="hljs-string">"Pertti"</span>, sukunimi: <span class="hljs-string">"Pasanen"</span> }];</code></pre>
+
+<ul>
+<li>ja näkymässä (<code>*.html</code>):</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">ng-repeat</span>=<span class="hljs-value">"k in kayttajat"</span>&gt;</span>
+    {{k.etunimi}} {{k.sukunimi}}
+  <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span></code></pre>
+
+<ul>
+<li><a href="../../assets/misc/angular3.html">angular3.html</a></li>
+</ul>
+<hr>
+<h2 id="suodattimet-filters-">Suodattimet (filters)</h2>
+<ul>
+<li>Angular-direktiiveihin voidaan lisätä
+<a href="https://docs.angularjs.org/api/ng/filter/filter"><em>suodatin</em> (filter)</a>
+putkimerkillä <code>|</code> erottamalla<ul>
+<li>Angularissa <a href="https://docs.angularjs.org/api/ng/filter">on valmiina muutama suodatin</a>:</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>The name is {{ lastName | uppercase }}<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">ng-repeat</span>=<span class="hljs-value">"x in names | orderBy:'country'"</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">ng-repeat</span>=<span class="hljs-value">"x in names | filter:test | orderBy:'country'"</span>&gt;</span></code></pre>
+
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">ng-model</span>=<span class="hljs-value">"test.sukunimi"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">ng-repeat</span>=<span class="hljs-value">"k in kayttajat | filter:test"</span>&gt;</span>
+    {{k.etunimi}} {{k.sukunimi}}
+  <span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span></code></pre>
+
+<ul>
+<li><a href="../../assets/misc/angular4.html">angular4.html</a></li>
+</ul>
+<hr>
+<h2 id="-http-ja-resource">$http ja $resource</h2>
+<ul>
+<li>Angular-sovellus voi tehdä HTTP-pyyntöjä palvelimelle käyttäen
+<a href="https://docs.angularjs.org/api/ng/service/$http"><code>$http</code></a>-palvelua</li>
+</ul>
+<pre><code class="hljs javascript">app.controller(<span class="hljs-string">'customersCtrl'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$scope, $http</span>) </span>{
+  $http.get(<span class="hljs-string">"/api/customers"</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">response</span>) </span>{
+    $scope.customers = response.customers;
+  });
+});</code></pre>
+* Toinen vaihtoehto on[`$resource`](https://docs.angularjs.org/api/ngResource/service/$resource)-palvelu
+
+<pre><code class="hljs javascript">app.controller(<span class="hljs-string">'customersCtrl'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$scope, $resource</span>) </span>{
+  $scope.customers = $resource(<span class="hljs-string">"/api/customers"</span>).query();
+});</code></pre>
+
+<ul>
+<li>Molemmat automaattisesti muuntavat JSON-muotoisen data
+JavaScript-olioksi</li>
+</ul>
+<hr>
+<h2 id="linkkej-">Linkkejä</h2>
+<ul>
+<li><p><a href="https://angularjs.org/">angularjs.org</a></p>
+</li>
+<li><p><a href="https://docs.angularjs.org/tutorial">Angular-tutoriaali &quot;PhoneCat&quot;</a></p>
+</li>
+<li><p><a href="http://campus.codeschool.com/courses/shaping-up-with-angular-js/">codeschools.com: Angular-tutoriaali</a></p>
+</li>
+<li><p><a href="http://www.w3schools.com/angular/default.asp">W3Schools: Angular</a></p>
+</li>
+<li><p><a href="https://docs.angularjs.org/api">Angular API Reference</a></p>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="../../assets/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/scripts.js"></script>
+	</body>
+</html>
