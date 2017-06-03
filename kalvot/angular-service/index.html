@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>angular</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Angular Service
+
+
+---
+
+## Angular Service
+
+* Angular Servicet ovat tapa jakaa toiminnallisuutta ja dataa sovellusten eri osien välillä
+
+* Toisin kuin komponenteilla, serviceillä ei ole ulkoasua
+
+* Backend-yhteyden tarjoaminen on tyypillinen serviceiden käyttötapaus
+    * Tehdään sellainen itsekin
+    * Angular-CLI:llä se onnistuu seuraavasti
+
+```bash
+ng generate service services/data --module=app.module
+```
+
+---
+
+## HTTP
+
+* Angularissa on valmiina moduuli HTTP-pyyntöjen tekoon
+    * Käytämme sitä omassa servicessämme
+
+* Se täytyy vain ottaa mukaan `app.module.ts`-tiedostossa
+
+```typescript
+import { HttpModule } from '@angular/http';
+```
+
+```typescript
+imports: [
+    /* ... */
+    HttpModule,
+```
+
+* Tämän jälkeen servicen toteutus on kohtuullisen suoraviivaista =>
+
+---
+
+## data.service.ts
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/toPromise';
+
+@Injectable()
+export class DataService {
+
+  constructor(private http: Http) { }
+
+  public postSupersankari(nimi: string, supersankari: string): Promise<Response> {
+    return this.http.post( '/supersankari',
+      {nimi: nimi, supersankari: supersankari}
+    ).toPromise();
+  }
+
+  public haeTulokset() {
+    return this.http.get('/tulokset').toPromise();
+  }
+}
+
+```
+
+---
+
+## Servicen käyttö
+
+* Luomamme servicen voi ottaa käyttöön `app.component.ts`-tiedostossa
+
+```typescript
+import { DataService } from './services/data.service'
+```
+
+* Määritellään `AppComponent`-luokalle rakentaja, johon *injektoidaan* service
+
+```typescript
+constructor(private dataService: DataService) { }
+```
+
+* Tämän jälkeen sitä voi käyttää
+
+```typescript
+onValmis($event) {
+  this.supersankari = $event.supersankari;
+  this.dataService.postSupersankari(
+    $event.nimi,
+    $event.supersankari
+  ).then(function() {
+    console.log("Tallennus onnistui");
+  });
+}
+```
+
+---
+
+## Yksi ongelma
+
+* Tällä hetkellä servicemme yrittää tehdä kutsun saman palvelin osoitteeseen
+`/supersankari`
+    * Siellä ei tietenkään ole mitään, sillä olemme `ng`-kehityspalvelimella
+
+* Voisimme laittaa `lomake_backendin` pyörimään ja yrittää yhdistää sen osoitteeseen
+`http://localhost:3000/supersankari`
+    * Tämäkään ei onnistuisi johtuen selaimen tietoturvaominaisuudesta nimeltä *same origin policy*
+
+* Ratkaisuvaihtoehtoja on ainakin kaksi
+    * Viritellään backend sallimaan eri *originista* tulevat pyynnöt
+    * Laitetaan Angular-sovelluksemme ajoon samaan *originiin* kuin backend
+
+* Jälkimmäinen lienee nyt helpompi vaihtoehto
+
+---
+
+## Palvelimen vaihto
+
+* Luopukaamme `ng`-kehityspalvelimesta ja käytetään vain `lomake_backend`:in palvelinta
+    * Käynnistyy `lomake_backend`-hakemistossa komennolla
+
+```bash
+npm start
+```
+
+* `ng serve`:n sijaan *buildataan* Angular-sovelluksemme `lomake_backendin` `public`-kansioon:
+
+```bash
+ng build --output-path='../lomake_backend/public/app' --base-href='/app/' --watch
+```
+
+* Nyt Angular-sovelluksemme pitäisi näkyä osoitteessa [http://localhost:3000/app](http://localhost:3000/app)
+    * ja backend yhteyden toimia
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>angular</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="../../assets/css/slides.css" rel="stylesheet">
+		<link href="../../assets/css/tamplr.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">class: center, middle
+
+# Angular
+
+---
+
+## Angular vs AngularJs
+
+* Angularin versiointi on hieman hämmentävää
+
+* Uusin versio on nimeltään pelkkä Angular, ilman Js:ää
+    * Tunnettiin aiemmin nimellä Angular 2
+    * Osoitteessa [angular.io](https://angular.io/)
+
+* Aiempi, yhä laajalti käytetty, versio on AngularJs 1.x
+    * Osoitteessa [angularjs.org](https://angularjs.org/)
+
+* Versioiden välillä on varsin suuria eroja
+    * Kannattaa olla tarkkana googlaillessaan
+
+* **Näillä kalvoilla käsitellään uudempaa Angularia**
+
+---
+
+## Angular
+
+AngularJs 1.x:ään verrattuna uudessa Angularissa on aika paljon uutta, mm.
+
+* Ei *scopea* eikä *controllereita* vaan *komponentteja*
+* TypeScript-tuki
+* Muutoksia template-syntaksiin
+* ym. ym.
+
+[Tavoitteena](http://blog.angular-university.io/introduction-to-angular2-the-main-goals/)
+on ollut mm. yksinkertaistaa rakennetta, parantaa suorituskykyä sekä tehdä sovelluksista modulaarisempia
+
+---
+
+## TypeScript
+
+* Angularia suositellaan käytettäväksi [TypeScript](https://www.typescriptlang.org/)-kielellä
+    * JavaScriptkin käy
+
+* TypeScript on JavaScriptin *ylijoukko* (superset)
+    * Kaikki JavaScript-koodinpätkät ovat myös laillisia TypeScript-koodinpätkiä
+
+* Selain ei suoraan ymmärrä TypeScriptiä vaan se on käännettävä JavaScriptiksi ennen suoritusta
+
+* Tärkeimpänä lisänä TypeScript tuo kieleen tyyppimäärittelyt
+
+```typescript
+function tuplaa(luku: number): number {
+  var tupla: number = luku * 2;
+  return tupla;
+}
+```
+
+---
+
+## Angular CLI
+
+* Angular tarjoaa komentorivityökalun [Angularin komentorivityökalu](https://cli.angular.io/)
+helpottaa Angular-sovelluksen kehittämistä
+
+* Sen voi asentaa `npm`:llä:
+```bash
+npm install -g @angular/cli
+```
+
+* Tämän jälkeen `ng`-komennon pitäisi olla käytettävissä
+
+* Esim. apua saa komennolla
+```bash
+ng help
+```
+
+---
+
+## Uusi projekti
+
+* Uuden projektin aloittaminen on helppoa `ng`-työkalun avulla:
+```bash
+ng new supersankari
+```
+* Komento loi uuden Angular-projektin hakemistoon `supersankari`
+
+* Siirrytään sinne ja käynnistetään kehityspalvelin:
+```bash
+cd supersankari
+ng serve --watch
+```
+
+* Nyt uusi Angular-sovellus pitäisi olla saatavilla osoitteessa
+[http://localhost:4200](http://localhost:4200)
+
+---
+
+## app-komponentti
+
+* `ng new` loi automaattisesti sovellukseen yhden komponentin
+    * Se on nimeltään `app` ja koostuu seuraavista tiedostoista hakemistossa `src/app`
+
+| Tiedosto |  |
+|:-------|:---------|
+|`app.component.css`| Tyylit |
+|`app.component.html`| HTML-template |
+|`app.component.spec.ts`| Testit |
+|`app.component.ts`| TypeScript-koodi |
+
+* Kokeile muuttaa HTML-tiedostoa tai lisätä tyylimäärittelyjä CSS-tiedostoon
+    * Palvelimen `ng serve --watch` ollessa käynnissä muutokset pitäisi päivittyä saman tien selaimeen
+
+---
+
+## app.component.ts
+
+* Tiedostossa `app.component.ts` on määritelty komponentin luokka
+
+```typescript
+export class AppComponent {
+  title = 'app';
+}
+```
+
+* Luokan jäsenmuuttujat näkyvät HTML-templatelle `app.component.html`
+
+```html
+<h1>
+  Welcome to {{title}}!!
+</h1>
+```
+
+---
+
+## (click)
+
+* Myös komponenttiluokan *metodit* (= jäsenfunktiot) ovat saatavilla HTML-templatessa
+
+* Esim. lisätään `app.component.html`-tiedostoon uusi nappi:
+
+```html
+<button (click)="painallus()">Paina</button>
+```
+
+* Kaarisulkujen sisällä oleva `(click)` on Angular-syntaksia
+    * Se määrittelee mitä tehdään tietyllä tapahtumalla (event), tässä tapauksessa `click`
+
+* Tässä kutsutaan funktiota `painallus()`
+    * Funktio täytyy toteuttaa `AppComponent`-luokan sisään tiedostossa `app.component.ts`:
+
+```typescript
+export class AppComponent {
+  title = 'app';
+  painallus() {
+    this.title = this.title + '!';
+  }
+}
+```
+
+---
+
+## Seuraavaksi
+
+* Voidaan vielä vähän tutustua luomaamme projektiin ja leikkiä Angularin kanssa
+
+* Aletaan sitten toteuttamaan Angular-versiota supersankarilomakkeesta
+
+</textarea>
+    <script>
+      "use strict";
+      $(document).ready(function() {
+        remark.create();
+      });
+    </script>
+  </body>
+</html>
