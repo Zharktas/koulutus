@@ -77,43 +77,11 @@ options = {
 
 ---
 
-## /tulokset
+## Dataa
 
 * Jos graafi näkyy, voidaan yrittää samaa oikealla datalla
 
-* Tätä varten lisätään **backendin** `routes/index.js`-tiedostoon uusi route:
-
-```javascript
-router.get("/tulokset", function (req, res) {
-  Vastaus.aggregate([{
-    $group: { _id: "$supersankari", arvo: {$sum: 1}}}]).then(function(data) {
-      var tulokset = {};
-      data.forEach(function(v) {
-        tulokset[v._id] = v.arvo;
-      });
-      res.json(tulokset);
-    },
-    function () {
-      res.status(500).send("Tietokantavirhe");
-    });
-});
-```
-
----
-
-## tulokset.component.ts
-
 ```typescript
-ngOnInit() {
-  this.paivitaTulokset();
-}
-
-public paivitaTulokset() {
-  this.dataService.haeTulokset().then((response) => {
-    this.asetaTulokset(response.json());
-  });
-}
-
 private asetaTulokset(tulokset) {
   let newLabels: string[] = [];
   let newData: number[] = [];
@@ -125,33 +93,6 @@ private asetaTulokset(tulokset) {
     {data: newData, label: "Suosikit"}
   ];
   this.labels = newLabels;
-}
-```
-
----
-
-## app.component.ts
-
-```typescript
-import { Component, ViewChild } from '@angular/core';
-import { TuloksetComponent } from './tulokset/tulokset.component';
-```
-
-```typescript
-@ViewChild(TuloksetComponent) tulokset: TuloksetComponent;
-```
-
-```typescript
-onValinta($event) {
-  this.sankariService.postSupersankari(
-    $event.nimi,
-    $event.sankari
-  ).then(() => {
-    this.supersankari = $event.supersankari;
-    this.tulokset.paivitaTulokset();
-  }).catch((err) => {
-    console.log(err);
-  });
 }
 ```
 
@@ -170,10 +111,14 @@ dataSets;
 
 * Lisäksi chartin piirto ei onnistu tyhjällä datalla
     * Ei sitten piirretä ennen kuin on dataa: `app.tulokset.html`
-
+    
 ```html
 <canvas *ngIf="dataSets"
 ```
+
+
+* Vieläkään ei toiminta ole aivan täydellistä
+    * Katsotaan voimmeko parantaa...
 
 </textarea>
     <script>
