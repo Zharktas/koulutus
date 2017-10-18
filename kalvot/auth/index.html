@@ -332,116 +332,21 @@ app.get('/salainen', ensureLoggedIn('/login'), function(req, res) {
 
 ---
 
-## Kolmannen osapuolen valtuutus
+<h2 class="harjoitus">Harjoitus</h2>
 
-* Joskus on kiva jos web-sovellus A voi olla yhteydessä toiseen
-  web-sovellukseen B käyttäjän puolesta
-    * Esim. A haluaa lukea käyttäjän B:hen tallentamia lomakuvia
-    * Esim. A haluaa julkaista viestejä B:ssä käyttäjän nimissä
-
-* Tätä varten käyttäjän täytyy valtuuttaa A käyttämään B:tä hänen
-  puolestaan
-    * "Three-legged authorization"
-
-* Yksinkertaisin ratkaisu: käyttäjä antaa B:n käyttäjätunnuksensa ja
-  salasanansa A:lle
-    * A voi nyt tehdä kaikkea mahdollista käyttäjänä (eikä ole
-      rajoitettu esim. lomakuvien lukemiseen)
-    * jos A vuotaa salasanan, voi kuka tahansa tehdä mitä tahansa
-    * valtuutuksen peruminen on vaivalloista
-    * parempiakin ratkaisuja on, OAuth ->
-
-
+ * Toteutetaan supersankarilomakkeeseen rekisteröityminen ja sisäänkirjautuminen
+ * Rekisteröityminen vaatii uuden lomakkeen ja sen käsittelijän, joka vastaanottaa käyttäjätunnuksen ja salasanan
+ * Tunnukset tallennetaan tietokantaan käyttäen uutta mallia
+ * Sisäänkirjautuminen toteutaan passportin local-strategyn avulla joka hakee kannasta käyttäjätunnusta vastaavan salasanan ja vertaa sitä annettuun.
+ * Kaikki muut sovelluksen polut kuin rekisteröinti ja sisäänkirjautuminen asetetaan sisäänkirjautumisen taakse
 ---
 
-## OAuth
+## Huomioita
 
-* OAuth on standardi, jonka avulla *resurssinhaltija* (käyttäjä)
-  voi valtuuttaa *asiakassovelluksen* käyttämään hänen *resurssipalvelimella*
-  sijaitsevia resursseja
+ * Salasanat pitäis kryptata tietokantaan tallentaessa. Hyvä vaihtoehto on esim [bcrypt](https://www.npmjs.com/package/bcrypt)
+ * Rekisteröityessä käyttäjätunnuksen (tai muun identifioivan tiedon kuten sähköpostiosoitteen) olemassa olo pitäisi tarkastaa ja ilmoittaa käyttäjälle, jos tunnuksella on jo rekisteröity
 
-* Asiakassovelluksen ei tarvitse tietää resurssinhaltijan
-  käyttäjätunnusta eikä salasanaa
-
-* Valtuutusta voidaan rajata mielivaltaisesti
-    * esim. pelkkä lukuoikeus lomakuviin
-
-* Valtuutus voidaan perua helposti
-    * salasanaa ei tarvitse vaihtaa
-    * yhden asiakassovelluksen valtuutuksen peruminen ei vaikuta muihin
-
-* Tässä käsitellään OAuth:n versiota [2.0](https://tools.ietf.org/html/rfc6749)
-    * Versiota 1.0a käytetään myös. Eroaa varsin paljon 2.0:sta.
-
----
-
-## OAuth 2.0:n roolit
-
-OAuth 2.0 määrittelee neljä
-[roolia](https://tools.ietf.org/html/rfc6749#section-1.1)
-
-1. Resurssinhaltija (resource owner)
-    * usein ihminen eli loppukäyttäjä
-
-2. Resurssipalvelin (resource server)
-    * palvelin, jossa haltijan omistama resurssi on
-
-3. Asiakassovellus (client)
-    * resurssinhaltijan valtuuttama sovellus
-
-4. Valtuutuspalvelin (authorization server)
-    * hoitaa valtuutuksen
-    * usein sama kuin resurssipalvelin
-
----
-
-## OAuth 2.0:n valtuutustavat
-
-OAuth 2.0 määrittelee neljä erilaista
-[valtuutustapaa](https://tools.ietf.org/html/rfc6749#section-4)
-
-1. Authorization Code Grant
-    * Yleisin web-sovelluksissa käytetty tapa
-
-2. Implicit Grant
-    * Edellisen yksinkertaistettu versio
-    * Käytettävissä web-sovelluksissa, joissa kaikki toiminnallisuus on
-      selainpäässä
-
-3. Resource Owner Password Credentials Grant
-    * Asiakassovellus säilyttää resurssinhaltijan salasanaa
-
-4. Client Credentials Grant
-    * Kun resurssinhaltija = asiakassovellus
-
----
-
-## OAuth 2.0: implicit grant
-
-![](../img/oauth2-2.png)
-
----
-
-## OAuth 2.0: authorization code grant
-
-![](../img/oauth2-1.png)
-
----
-
-## Access token
-
-* OAuth 2.0:ssa voidaan käyttää eri tyyppisiä access tokeneita
-
-* Samalla kun valtuutuspalvelin palauttaa access tokenin,
-palauttaa se myös sen tyypin
-
-* Yksinkertaisin tyyppi on ns. *bearer*, jossa access token välitetään
-  sellaisenaan `Authorization`-otsikkokentässä
-
-```http
-Authorization: Bearer jfHIUA82jfi9d29d
-```
-
+ * Laitan koko supersankarisovelluksen moodleen vielä malliksi
 
 </textarea>
     <script>
