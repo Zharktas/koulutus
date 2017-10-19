@@ -18,10 +18,95 @@
 
 # Ympäristö
 
+---
+
+Jos käytössä on oma kone, voit hypätä Cloud9 osion yli [tänne](/kalvot/c9/#6)
+
+## Cloud9
+
+* [Cloud9 (c9.io)](https://c9.io) on pilvessä toimiva
+  ohjelmistonkehitysympäristö
+
+* Cloud9:ssä voi luoda ns *workspace*:ja
+    * Workspacet ovat Ubuntu-virtuaalikoneita
+
+* Valmiina on erilaisia workspace-tyyppejä erilaisten web-sovellusten
+  tekoon
+    * Node.js, Django, PHP, Ruby on Rails, ...
+
+* Cloud9 tarjoaa varsin hyvän web-pohjaisen IDE:n jonka kautta
+  workspacessa olevaa koodia voi muokata, suorittaa, jne.
+
+* Ilmaiseksi saa yhden yksityisen (premium) workspacen ja rajattomasti
+  julkisia
 
 ---
 
-## Asennetaan
+<h2 class="harjoitus">Harjoitus</h2>
+
+* Luo [Cloud9:ssä](https://c9.io) workspace,
+valitse tyypiksi Node.js
+
+Cloud9 luo valmiin Node.js-projektin.
+
+* Avaa `server.js` ja klikkaa yläpalkin *Run*-painiketta
+
+Sovelluksen pitäisi käynnistyä.
+Alareunan terminaalista näet mihin URL-osoitteeseen se käynnistyi.
+Avaa se vaikkapa uudessa selain-tabissa.
+
+Kyseessä on WebSocketein kommunikoiva chat-sovellus.
+Se on kuitenkin hieman liian monimutkainen ensimmäiseksi
+Node.js-sovellukseksi, joten ei tutustuta siihen sen tarkemmin.
+* vaan... ->
+
+---
+
+## server.js
+
+* Korvaa tiedoston `server.js` sisältö tällä koodilla:
+
+```javascript
+var express = require('express');
+
+var app = express();
+
+app.get('/', function(req, res) {
+  res.send("Hello!");
+});
+
+var server = app.listen(
+    process.env.PORT || 3000,
+    process.env.IP || "0.0.0.0",
+    function() {
+      var addr = server.address();
+      console.log("Server listening at",
+                  addr.address + ":" + addr.port);
+    }
+);
+```
+
+* Voit myös poistaa hakemiston `client`
+
+---
+
+## Bash
+
+* Cloud9:ssä on myös Bash-komentoriviterminaali, jonka kautta
+  workspace-virtuaalikonetta voi hallita
+
+* Voit vaikkapa poistaa Node.js-projektiin asennetun vanhan
+  `express`-moduulin ja korvata sen uudemmalla suorittamalla
+
+```bash
+npm uninstall express --save
+npm install express --save
+```
+
+
+---
+
+## Asennus lokaaliin ympäristöön
 
 * [Node.js](https://nodejs.org/en/download/)
 
@@ -71,18 +156,6 @@ var server = app.listen(
 );
 ```
 
-
----
-
-## Node moduulit
-
-* Voit vaikkapa poistaa Node.js-projektiin asennetun vanhan
-  `express`-moduulin ja korvata sen uudemmalla suorittamalla
-
-```bash
-npm uninstall express --save
-npm install express --save
-```
 
 ---
 
