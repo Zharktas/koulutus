@@ -9,11 +9,22 @@ mongoose.connect('mongodb://dev:dev@localhost/kanta',
 // Määritellään Vastaus-schema
 var vastausSchema = mongoose.Schema({
     nimi: String,
-  supersankari: String
+    supersankari: String
 });
 
 // Määritellään Vastaus-malli
 var Vastaus = mongoose.model('Vastaus', vastausSchema);
 
-// "Exportoidaan" Vastaus-malli jotta sitä voidaan käyttää muualla
+// Määritellään User-schema
+var userSchema = mongoose.Schema({
+    username: String,
+    password: String
+});
+
+// Määritellään User-malli
+var User = mongoose.model('User', userSchema);
+
+
+// "Exportoidaan" Vastaus-malli  ja User-mallit jotta niitä voidaan käyttää muualla
 exports.Vastaus = Vastaus;
+exports.User = User;
