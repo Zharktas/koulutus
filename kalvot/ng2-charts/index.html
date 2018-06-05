@@ -89,7 +89,7 @@ private asetaTulokset(tulokset) {
     newLabels.push(k);
     newData.push(tulokset[k]);
   }
-  this.dataSets = [
+  this.datasets = [
     {data: newData, label: "Suosikit"}
   ];
   this.labels = newLabels;
@@ -106,14 +106,14 @@ private asetaTulokset(tulokset) {
 
 ```typescript
 labels;
-dataSets;
+datasets;
 ```
 
 * Lisäksi chartin piirto ei onnistu tyhjällä datalla
     * Ei sitten piirretä ennen kuin on dataa: `app.tulokset.html`
     
 ```html
-<canvas *ngIf="dataSets"
+<canvas *ngIf="datasets"
 ```
 
 
