@@ -1,0 +1,19 @@
+<p>
+  Suosikkisupersankarisi on siis {{supersankari}}.
+</p>
+
+<ul>
+  <li *ngFor="let t of tuloslista">
+    {{t[0]}}: {{t[1]}}
+  </li>
+</ul>
+
+<div>
+  <canvas *ngIf="datasets"
+          baseChart
+          height="200"
+          chartType="bar"
+          [options]="options"
+          [datasets]="datasets"
+          [labels]="labels"></canvas>
+</div>
