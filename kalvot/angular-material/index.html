@@ -43,14 +43,14 @@ npm install --save @angular/material @angular/cdk
 
 ```typescript
 import { MatButtonModule, MatInputModule, MatRadioModule, MatCardModule } from '@angular/material';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 ```
 
 ```typescript
 imports: [
   BrowserModule,
   FormsModule,
-  NoopAnimationsModule,
+  BrowserAnimationsModule,
   MatButtonModule,
   MatInputModule,
   MatRadioModule,
@@ -76,9 +76,9 @@ imports: [
 * Esim.
 
 ```html
-<md-card>
-  <button md-button>Paina tästä</button>
-</md-card>
+<mat-card>
+  <button mat-button>Paina tästä</button>
+</mat-card>
 ```
 
 * Kaikki Angular Material -komponentit esimerkkikoodeineen löytyvät [täältä](https://material.angular.io/components)
