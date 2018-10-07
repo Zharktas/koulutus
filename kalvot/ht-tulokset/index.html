@@ -110,7 +110,7 @@ import { TuloksetComponent } from './tulokset/tulokset.component';
 
 ```typescript
 onValinta($event) {
-  this.sankariService.postSupersankari(
+  this.dataService.postSupersankari(
     $event.nimi,
     $event.sankari
   ).then(() => {

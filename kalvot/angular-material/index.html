@@ -42,19 +42,19 @@ npm install --save @angular/material @angular/cdk
     * Lisäksi tarvitaan animaatiomoduuli
 
 ```typescript
-import { MdButtonModule, MdInputModule, MdRadioModule, MdCardModule } from '@angular/material';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatInputModule, MatRadioModule, MatCardModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 ```
 
 ```typescript
 imports: [
   BrowserModule,
   FormsModule,
-  NoopAnimationsModule,
-  MdButtonModule,
-  MdInputModule,
-  MdRadioModule,
-  MdCardModule
+  BrowserAnimationsModule,
+  MatButtonModule,
+  MatInputModule,
+  MatRadioModule,
+  MatCardModule
 ],
 ```
 ---
@@ -76,9 +76,9 @@ imports: [
 * Esim.
 
 ```html
-<md-card>
-  <button md-button>Paina tästä</button>
-</md-card>
+<mat-card>
+  <button mat-button>Paina tästä</button>
+</mat-card>
 ```
 
 * Kaikki Angular Material -komponentit esimerkkikoodeineen löytyvät [täältä](https://material.angular.io/components)
@@ -89,7 +89,7 @@ imports: [
 
 * Korvataan lomakkeemme sisällä olevat komponentit Angular Material -komponenteilla
 
-* Ja laitetaan se vaikka `<md-card>`:in sisään
+* Ja laitetaan se vaikka `<mat-card>`:in sisään
 
 * Ja mitä muuta nyt keksiikään
 

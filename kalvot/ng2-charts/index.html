@@ -46,7 +46,7 @@ imports: [
 
 ## ng2-charts
 
-* Kokeillaan lisätä `lomake.component.html`:ään
+* Kokeillaan lisätä `tulokset.component.html`:ään
 
 ```html
 <div>
@@ -59,7 +59,7 @@ imports: [
 </div>
 ```
 
-* Ja määritellään muuttujat `lomake.component.ts`:ssä
+* Ja määritellään muuttujat `tulokset.component.ts`:ssä
 
 ```typescript
 labels = ["A", "B"];
@@ -89,7 +89,7 @@ private asetaTulokset(tulokset) {
     newLabels.push(k);
     newData.push(tulokset[k]);
   }
-  this.dataSets = [
+  this.datasets = [
     {data: newData, label: "Suosikit"}
   ];
   this.labels = newLabels;
@@ -106,14 +106,14 @@ private asetaTulokset(tulokset) {
 
 ```typescript
 labels;
-dataSets;
+datasets;
 ```
 
 * Lisäksi chartin piirto ei onnistu tyhjällä datalla
     * Ei sitten piirretä ennen kuin on dataa: `app.tulokset.html`
     
 ```html
-<canvas *ngIf="dataSets"
+<canvas *ngIf="datasets"
 ```
 
 
