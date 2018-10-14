@@ -246,6 +246,31 @@ function(err) {
   return res.status(500).json({error: 'ServerError'});
 });
 ```
+
+---
+## Async / Await
+
+* Funktion voi myös määrittää asynkroniseksi jonka paluuarvo määrittyy myöhemmin.
+
+```javascript
+function resolveAfter2Seconds() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 2000);
+  });
+}
+
+async function asyncCall() {
+  console.log('calling');
+  var result = await resolveAfter2Seconds();
+  console.log(result);
+  // expected output: 'resolved'
+}
+```
+
+* Teknisesti toteutettu promiseilla.
+* Asynkronisen funktion suoritus pysähtyy odottamaan await funktiota ja jatkuu kun se on suoritettu.
 </textarea>
     <script>
       "use strict";
