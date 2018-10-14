@@ -16,7 +16,7 @@
   <body>
     <textarea id="source">class: center, middle
 
-# Funktioista
+# Lisää JavaScriptiä
 
 .yhdensivunversio[
 [Yhden sivun versio](./all.html)
@@ -105,6 +105,61 @@ function foo() {
 * Funktio `bar` näkee `x`:n ja `y`:n niin kauan kuin se on olemassa,
 vaikka olemassaolo jatkuisi `foo`:n suoritusta kauemmin
     * Näin voi käydä `return bar;` lauseesta johtuen
+
+---
+## Muuttujista
+
+
+* Muuttujia voi määrittää myös muilla tavoin kuin globaaleina tai funktion näkyvyysalueella.
+* Avainsanalla **let** muuttujan näkyvyysalueeksi tulee koodilohko.
+
+```javascript
+function foo() {
+  var x = 0;
+
+  function bar() {
+    var y = 0;
+    // x ja y näkyvät täällä
+  }
+
+  if ( x === 0 ){
+    let z = 0;
+    // x ja z näkyy
+  }
+
+  // x näkyy, y ja z ei
+
+  return bar;
+}
+
+// x, y ja z ei näy
+```
+
+---
+
+## Muuttujista
+
+* Avainsanalla **const** muuttujasta tehdään vakio, jolloin muuttujaan ei voi sijoittaa uutta arvoa.
+```javascript
+const x = 10;
+x = 20; // Uncaught TypeError: Assignment to constant variable.
+```
+
+* Poikkeuksena olion attribuutit, joita edelleen voidaan muokata.
+```javascript
+const y = { bar: 2 };
+y = 20; // Uncaught TypeError: Assignment to constant variable.
+y.foo = "bar"; // toimii hyvin
+```
+
+---
+
+## Muuttujista
+
+* Pääasiassa kannattaa käyttää lettiä ja constia varin sijaan aina kun mahdollista.
+* Näiden rakenteiden tarkoitus on vähentää virheitä.
+* Tai jos virhe tulee niin se huomataan aikasemmassa vaiheessa.
+
 
 ---
 
