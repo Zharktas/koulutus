@@ -264,10 +264,10 @@ passport.use(new BasicStrategy(
 routes/index.js
 ```javascript
 var passport = require('passport');
-router.get('/salainen',
+router.get('/',
         passport.authenticate('basic', {session: false}),
         function(req, res) {
-          // ...
+          res.render('index', { title: 'Express' });
         });
 ```
 
