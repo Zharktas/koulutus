@@ -347,6 +347,8 @@ passport.use(new LocalStrategy(
     });
   }));
 
+var session = require("express-session");
+
 // cookieparserin jälkeen
 app.use(session({ secret: "cats" , resave: false,
   saveUninitialized: true}));
@@ -355,6 +357,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 ```
+npm install passport-local
+npm install express-session
 
 ---
 
