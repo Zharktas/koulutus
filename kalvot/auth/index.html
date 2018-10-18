@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>auth</title>
-    
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
 		<link href="../../assets/css/slides.css" rel="stylesheet">
@@ -242,29 +242,29 @@ npm install passport-local --save
 
 ## Passport-esimerkki: Basic
 
+app.js
+
 ```javascript
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
-```
 
-```javascript
 passport.use(new BasicStrategy(
   function(username, password, done) {
-    User.findOne({username: username}).then(function (u) {
-      if (u && u.password === password) {
-        done(null, u);
+      if (username === 'ahto' && password === '1234') {
+        done(null, {username: 'ahto'});
       }
       else {
         done(null, false);
       }
-    });
   }));
+  app.use(passport.initialize());
+
 ```
 
+routes/index.js
 ```javascript
-app.use(passport.initialize());
 
-app.get('/salainen',
+router.get('/salainen',
         passport.authenticate('basic', {session: false}),
         function(req, res) {
           // ...
@@ -357,4 +357,3 @@ app.get('/salainen', ensureLoggedIn('/login'), function(req, res) {
     </script>
   </body>
 </html>
-
