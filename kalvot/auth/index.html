@@ -263,7 +263,7 @@ passport.use(new BasicStrategy(
 
 routes/index.js
 ```javascript
-
+var passport = require('passport');
 router.get('/salainen',
         passport.authenticate('basic', {session: false}),
         function(req, res) {
